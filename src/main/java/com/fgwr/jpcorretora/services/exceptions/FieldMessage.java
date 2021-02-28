@@ -1,4 +1,4 @@
-package com.fgwr.jpcorretora.resources.exceptions;
+package com.fgwr.jpcorretora.services.exceptions;
 
 import java.io.Serializable;
 

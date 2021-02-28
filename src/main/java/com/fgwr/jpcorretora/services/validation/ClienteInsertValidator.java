@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.fgwr.jpcorretora.dto.ClienteNewDTO;
 import com.fgwr.jpcorretora.enums.TipoCliente;
-import com.fgwr.jpcorretora.resources.exceptions.FieldMessage;
+import com.fgwr.jpcorretora.services.exceptions.FieldMessage;
 import com.fgwr.jpcorretora.services.validation.utils.BR;
 
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
