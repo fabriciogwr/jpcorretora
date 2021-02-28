@@ -119,6 +119,7 @@ public class ImovelController {
 			bairroLabel.setText("");
 			cepLabel.setText("");
 			dataAngariacaoLabel.setText("");
+			proprietarioLabel.setText("");
 			
 		}
 	}

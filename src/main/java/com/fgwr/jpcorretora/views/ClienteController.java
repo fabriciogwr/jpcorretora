@@ -1,11 +1,13 @@
 package com.fgwr.jpcorretora.views;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
@@ -31,9 +33,11 @@ import net.rgielen.fxweaver.core.FxmlView;
 @Component
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+@Transactional
 public class ClienteController {
 	
 	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
+	private ObservableList<String> telefoneData = FXCollections.observableArrayList();
 	@FXML
 	private TableView<Cliente> clienteTable;
 	@FXML
@@ -67,6 +71,10 @@ public class ClienteController {
 	private Label rgLabel;
 	@FXML
 	private Label emailLabel;
+	@FXML
+	private Label telefonePrefLabel;
+	@FXML
+	private Label telefoneAltLabel;
 	@FXML
 	private Label estadoCivilLabel;
 	@FXML
@@ -160,16 +168,31 @@ public class ClienteController {
 		duplicataTable.setItems(duplicataAux);
 		}
 
+	
 	private void showClient(Cliente cliente) {
 		if (cliente != null) {
 			nomeLabel.setText(cliente.getNome());
 			cpfLabel.setText(cliente.getCpfOuCnpj());
 			rgLabel.setText(cliente.getRg());
 			emailLabel.setText(cliente.getEmail());
+			
+			Set<String> telefones = cliente.getTelefones();
+			for (String string : telefones) {
+				System.out.println(string);
+				telefoneData.add(string);
+			}
+			telefonePrefLabel.setText(telefoneData.get(0));
+			if (telefoneData.size() == 2 ) {
+			telefoneAltLabel.setText(telefoneData.get(1)); } else telefoneAltLabel.setText("");
+			telefoneData.clear();
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
+			if (cliente.getContrato() != null ) {
 			contratoAtual = cliente.getContrato().getId();
+			} else {
+				contratoAtual = null;
+			}
 			clienteAux = cliente;
 			duplicataAux.clear();
 			imovel = getImovelData();
@@ -219,6 +242,8 @@ public class ClienteController {
 			cpfLabel.setText("");
 			rgLabel.setText("");
 			dataNascimentoLabel.setText("");
+			telefonePrefLabel.setText("");
+			telefoneAltLabel.setText("");
 			emailLabel.setText("");
 			estadoCivilLabel.setText("");
 			profissaoLabel.setText("");
@@ -229,15 +254,6 @@ public class ClienteController {
 			titularLabel.setText("");
 		}
 	
-	}
-	
-	@FXML
-	private void handleNovoCliente() {
-	    Cliente tempCliente = new Cliente();
-	    boolean okClicked = frontApp.showEditCliente(tempCliente);
-	    if (okClicked) {
-	        getClienteData().add(tempCliente);
-	    }
 	}
 
 	@FXML

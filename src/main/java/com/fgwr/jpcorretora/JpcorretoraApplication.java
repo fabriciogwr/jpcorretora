@@ -95,6 +95,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		Referencia ref2 = new Referencia(null, "Mell");
 
 		cli1.getTelefones().addAll(Arrays.asList("993557900", "34225987"));
+		cli2.getTelefones().addAll(Arrays.asList("84023706"));
 
 		cli1.getReferencia().addAll(Arrays.asList(ref1, ref2));
 		cli2.getReferencia().addAll(Arrays.asList(ref2));

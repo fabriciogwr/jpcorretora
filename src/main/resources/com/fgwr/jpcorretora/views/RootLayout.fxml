@@ -18,7 +18,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Novo">
             <items>
-              <MenuItem mnemonicParsing="false" text="Cliente" />
+              <MenuItem mnemonicParsing="false" onAction="#handleNovoCliente" text="Cliente" />
                   <MenuItem mnemonicParsing="false" text="Imóvel" />
                   <MenuItem mnemonicParsing="false" text="Contrato" />
             </items>

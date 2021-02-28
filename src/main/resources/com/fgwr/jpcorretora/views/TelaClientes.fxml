@@ -144,13 +144,13 @@
                                              </font>
                                           </Label>
                                           <Label text="Telefone Preferencial" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-                                          <Label fx:id="telefone1Label" text="Label" GridPane.rowIndex="5">
+                                          <Label fx:id="telefonePrefLabel" text="Label" GridPane.rowIndex="5">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
                                           <Label text="Telefone Alternativo" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-                                          <Label fx:id="telefone2Label" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                          <Label fx:id="telefoneAltLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -205,6 +205,13 @@
                                           <TableColumn fx:id="dataPgtoColumn" prefWidth="75.0" text="Data Pgto" />
                                       </columns>
                                     </TableView>
+                                    <HBox layoutX="19.0" layoutY="424.0" spacing="20.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" text="Efetuar Pagamento" />
+                                          <Button mnemonicParsing="false" text="Cancelar Pagamento" />
+                                          <Button mnemonicParsing="false" text="Button" />
+                                       </children>
+                                    </HBox>
                                  </children></AnchorPane>
                         </content>
                       </TitledPane>

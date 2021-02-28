@@ -10,12 +10,14 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.views.ClienteController;
 import com.fgwr.jpcorretora.views.EditClienteController;
 import com.fgwr.jpcorretora.views.ImovelController;
+import com.fgwr.jpcorretora.views.NovoClienteController;
 import com.fgwr.jpcorretora.views.RootController;
 
 import javafx.application.Application;
@@ -61,7 +63,6 @@ public class FrontApp extends Application {
 
 	@Override
 	public void init() {
-	//	String[] args = getParameters().getRaw().toArray(new String[0]);
 
 		ApplicationContextInitializer<GenericApplicationContext> initializer = ac -> {
 
@@ -82,8 +83,6 @@ public class FrontApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		//FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
-	//	Parent root = fxWeaver.loadView(RootController.class);
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("JPCorretora");
 
@@ -96,7 +95,6 @@ public class FrontApp extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(FrontApp.class.getResource("views/RootLayout.fxml"));
-	//		loader.setControllerFactory(param -> cc);
 			loader.setController(new RootController());
 			rootLayout = (BorderPane) loader.load();
 
@@ -113,7 +111,6 @@ public class FrontApp extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(FrontApp.class.getResource("views/TelaClientes.fxml"));
-	//		loader.setControllerFactory(param -> cc);
 			AnchorPane personOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(personOverview);
@@ -130,7 +127,6 @@ public class FrontApp extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(FrontApp.class.getResource("views/TelaImoveis.fxml"));
-	//		loader.setControllerFactory(param -> ic);
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
@@ -146,8 +142,6 @@ public class FrontApp extends Application {
 	public boolean showEditCliente(Cliente cliente) {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditCliente.fxml"));
-	     //   loader.setLocation(FrontApp.class.getResource("views/EditCliente.fxml"));
-	       // loader.setControllerFactory(param -> ecs);
 	        loader.setController(new EditClienteController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -170,6 +164,33 @@ public class FrontApp extends Application {
 	        return false;
 	    }
 	}
+	
+	public boolean showNovoCliente(Cliente cliente, DadosBancarios db) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditCliente.fxml"));
+	        loader.setController(new NovoClienteController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Novo Cliente");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        NovoClienteController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setCliente(cliente, db);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
