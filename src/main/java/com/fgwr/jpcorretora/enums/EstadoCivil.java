@@ -39,5 +39,14 @@ public enum EstadoCivil {
 		throw new IllegalArgumentException("Id inválido: " + cod);
 		
 	}
+	
+	public static EstadoCivil valueOfDescricao(String desc) {
+	    for (EstadoCivil estadoCivil: values()) {
+	        if (estadoCivil.descricao.equals(desc)) {
+	            return estadoCivil;
+	        }
+	    }
+	    return null;
+	}
 
 }

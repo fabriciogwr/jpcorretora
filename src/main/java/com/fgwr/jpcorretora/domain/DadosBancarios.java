@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.TipoConta;
 
 @Entity
@@ -23,7 +24,7 @@ public class DadosBancarios implements Serializable {
     @JoinColumn(name="cliente_id")
     private Cliente cliente;
 
-    private String banco;
+    private Integer banco;
     private String agencia;
     private String conta;
     private Integer tipo;
@@ -33,21 +34,21 @@ public class DadosBancarios implements Serializable {
     	
     }
 
-    public DadosBancarios(Integer id, String banco, String agencia, String conta, TipoConta tipo, String titular) {
+    public DadosBancarios(Integer id, Banco banco, String agencia, String conta, TipoConta tipo, String titular) {
         this.id = id;
-        this.banco = banco;
+        this.banco = banco.getCod();
         this.agencia = agencia;
         this.conta = conta;
         this.tipo = tipo.getCod();
         this.titular = titular;
     }
 
-    public String getBanco() {
-        return banco;
+    public Banco getBanco() {
+        return Banco.toEnum(banco);
     }
 
-    public void setBanco(String banco) {
-        this.banco = banco;
+    public void setBanco(Banco banco) {
+        this.banco = banco.getCod();
     }
 
     public String getAgencia() {

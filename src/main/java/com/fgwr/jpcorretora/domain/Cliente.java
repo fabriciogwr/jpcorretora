@@ -63,8 +63,8 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy ="cliente", cascade = CascadeType.ALL)
     private List<Imovel> imoveis = new ArrayList<>();
     
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<DadosBancarios> dadosBancarios = new ArrayList<>();
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private DadosBancarios dadosBancarios;
 
     private String obs;
     
@@ -207,6 +207,14 @@ public class Cliente implements Serializable {
 
 	public void setContrato(Contrato contrato) {
 		this.contrato = contrato;
+	}
+
+	public DadosBancarios getDadosBancarios() {
+		return dadosBancarios;
+	}
+
+	public void setDadosBancarios(DadosBancarios dadosBancarios) {
+		this.dadosBancarios = dadosBancarios;
 	}
 
 	@Override

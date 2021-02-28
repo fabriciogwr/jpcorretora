@@ -2,7 +2,6 @@ package com.fgwr.jpcorretora.views;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -11,10 +10,11 @@ import org.springframework.stereotype.Component;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
-import com.fgwr.jpcorretora.services.ContratoService;
 import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ImovelService;
 
@@ -32,9 +32,6 @@ import net.rgielen.fxweaver.core.FxmlView;
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ClienteController {
-
-	@Autowired
-	private ClienteService cs;
 	
 	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
 	@FXML
@@ -44,9 +41,6 @@ public class ClienteController {
 	@FXML
 	private TableColumn<Cliente, String> nomeColumn;
 	
-	@Autowired
-	private DuplicataService ds;
-
 	private ObservableList<Duplicata> duplicataData = FXCollections.observableArrayList();
 	@FXML
 	private TableView<Duplicata> duplicataTable;
@@ -82,13 +76,20 @@ public class ClienteController {
 	
 	private Cliente clienteAux;
 	
+	private DadosBancarios dadosBancarios;
+	
+	@FXML
+	private Label bancoLabel;
+	@FXML
+	private Label agenciaLabel;
+	@FXML
+	private Label tipoContaLabel;
+	@FXML
+	private Label numeroContaLabel;
+	@FXML
+	private Label titularLabel;
+	
 	private ObservableList<Duplicata> duplicataAux = FXCollections.observableArrayList();
-	
-	@Autowired
-	ContratoService contratoService;
-	
-	@Autowired
-	ImovelService is;
 	
 	@FXML
 	private Label logradouroLabel;
@@ -136,6 +137,15 @@ public class ClienteController {
 		
 		imovel = imServ.findByContrato(clienteAux.getContrato());
 			return imovel;
+			}
+	
+	public DadosBancarios getDadosBancariosData() {
+		ApplicationContext context = SpringContext.getAppContext();
+    	DadosBancariosRepository dbRepo = (DadosBancariosRepository)context.getBean("dadosBancariosRepository");
+		
+		
+		dadosBancarios = dbRepo.findByCliente(clienteAux);
+			return dadosBancarios;
 			} 
 	
 	@FXML
@@ -163,6 +173,13 @@ public class ClienteController {
 			clienteAux = cliente;
 			duplicataAux.clear();
 			imovel = getImovelData();
+			dadosBancarios = getDadosBancariosData();
+			bancoLabel.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
+			
+			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
+			agenciaLabel.setText(dadosBancarios.getAgencia());
+			numeroContaLabel.setText(dadosBancarios.getConta());
+			titularLabel.setText(dadosBancarios.getTitular());
 			clienteTable.refresh();
 			for (Duplicata duplicata : duplicataData) {		
 				if (duplicata.getContrato().getId() == contratoAtual) {
@@ -205,6 +222,11 @@ public class ClienteController {
 			emailLabel.setText("");
 			estadoCivilLabel.setText("");
 			profissaoLabel.setText("");
+			bancoLabel.setText("");
+			tipoContaLabel.setText("");
+			agenciaLabel.setText("");
+			numeroContaLabel.setText("");
+			titularLabel.setText("");
 		}
 	
 	}

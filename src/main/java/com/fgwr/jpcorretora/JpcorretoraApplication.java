@@ -18,6 +18,7 @@ import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
+import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.EstadoImovel;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
@@ -82,7 +83,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		/*
+		
 		Calendar cal = Calendar.getInstance();
 		
 		cal.set(1994, 7, 1);
@@ -103,10 +104,14 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		ref1.getCliente().addAll(Arrays.asList(cli1));
 		ref2.getCliente().addAll(Arrays.asList(cli1, cli2));
 
-		DadosBancarios db1 = new DadosBancarios(null, "Caixa Econômica Federal", "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA");
+		DadosBancarios db1 = new DadosBancarios(null, Banco.CAIXAECONOMICAFEDERAL, "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA");
+		DadosBancarios db2 = new DadosBancarios(null, Banco.BANCOINTERSA, "000001", "12345678", TipoConta.POUPANCAPF, "FABIO PIOVESAN");
 		
 		db1.setCliente(cli1);
+		db2.setCliente(cli2);
 
+		cli1.setDadosBancarios(db1);
+		cli2.setDadosBancarios(db2);
 		Endereco e1 = new Endereco(null, "Av Erivaldo Venceslau da Silva", "2356", null, "Bodanese", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
 		Endereco e2 = new Endereco(null, "Rua 8215", "2773", null, "Barão 3", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
 		

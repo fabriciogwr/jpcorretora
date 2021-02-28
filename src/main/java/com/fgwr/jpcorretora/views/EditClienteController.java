@@ -2,7 +2,9 @@ package com.fgwr.jpcorretora.views;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
+import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 
 import javafx.collections.FXCollections;
@@ -19,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -40,21 +45,58 @@ public class EditClienteController {
     @FXML
     private TextField rgField;
     @FXML
-    private ChoiceBox<EstadoCivil> estadoCivilBox;
+    private ChoiceBox<String> estadoCivilBox;
     @FXML
     private TextField profissaoField;
+    @FXML
+    private TextField agenciaField;
+    @FXML
+    private TextField contaField;
+    @FXML
+    private TextField titularField;
+    @FXML
+    private ComboBox<String> bancoBox;
+    @FXML
+    private ComboBox<String> tipoContaBox;
+
+    private List<String> estadoCivilAux = new ArrayList<>();
+    
+    private List<String> bancoAux = new ArrayList<>();
+    
+    private List<String> tipoContaAux = new ArrayList<>();
 
     private Stage dialogStage;
     private Cliente cliente;
     private boolean okClicked = false;
+    
+    private EstadoCivil[] estadoCivil = EstadoCivil.values();
+    private Banco[] banco = Banco.values();
+    private TipoConta[] tipoConta = TipoConta.values();
     
     
 	
     @FXML
     private void initialize() {
     	
-    	estadoCivilBox.setItems(FXCollections.observableArrayList(EstadoCivil.values()));
+    	for (EstadoCivil estadoCivil : estadoCivil) {
+			estadoCivilAux.add(estadoCivil.getDescricao());
+		}
     	
+    	for (Banco banco : banco) {
+    		bancoAux.add(banco.getFullCod() + " - " + banco.getDescricao());	
+    	}
+    	
+    	for (TipoConta tipoConta : tipoConta) {
+    		tipoContaAux.add(tipoConta.getDesc());
+    		
+    	}
+    	
+    	estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
+    	bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
+    	tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
+    	
+    	
+    	    	
     }
     
     public void setDialogStage(Stage dialogStage) {
@@ -69,8 +111,14 @@ public class EditClienteController {
         dataNascimentoField.setValue(Instant.ofEpochMilli(cliente.getDataNascimento().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
         cpfField.setText(cliente.getCpfOuCnpj());
         rgField.setText(cliente.getRg());
-        estadoCivilBox.setValue(cliente.getEstadoCivil());
+        estadoCivilBox.setValue(cliente.getEstadoCivil().getDescricao());
         profissaoField.setText(cliente.getProfissao());
+        agenciaField.setText(cliente.getDadosBancarios().getAgencia());
+        titularField.setText(cliente.getDadosBancarios().getTitular());
+        contaField.setText(cliente.getDadosBancarios().getConta());
+		
+        bancoBox.setValue(cliente.getDadosBancarios().getBanco().getFullCod() + " - " + cliente.getDadosBancarios().getBanco().getDescricao());
+        tipoContaBox.setValue(cliente.getDadosBancarios().getTipo().getDesc());
        
     }
 
@@ -90,8 +138,12 @@ public class EditClienteController {
             cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             cliente.setCpfOuCnpj(cpfField.getText());
             cliente.setRg(rgField.getText());
-            cliente.setEstadoCivil(estadoCivilBox.getValue());
-            
+            cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
+            cliente.getDadosBancarios().setAgencia(agenciaField.getText());
+            cliente.getDadosBancarios().setConta(contaField.getText());
+            cliente.getDadosBancarios().setTitular(titularField.getText());
+            cliente.getDadosBancarios().setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+            cliente.getDadosBancarios().setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
             repo.save(cliente);
             okClicked = true;
             dialogStage.close();

@@ -37,4 +37,13 @@ public enum TipoConta {
 		throw new IllegalArgumentException("Id inválido: " + cod);
 		
 	}
+    
+    public static TipoConta valueOfDescricao(String desc) {
+	    for (TipoConta tipoConta: values()) {
+	        if (tipoConta.desc.equals(desc)) {
+	            return tipoConta;
+	        }
+	    }
+	    return null;
+	}
 }
