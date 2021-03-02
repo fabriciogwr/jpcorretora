@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,8 +30,7 @@ public class Contrato implements Serializable {
     @OneToOne
     private Cliente cliente;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="imovel_id")
+    @OneToOne(cascade = CascadeType.ALL)
     private Imovel imovel;
 
     private int qtdParcelas;
@@ -97,6 +97,14 @@ public class Contrato implements Serializable {
 
 	public void setValorDeCadaParcela(Double valorDeCadaParcela) {
 		this.valorDeCadaParcela = valorDeCadaParcela;
+	}
+
+	public List<Duplicata> getDuplicatas() {
+		return duplicatas;
+	}
+
+	public void setDuplicatas(List<Duplicata> duplicatas) {
+		this.duplicatas = duplicatas;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,12 +37,14 @@ public class Duplicata implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;
 	
+	@Temporal(TemporalType.DATE)
+	private Date dataPagamento;
+	
 	private Double valor;
 	
 	private Integer estado;
 	
-	@OneToOne(mappedBy="duplicata")
-	@JoinColumn(name="recibo_id")
+	@OneToOne(cascade = CascadeType.ALL)
 	private Recibo recibo;
 	
 
@@ -50,13 +53,14 @@ public class Duplicata implements Serializable {
 	}
 
 
-	public Duplicata(Integer id, Integer parcela, Date dataVencimento, Double valor, EstadoPagamento estado) {
+	public Duplicata(Integer id, Integer parcela, Date dataVencimento, Double valor, EstadoPagamento estado, Date dataPagamento) {
 		super();
 		this.id = id;
 		this.parcela = parcela;
 		this.dataVencimento = dataVencimento;
 		this.valor = valor;
 		this.estado = estado.getCod();
+		this.dataPagamento = dataPagamento;
 	}
 
 
@@ -100,6 +104,16 @@ public class Duplicata implements Serializable {
 	}
 
 
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+
+
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
+
+
 	public Double getValor() {
 		return valor;
 	}
@@ -117,6 +131,16 @@ public class Duplicata implements Serializable {
 
 	public void setEstado(EstadoPagamento estado) {
 		this.estado = estado.getCod();
+	}
+
+
+	public Recibo getRecibo() {
+		return recibo;
+	}
+
+
+	public void setRecibo(Recibo recibo) {
+		this.recibo = recibo;
 	}
 
 
@@ -174,8 +198,14 @@ public class Duplicata implements Serializable {
 	
 	public StringProperty dataPgto() {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		StringProperty dataPgto = new SimpleStringProperty(df.format(recibo.getDataPagamento()));
-		return dataPgto;
+		StringProperty dataPgto = null;
+		if (getDataPagamento() != null ) {
+		dataPgto = new SimpleStringProperty(df.format(getDataPagamento())); 
+		
+	} else {
+		dataPgto = new SimpleStringProperty("");
 	}
 		
+		return dataPgto;
+	}
 }

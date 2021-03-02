@@ -83,7 +83,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		
+		/*
 		Calendar cal = Calendar.getInstance();
 		
 		cal.set(1994, 7, 1);
@@ -91,19 +91,17 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		cal.set(1980, 1, 21);
 		Cliente cli2 = new Cliente(null, "Fábio", cal.getTime(), "fabio@gmail.com", "01234567891", "12345678", "cliente ok", TipoCliente.PESSOAJURIDICA, EstadoCivil.CASADO, "Corretor de Imóveis");
 
-		Referencia ref1 = new Referencia(null, "Fábia");
-		Referencia ref2 = new Referencia(null, "Mell");
+		Referencia ref1 = new Referencia(null, "Fábia", "84014444");
+		Referencia ref2 = new Referencia(null, "Mell", "12345678");
 
 		cli1.getTelefones().addAll(Arrays.asList("993557900", "34225987"));
 		cli2.getTelefones().addAll(Arrays.asList("84023706"));
 
-		cli1.getReferencia().addAll(Arrays.asList(ref1, ref2));
+		cli1.getReferencia().addAll(Arrays.asList(ref1));
 		cli2.getReferencia().addAll(Arrays.asList(ref2));
 
-		ref1.getTelefones().addAll(Arrays.asList("123456789", "465498987"));
-
-		ref1.getCliente().addAll(Arrays.asList(cli1));
-		ref2.getCliente().addAll(Arrays.asList(cli1, cli2));
+		ref1.setCliente(cli1);
+		ref2.setCliente(cli2);
 
 		DadosBancarios db1 = new DadosBancarios(null, Banco.CAIXAECONOMICAFEDERAL, "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA");
 		DadosBancarios db2 = new DadosBancarios(null, Banco.BANCOINTERSA, "000001", "12345678", TipoConta.POUPANCAPF, "FABIO PIOVESAN");
@@ -118,9 +116,6 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		
 		Imovel i1 = new Imovel(null, "José Bonifácil", cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabio");
 		Imovel i2 = new Imovel(null, "Molares", cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabricio");
-		
-		i1.setCliente(cli1);
-		i2.setCliente(cli2);
 		
 		
 		Contrato ctr1 = new Contrato(null, cal.getTime(), 6, 650.00);
@@ -143,10 +138,14 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		
 		
 
-		List<Duplicata> vs1 = ds.preencherDuplicata(ctr1);
+		List<Duplicata> vs1 = ds.preencherDuplicata(ctr1, 10);
 		List<Duplicata> vs2 = ds.preencherDuplicata(ctr2);
 
-		Recibo rec1 = new Recibo(null, cli1, ctr1.getValorDeCadaParcela(), ctr1.getQtdParcelas(), vs1.get(0).getDataVencimento(), cal.getTime(), vs1.get(0));
+		Recibo rec1 = new Recibo(null, cli1, ctr1.getValorDeCadaParcela(), ctr1.getQtdParcelas(), vs1.get(0).getDataVencimento(), cal.getTime());
+		
+		rec1.setDuplicata(vs1.get(0));
+		
+		vs1.get(0).setRecibo(rec1);
 
 
 
@@ -163,6 +162,8 @@ public class JpcorretoraApplication implements CommandLineRunner {
 
 		Duplicata dup = vs1.get(0);
 		dup.setEstado(EstadoPagamento.QUITADO);
+		
+		dup.setDataPagamento(Calendar.getInstance().getTime());
 
 		duplicataRepository.save(dup);
 

@@ -31,13 +31,8 @@ public class Imovel implements Serializable {
     private Date dataAngariacao;
     
     private String proprietario;
-
-    @OneToOne
-    @JoinColumn(name="cliente_id")
-    private Cliente cliente;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="contrato_id")
     private Contrato contrato;
     
     @OneToOne(cascade = CascadeType.ALL)
@@ -161,14 +156,6 @@ public class Imovel implements Serializable {
     public void setDataAngariacao(Date dataAngariacao) {
         this.dataAngariacao = dataAngariacao;
     }
-
-    public Integer getCliente() {
-		return cliente.getId();
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
 
 	public Contrato getContrato() {
 		return contrato;

@@ -35,14 +35,13 @@ public class Recibo implements Serializable {
     private Date dataPagamento;
     
     @OneToOne
-    @JoinColumn(name="duplicata_id")
     private Duplicata duplicata;
 
     public Recibo() {
     	
     }
 
-	public Recibo(Integer id, Cliente cliente, double valor, int qtdParcelas, Date dataVencimento, Date dataPagamento, Duplicata duplicata) {
+	public Recibo(Integer id, Cliente cliente, double valor, int qtdParcelas, Date dataVencimento, Date dataPagamento) {
 		super();
 		this.id = id;
 		this.cliente = cliente;
@@ -50,7 +49,6 @@ public class Recibo implements Serializable {
 		this.qtdParcelas = qtdParcelas;
 		this.dataVencimento = dataVencimento;
 		this.dataPagamento = dataPagamento;
-		this.duplicata = duplicata;
 	}
 
 	public Cliente getCliente() {

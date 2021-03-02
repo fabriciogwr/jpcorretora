@@ -6,22 +6,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
-import com.fgwr.jpcorretora.repositories.ClienteRepository;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,9 +31,9 @@ import net.rgielen.fxweaver.core.FxmlView;
 @Component
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class EditClienteController {
-	
-    @FXML
+public class NovoClienteController {
+
+	@FXML
     private TextField nomeField;
     @FXML
     private TextField emailField;
@@ -65,8 +61,8 @@ public class EditClienteController {
     private ComboBox<String> bancoBox;
     @FXML
     private ComboBox<String> tipoContaBox;
-
-    private List<String> estadoCivilAux = new ArrayList<>();
+    
+private List<String> estadoCivilAux = new ArrayList<>();
     
     private List<String> bancoAux = new ArrayList<>();
     
@@ -74,14 +70,14 @@ public class EditClienteController {
 
     private Stage dialogStage;
     private Cliente cliente;
+    private DadosBancarios db;
     private boolean okClicked = false;
     
     private EstadoCivil[] estadoCivil = EstadoCivil.values();
     private Banco[] banco = Banco.values();
     private TipoConta[] tipoConta = TipoConta.values();
     
-    
-	
+
     @FXML
     private void initialize() {
     	
@@ -109,88 +105,16 @@ public class EditClienteController {
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-
-        ObservableList<String> telefoneData = FXCollections.observableArrayList();
-        nomeField.setText(cliente.getNome());
-        emailField.setText(cliente.getEmail());
-        
-        Set<String> telefones = cliente.getTelefones();
-		for (String string : telefones) {
-			telefoneData.add(string);
-		}
-		telefonePrefField.setText(telefoneData.get(0));
-		if (telefoneData.size() == 2 ) {
-			telefoneAltField.setText(telefoneData.get(1)); } else { telefoneAltField.setText("");
-    }
-        
-        
-        if (cliente.getDataNascimento() != null) {
-        dataNascimentoField.setValue(Instant.ofEpochMilli(cliente.getDataNascimento().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
-        } else {
-        	dataNascimentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-        
-        cpfField.setText(cliente.getCpfOuCnpj());
-        rgField.setText(cliente.getRg());
-        if (cliente.getEstadoCivil() != null ) {
-        estadoCivilBox.setValue(cliente.getEstadoCivil().getDescricao());
-        } else {
-        	estadoCivilBox.setValue(null);
-        }
-        profissaoField.setText(cliente.getProfissao());
-        agenciaField.setText(cliente.getDadosBancarios().getAgencia());
-        titularField.setText(cliente.getDadosBancarios().getTitular());
-        contaField.setText(cliente.getDadosBancarios().getConta());
-		
-        if (cliente.getDadosBancarios() != null) {
-        bancoBox.setValue(cliente.getDadosBancarios().getBanco().getFullCod() + " - " + cliente.getDadosBancarios().getBanco().getDescricao());
-        tipoContaBox.setValue(cliente.getDadosBancarios().getTipo().getDesc());
-        } else {
-        	bancoBox.setValue(null);
-        	tipoContaBox.setValue(null);
-        }
-       
-    }
-
+    
     public boolean isOkClicked() {
         return okClicked;
     }
-
-    
-    @FXML
-    private void handleOk() {
-        if (isInputValid()) {
-        	ApplicationContext context = SpringContext.getAppContext();
-        	ClienteRepository repo = (ClienteRepository)context.getBean("clienteRepository");
-        	cliente.setNome(nomeField.getText());
-            cliente.setEmail(emailField.getText());            
-            cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
-            cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            cliente.setCpfOuCnpj(cpfField.getText());
-            cliente.setRg(rgField.getText());
-            cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
-            cliente.setProfissao(profissaoField.getText());
-            cliente.getDadosBancarios().setAgencia(agenciaField.getText());
-            cliente.getDadosBancarios().setConta(contaField.getText());
-            cliente.getDadosBancarios().setTitular(titularField.getText());
-            cliente.getDadosBancarios().setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
-            cliente.getDadosBancarios().setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
-            repo.save(cliente);
-            
-            okClicked = true;
-            dialogStage.close();
-        }
-    }
-
     
     @FXML
     private void handleCancel() {
         dialogStage.close();
     }
-
+    
     private boolean isInputValid() {
         String errorMessage = "";
 
@@ -229,4 +153,64 @@ public class EditClienteController {
             return false;
         }
     }
+
+	public void setCliente(Cliente cliente, DadosBancarios db) {
+		this.cliente = cliente;
+		this.db = db;
+
+        nomeField.setText("");
+        emailField.setText("");
+        dataNascimentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+        telefonePrefField.setText("");
+        telefoneAltField.setText("");
+        cpfField.setText("");
+        rgField.setText("");
+        
+        estadoCivilBox.setValue(null);
+        
+        profissaoField.setText("");
+        
+        agenciaField.setText("");
+        titularField.setText("");
+        contaField.setText("");
+		
+        
+        bancoBox.setValue(null);
+        tipoContaBox.setValue(null);
+        
+		
+	}
+	
+	 @FXML
+	    private void handleOk() {
+	        if (isInputValid()) {
+	        	
+	        	
+	            cliente.setNome(nomeField.getText());
+	            cliente.setEmail(emailField.getText());
+	            
+	            if (telefoneAltField.getText() != "") {
+	            	cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
+	            } else {
+	            	cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText()));
+	            }
+	            cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	            cliente.setCpfOuCnpj(cpfField.getText());
+	            cliente.setRg(rgField.getText());
+	            cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
+	            cliente.setProfissao(profissaoField.getText());
+	            
+	            db.setAgencia(agenciaField.getText());
+	            db.setConta(contaField.getText());
+	            db.setTitular(titularField.getText());
+	            db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+	            db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+	            cliente.setDadosBancarios(db);
+	            db.setCliente(cliente);
+	            
+	            okClicked = true;
+	            dialogStage.close();
+	        }
+	    }
+    
 }

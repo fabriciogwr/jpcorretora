@@ -129,12 +129,5 @@ public class ImovelService {
 
 	
 
-	public Imovel findByCliente(String nome) {
-
-		Imovel imovel = repo.findByCliente(nome);
-		if (imovel == null) {
-			throw new ObjectNotFoundException("Imovels não encontradas!");
-		}
-		return imovel;
-	}
+	
 }

@@ -2,19 +2,13 @@ package com.fgwr.jpcorretora.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Referencia implements Serializable {
@@ -27,22 +21,20 @@ public class Referencia implements Serializable {
     
     private String nome;
     
-    @ManyToMany
-    @JoinTable(name="CLIENTE_REFERENCIA", joinColumns = @JoinColumn(name="referencia_id"), inverseJoinColumns = @JoinColumn(name="cliente_id"))
-    private List<Cliente> cliente = new ArrayList<>() ;
+    @ManyToOne
+    private Cliente cliente;
 
-    @ElementCollection
-    @CollectionTable(name = "TELEFONE_REF")
-    private Set<String> telefones = new HashSet<>();
+    private String telefone;
 
 
     public Referencia() {
     	
     }
     
-    public Referencia(Integer id, String nome) {
+    public Referencia(Integer id, String nome, String telefone) {
         this.id = id;
         this.nome = nome;
+        this.telefone = telefone;
     }
 
     public Integer getId() {
@@ -61,20 +53,20 @@ public class Referencia implements Serializable {
         this.nome = nome;
     }
 
-    public Set<String> getTelefones() {
-        return telefones;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setTelefones(Set<String> telefones) {
-        this.telefones = telefones;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
-    public List <Cliente> getCliente() {
+    public Cliente getCliente() {
 		return cliente;
 	}
 
 
-	public void setCliente(List <Cliente> cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 

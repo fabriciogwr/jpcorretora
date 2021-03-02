@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
+import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 
 import javafx.event.ActionEvent;
@@ -67,6 +69,21 @@ public class RootController {
         	DadosBancariosRepository repoDb = (DadosBancariosRepository)context.getBean("dadosBancariosRepository");
 	        repoCli.save(tempCliente);
 	        repoDb.save(db);
+	        
+	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
+	        rootLayout.setCenter(showCadastroClientes);
+	    }
+	}
+	
+	@FXML
+	private void handleNovoContrato(ActionEvent event)  throws IOException {
+	    Contrato contrato = new Contrato();
+	    
+	    boolean okClicked = frontApp.showNovoContrato(contrato);
+	    if (okClicked) {
+	    	ApplicationContext context = SpringContext.getAppContext();
+        	ContratoRepository contRepo = (ContratoRepository)context.getBean("contratoRepository");
+	        contRepo.save(contrato);
 	        
 	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
 	        rootLayout.setCenter(showCadastroClientes);

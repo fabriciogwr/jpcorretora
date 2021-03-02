@@ -8,8 +8,6 @@ import com.fgwr.jpcorretora.domain.Imovel;
 
 @Repository
 public interface ImovelRepository extends JpaRepository <Imovel, Integer>{
-
-	Imovel findByCliente(String nome);
 	
 	Imovel findByContrato(Contrato contrato);
 

@@ -1,5 +1,7 @@
 package com.fgwr.jpcorretora.services;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +43,42 @@ public class DuplicataService {
 			duplicata.setParcela(i);
 			vencimentos.add(duplicata);
 		}
+		return vencimentos;
+	}
+	
+	public List<Duplicata> preencherDuplicata(Contrato contrato, Integer primeiraParcela) {
+
+		List<Duplicata> vencimentos = new ArrayList<>();
+		int qtdParcelas = contrato.getQtdParcelas();
+
+		Calendar cal = Calendar.getInstance();
+		
+		Date now = new Date();
+
+		for (int i = 1; i <= qtdParcelas ; i++) {			
+			Duplicata duplicata = new Duplicata();
+			cal.setTime(now);
+			cal.add(Calendar.MONTH, i-1);
+			duplicata.setId(null);
+			cal.set(Calendar.DAY_OF_MONTH, primeiraParcela);
+			duplicata.setDataVencimento(cal.getTime());
+			duplicata.setEstado(EstadoPagamento.PENDENTE);
+			duplicata.setContrato(contrato);
+			 if (i==1) {
+				cal.setTime(now);
+				Double valorPorDia = contrato.getValorDeCadaParcela()/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				DecimalFormatSymbols separador = new DecimalFormatSymbols();
+				separador.setDecimalSeparator('.');				
+				DecimalFormat df = new DecimalFormat("0.00", separador);
+				String valorPorDiaString = df.format(valorPorDia);
+				Double diferençaDeVencimento = Double.parseDouble(valorPorDiaString) * (primeiraParcela - cal.get(Calendar.DAY_OF_MONTH));
+				duplicata.setValor(contrato.getValorDeCadaParcela() + diferençaDeVencimento);
+			} else {
+			duplicata.setValor(contrato.getValorDeCadaParcela()); }
+			duplicata.setParcela(i);
+			vencimentos.add(duplicata);
+		}
+
 		return vencimentos;
 	}
 	

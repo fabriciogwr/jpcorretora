@@ -16,11 +16,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoCliente;
@@ -54,15 +56,13 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @NotFound(action = NotFoundAction.IGNORE)
     private List<Referencia> referencia = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "TELEFONE_CLI")
     private Set<String> telefones = new HashSet<>();
-    
-    @OneToMany(mappedBy ="cliente", cascade = CascadeType.ALL)
-    private List<Imovel> imoveis = new ArrayList<>();
     
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     private DadosBancarios dadosBancarios;

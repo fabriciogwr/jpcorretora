@@ -20,7 +20,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleNovoCliente" text="Cliente" />
                   <MenuItem mnemonicParsing="false" text="Imóvel" />
-                  <MenuItem mnemonicParsing="false" text="Contrato" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleNovoContrato" text="Contrato" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

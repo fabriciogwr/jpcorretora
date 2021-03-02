@@ -10,14 +10,19 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.views.ClienteController;
 import com.fgwr.jpcorretora.views.EditClienteController;
+import com.fgwr.jpcorretora.views.EditObsController;
+import com.fgwr.jpcorretora.views.EditRefController;
 import com.fgwr.jpcorretora.views.ImovelController;
 import com.fgwr.jpcorretora.views.NovoClienteController;
+import com.fgwr.jpcorretora.views.NovoContratoController;
 import com.fgwr.jpcorretora.views.RootController;
 
 import javafx.application.Application;
@@ -146,7 +151,7 @@ public class FrontApp extends Application {
 	        AnchorPane page = (AnchorPane) loader.load();
 
 	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Edita Cliente");
+	        dialogStage.setTitle("Editar Cliente");
 	        dialogStage.initModality(Modality.NONE);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -181,6 +186,84 @@ public class FrontApp extends Application {
 	        NovoClienteController controller = loader.getController();
 	        controller.setDialogStage(dialogStage);
 	        controller.setCliente(cliente, db);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showNovoContrato(Contrato contrato) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoContrato.fxml"));
+	        loader.setController(new NovoContratoController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Novo Contrato");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        NovoContratoController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setContrato(contrato);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showEditObs(Cliente cliente) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditObs.fxml"));
+	        loader.setController(new EditObsController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Editar Observação");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        EditObsController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setCliente(cliente);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showEditRef(Cliente cliente, Referencia selectedReferencia) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditRef.fxml"));
+	        loader.setController(new EditRefController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Editar Referência");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        EditRefController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setClienteReferencia(cliente, selectedReferencia);
 
 	        dialogStage.showAndWait();
 
