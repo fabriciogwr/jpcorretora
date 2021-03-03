@@ -5,9 +5,11 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.weld.util.collections.Sets;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -123,7 +125,7 @@ public class EditClienteController {
 		}
 		telefonePrefField.setText(telefoneData.get(0));
 		if (telefoneData.size() == 2 ) {
-			telefoneAltField.setText(telefoneData.get(1)); } else { telefoneAltField.setText("");
+			telefoneAltField.setText(telefoneData.get(0)); telefonePrefField.setText(telefoneData.get(1)); } else { telefoneAltField.setText("");
     }
         
         
@@ -166,8 +168,16 @@ public class EditClienteController {
         	ApplicationContext context = SpringContext.getAppContext();
         	ClienteRepository repo = (ClienteRepository)context.getBean("clienteRepository");
         	cliente.setNome(nomeField.getText());
-            cliente.setEmail(emailField.getText());            
-            cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
+            cliente.setEmail(emailField.getText());
+            
+            if (telefoneAltField.getText() != "" ) {
+            	Set<String> telefones = Sets.newHashSet(telefoneAltField.getText());
+            	telefones.add(telefonePrefField.getText());
+            	cliente.setTelefones(telefones);
+            } else {
+            	Set<String> telefones = Sets.newHashSet(telefonePrefField.getText());
+            	cliente.setTelefones(telefones);
+            }
             cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             cliente.setCpfOuCnpj(cpfField.getText());
             cliente.setRg(rgField.getText());

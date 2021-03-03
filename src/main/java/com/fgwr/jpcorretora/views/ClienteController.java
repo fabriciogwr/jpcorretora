@@ -208,7 +208,7 @@ public class ClienteController {
 			}
 			telefonePrefLabel.setText(telefoneData.get(0));
 			if (telefoneData.size() == 2 ) {
-			telefoneAltLabel.setText(telefoneData.get(1)); } else telefoneAltLabel.setText("");
+			telefoneAltLabel.setText(telefoneData.get(0)); telefonePrefLabel.setText(telefoneData.get(1)); } else telefoneAltLabel.setText("");
 			telefoneData.clear();
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
