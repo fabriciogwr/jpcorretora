@@ -16,6 +16,7 @@ import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.enums.Banco;
@@ -83,7 +84,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		/*
+		
 		Calendar cal = Calendar.getInstance();
 		
 		cal.set(1994, 7, 1);
@@ -114,8 +115,20 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		Endereco e1 = new Endereco(null, "Av Erivaldo Venceslau da Silva", "2356", null, "Bodanese", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
 		Endereco e2 = new Endereco(null, "Rua 8215", "2773", null, "Barão 3", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
 		
-		Imovel i1 = new Imovel(null, "José Bonifácil", cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabio");
-		Imovel i2 = new Imovel(null, "Molares", cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabricio");
+		cal.set(2000, 8, 1);
+		Proprietario p1 = new Proprietario(null, "Jefferson", cal.getTime(), "jefferson@hotmail.com", "12345678910", "123456789", "OK", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Dev");
+		cal.set(1994, 8, 1);
+		Proprietario p2 = new Proprietario(null, "Qualquer", cal.getTime(), "jefferson@hotmail.com", "12345678910", "123456789", "OK", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Dev");
+		
+		
+		Imovel i1 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabio");
+		Imovel i2 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabricio");
+		
+		p1.getImovel().addAll(Arrays.asList(i1));
+		p2.getImovel().addAll(Arrays.asList(i2));
+		
+		i1.setProprietario(p1);
+		i2.setProprietario(p2);
 		
 		
 		Contrato ctr1 = new Contrato(null, cal.getTime(), 6, 650.00);

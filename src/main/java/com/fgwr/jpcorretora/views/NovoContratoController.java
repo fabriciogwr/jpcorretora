@@ -1,6 +1,13 @@
 package com.fgwr.jpcorretora.views;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +35,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
@@ -39,6 +49,7 @@ public class NovoContratoController {
 
 	private Stage dialogStage;
 	private boolean okClicked = false;
+	Double primeiraParcela;
 	 
 	ObservableList<Imovel> imoveis;
 	ObservableList<Cliente> clientes;
@@ -77,13 +88,40 @@ public class NovoContratoController {
 	}
 	
 	public void initialize () {
+		
+		
 	
 	imoveis = FXCollections.observableArrayList(getImovelData());
 	
 	for (Imovel imovel : imoveis) {
-		imovelAux.add(imovel.getProprietario());
+		imovelAux.add(imovel.getProprietario().getNome());
 	}
 	imovelBox.setItems(FXCollections.observableArrayList(getImovelData()));
+	
+	Callback<ListView<Imovel>, ListCell<Imovel>> imovelCellFactory = new Callback<ListView<Imovel>, ListCell<Imovel>>() {
+
+	    @Override
+	    public ListCell<Imovel> call(ListView<Imovel> l) {
+	        return new ListCell<Imovel>() {
+
+	            @Override
+	            protected void updateItem(Imovel imovel, boolean empty) {
+	                super.updateItem(imovel, empty);
+	                if (imovel == null || empty) {
+	                    setGraphic(null);
+	                } else {
+	                    setText(imovel.getProprietario().getNome());
+	                }
+	            }
+	        }; 
+	    }
+	
+
+
+	};
+
+	imovelBox.setButtonCell(imovelCellFactory.call(null));
+	imovelBox.setCellFactory(imovelCellFactory);
 	
 	clientes = FXCollections.observableArrayList(getClienteData());
 	
@@ -92,7 +130,81 @@ public class NovoContratoController {
 	}
 	clienteBox.setItems(FXCollections.observableArrayList(getClienteData()));
 	
+	Callback<ListView<Cliente>, ListCell<Cliente>> clienteCellFactory = new Callback<ListView<Cliente>, ListCell<Cliente>>() {
+
+	    @Override
+	    public ListCell<Cliente> call(ListView<Cliente> l) {
+	        return new ListCell<Cliente>() {
+
+	            @Override
+	            protected void updateItem(Cliente cliente, boolean empty) {
+	                super.updateItem(cliente, empty);
+	                if (cliente == null || empty) {
+	                    setGraphic(null);
+	                } else {
+	                    setText(cliente.getNome());
+	                }
+	            }
+	        }; 
+	    }
+	
+
+
+	};
+
+	clienteBox.setButtonCell(clienteCellFactory.call(null));
+	clienteBox.setCellFactory(clienteCellFactory);
+	
+Calendar cal = Calendar.getInstance();
+	
+	Date now = new Date();
+	
+	
+	vencimentosField.textProperty().addListener((observable, oldValue, newValue) -> {
+		cal.setTime(now);
+		if (valorField.getText() != "" && vencimentosField.getText() != "" && Integer.parseInt(vencimentosField.getText()) > cal.get(Calendar.DAY_OF_MONTH)) {
+		Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		DecimalFormatSymbols separador = new DecimalFormatSymbols();
+		separador.setDecimalSeparator('.');				
+		DecimalFormat df = new DecimalFormat("0.00", separador);
+		String valorPorDiaString = df.format(valorPorDia);
+		Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * (Integer.parseInt(vencimentosField.getText()) - cal.get(Calendar.DAY_OF_MONTH));
+		primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
+	    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
+		} else if (valorField.getText() != "" && vencimentosField.getText() != "" && Integer.parseInt(vencimentosField.getText()) <= cal.get(Calendar.DAY_OF_MONTH)){
+			Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+			DecimalFormatSymbols separador = new DecimalFormatSymbols();
+			separador.setDecimalSeparator('.');				
+			DecimalFormat df = new DecimalFormat("0.00", separador);
+			String valorPorDiaString = df.format(valorPorDia);
+			
+			LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			
+			cal.add(Calendar.MONTH, 1);
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.parseInt(vencimentosField.getText()));
+			LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			
+			Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+			System.out.println(Math.toIntExact(ChronoUnit.DAYS.between(date, date2)));
+			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
+		    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
+			
+		} else {
+			primeiraParcelaField.setText("");
+		}
+	});
+	
+	
+	
+	
+	
+	
 }
+	
+	@FXML
+	public void corrigirPrimeiraParcela () {
+		
+	}
 	public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
@@ -108,30 +220,27 @@ public class NovoContratoController {
     
     private boolean isInputValid() {
         String errorMessage = "";
-/*
-        if (nomeField.getText() == null || nomeField.getText().length() == 0) {
-            errorMessage += "Nome inválido\n"; 
+
+        if (clienteBox.getValue() == null) {
+            errorMessage += "Selecione um cliente\n"; 
         }
-        if (emailField.getText() == null || emailField.getText().length() == 0) {
-            errorMessage += "Email inválido\n"; 
+        if (imovelBox.getValue() == null) {
+            errorMessage += "Selecione um Imovel\n"; 
         }
-        if (cpfField.getText() == null || cpfField.getText().length() == 0) {
-            errorMessage += "CPF inválido\n"; 
+        if (tempoLocacaoField.getText() == "") {
+            errorMessage += "Informe um tempo de locação\n"; 
         }
 
-        if (rgField.getText() == null || rgField.getText().length() == 0) {
-            errorMessage += "RG inválido\n"; 
+        if (valorField.getText() == "") {
+            errorMessage += "Informe o valor da mensalidade\n"; 
         }
 
-        if (estadoCivilBox.getValue() == null) {
-            errorMessage += "Selecione um Estado Civil\n"; 
+        if (vencimentosField.getText().length() >= 3) {
+            errorMessage += "Data de vencimentos inválida\n"; 
         }
 
-        if (dataNascimentoField.getValue() == null) {
-            errorMessage += "Data de Nascimento inválida\n";
         
-        }
-*/
+
         if (errorMessage.length() == 0) {
             return true;
         } else {
@@ -151,6 +260,7 @@ public class NovoContratoController {
     }
     
     @FXML
+    @Transactional
     private void handleOk() {
         if (isInputValid()) {
         	
@@ -173,17 +283,25 @@ public class NovoContratoController {
         	for (Duplicata duplicata : dups) {
     			duplicata.setContrato(contrato);
     		}
-        /*	Cliente cliente = clienteBox.getValue();
-        	cliente.setContrato(contrato);
+        	
+
+        	Cliente cliente = clienteBox.getValue();
+        	
         	Imovel imovel = imovelBox.getValue();
-        	imovel.setContrato(contrato);
-        	contrato.setDuplicatas(dups);
+        	cliente.setContrato(contrato);
         	cliRepo.save(cliente);
+        	System.out.println(imovel);
+        	imovel.setContrato(contrato);
+        	contrato.setImovel(imovel);
         	imRepo.save(imovel);
-        	contRepo.save(contrato);        	
+        	contRepo.save(contrato);
+        	contrato.setDuplicatas(dups);
+        	contRepo.save(contrato);
+        	
+        	    	
         	dupRepo.saveAll(dups);
         	
-        	*/
+        	
         	
         }
     }

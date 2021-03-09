@@ -14,9 +14,15 @@ import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Endereco;
+import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
+import com.fgwr.jpcorretora.repositories.EnderecoRepository;
+import com.fgwr.jpcorretora.repositories.ImovelRepository;
+import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -90,6 +96,40 @@ public class RootController {
 	    }
 	}
 	
+	@FXML
+	private void handleNovoImovel(ActionEvent event)  throws IOException {
+	    Imovel imovel = new Imovel();
+	    Endereco endereco = new Endereco();
+	    Proprietario proprietario = new Proprietario();
+	    DadosBancarios db = new DadosBancarios();
+	    ApplicationContext context = SpringContext.getAppContext();
+	    
+	    boolean okClicked = frontApp.showNovoProprietario(proprietario, db);
+	    if (okClicked) {
+	    	
+	    	ProprietarioRepository propRepo = (ProprietarioRepository)context.getBean("proprietarioRepository");
+	    	DadosBancariosRepository dbRepo = (DadosBancariosRepository)context.getBean("dadosBancariosRepository");
+	        propRepo.save(proprietario);
+	        dbRepo.save(db);
+	    }
+	    
+	    boolean okClicked2 = frontApp.showNovoImovel(imovel, proprietario, endereco);
+	    if (okClicked2) {
+	    	ProprietarioRepository propRepo = (ProprietarioRepository)context.getBean("proprietarioRepository");
+        	ImovelRepository imvRepo = (ImovelRepository )context.getBean("imovelRepository");
+        	EnderecoRepository endRepo = (EnderecoRepository)context.getBean("enderecoRepository");
+        	imovel.setEndereco(endereco);
+        	imovel.setProprietario(proprietario);
+        	imvRepo.save(imovel);
+        	proprietario.getImovel().add(imovel);
+        	endereco.setImovel(imovel);
+	        propRepo.save(proprietario);
+	        endRepo.save(endereco);
+	        
+	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
+	        rootLayout.setCenter(showCadastroClientes);
+	    }
+	}
 	
 	
 }

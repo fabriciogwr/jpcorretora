@@ -12,6 +12,9 @@ import org.springframework.context.support.GenericApplicationContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Endereco;
+import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
@@ -23,6 +26,8 @@ import com.fgwr.jpcorretora.views.EditRefController;
 import com.fgwr.jpcorretora.views.ImovelController;
 import com.fgwr.jpcorretora.views.NovoClienteController;
 import com.fgwr.jpcorretora.views.NovoContratoController;
+import com.fgwr.jpcorretora.views.NovoImovelController;
+import com.fgwr.jpcorretora.views.NovoProprietarioController;
 import com.fgwr.jpcorretora.views.RootController;
 
 import javafx.application.Application;
@@ -186,6 +191,58 @@ public class FrontApp extends Application {
 	        NovoClienteController controller = loader.getController();
 	        controller.setDialogStage(dialogStage);
 	        controller.setCliente(cliente, db);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showNovoProprietario(Proprietario proprietario, DadosBancarios db) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoProprietario.fxml"));
+	        loader.setController(new NovoProprietarioController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Dados do Proprietario");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        NovoProprietarioController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setProprietario(proprietario, db);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showNovoImovel(Imovel imovel, Proprietario proprietario, Endereco endereco) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoImovel.fxml"));
+	        loader.setController(new NovoImovelController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Dados do Novo Imóvel");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        NovoImovelController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setImovel(imovel, proprietario, endereco);
 
 	        dialogStage.showAndWait();
 

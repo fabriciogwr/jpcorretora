@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,13 +29,13 @@ public class Imovel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dataAngariacao;
     
-    private String proprietario;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Proprietario proprietario;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     private Contrato contrato;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="endereco_id")
     private Endereco endereco;
     
     private Integer estadoImovel;
@@ -83,7 +82,7 @@ public class Imovel implements Serializable {
     	
     }
     
-    public Imovel(Integer id, String proprietario, Date dataAngariacao, EstadoImovel estadoImovel, String descricao,
+    public Imovel(Integer id, Date dataAngariacao, EstadoImovel estadoImovel, String descricao,
     		Boolean danoSala, Boolean danoCozinha, Boolean danoQuarto, Boolean danoBanheiro, Boolean danoDispensa,
 			Boolean danoAreaServico, Boolean danoGaragem, Boolean danoTomadas, Boolean danoLampadas,
 			Boolean danoChuveiro, Boolean danoFechaduras, Boolean danoChaves, Boolean danoPortaoEletro,
@@ -92,7 +91,6 @@ public class Imovel implements Serializable {
 			Boolean danoPortas, Boolean danoJanelas, Boolean danoPortao, Boolean danoPinturaInterna,
 			Boolean danoPinturaExterna, String obs, Date dataLaudo, String corretor ) {
         this.id = id;
-        this.proprietario = proprietario;
         this.dataAngariacao = dataAngariacao;
         this.descricao = descricao;
         this.estadoImovel = estadoImovel.getCod();
@@ -135,11 +133,11 @@ public class Imovel implements Serializable {
 		this.id = id;
 	}
 
-	public String getProprietario() {
+	public Proprietario getProprietario() {
 		return proprietario;
 	}
 
-	public void setProprietario(String proprietario) {
+	public void setProprietario(Proprietario proprietario) {
 		this.proprietario = proprietario;
 	}
 
@@ -445,7 +443,7 @@ public class Imovel implements Serializable {
 	}
 	
 	public StringProperty proprietario() {
-		StringProperty proprietario = new SimpleStringProperty((String) this.proprietario);
+		StringProperty proprietario = new SimpleStringProperty((String) this.proprietario.getNome());
 		return proprietario;
 	}
 	

@@ -64,6 +64,8 @@ public class EditClienteController {
     @FXML
     private TextField titularField;
     @FXML
+    private TextField obsField;
+    @FXML
     private ComboBox<String> bancoBox;
     @FXML
     private ComboBox<String> tipoContaBox;
@@ -146,6 +148,7 @@ public class EditClienteController {
         agenciaField.setText(cliente.getDadosBancarios().getAgencia());
         titularField.setText(cliente.getDadosBancarios().getTitular());
         contaField.setText(cliente.getDadosBancarios().getConta());
+        obsField.setText(cliente.getObs());
 		
         if (cliente.getDadosBancarios() != null) {
         bancoBox.setValue(cliente.getDadosBancarios().getBanco().getFullCod() + " - " + cliente.getDadosBancarios().getBanco().getDescricao());
@@ -188,6 +191,7 @@ public class EditClienteController {
             cliente.getDadosBancarios().setTitular(titularField.getText());
             cliente.getDadosBancarios().setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
             cliente.getDadosBancarios().setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+            cliente.setObs(obsField.getText());
             repo.save(cliente);
             
             okClicked = true;

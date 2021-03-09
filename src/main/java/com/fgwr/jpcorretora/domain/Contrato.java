@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class Contrato implements Serializable {
     @OneToOne
     private Cliente cliente;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "contrato", cascade = CascadeType.ALL)
     private Imovel imovel;
 
     private int qtdParcelas;

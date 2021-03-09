@@ -2,12 +2,13 @@ package com.fgwr.jpcorretora.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fgwr.jpcorretora.enums.TipoEndereco;
 
@@ -25,8 +26,13 @@ public class Endereco implements Serializable {
 	private String cep;
 	
 	@ManyToOne
-	@JoinColumn(name="cliente_id")
 	private Cliente cliente;
+	
+	@ManyToOne
+	private Proprietario proprietario;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Imovel imovel;
 	
 
 	private String cidade;
@@ -131,6 +137,14 @@ public class Endereco implements Serializable {
 
 	public void setTipo(TipoEndereco tipo) {
 		this.tipo = tipo.getCod();
+	}
+
+	public Imovel getImovel() {
+		return imovel;
+	}
+
+	public void setImovel(Imovel imovel) {
+		this.imovel = imovel;
 	}
 
 	@Override
