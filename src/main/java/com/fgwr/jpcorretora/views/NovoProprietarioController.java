@@ -48,6 +48,8 @@ public class NovoProprietarioController {
     @FXML
     private TextField rgField;
     @FXML
+    private TextField obsField;
+    @FXML
     private ChoiceBox<String> estadoCivilBox;
     @FXML
     private TextField profissaoField;
@@ -199,6 +201,7 @@ private List<String> estadoCivilAux = new ArrayList<>();
 	            proprietario.setRg(rgField.getText());
 	            proprietario.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
 	            proprietario.setProfissao(profissaoField.getText());
+	            proprietario.setObs(obsField.getText());
 	            
 	            db.setAgencia(agenciaField.getText());
 	            db.setConta(contaField.getText());

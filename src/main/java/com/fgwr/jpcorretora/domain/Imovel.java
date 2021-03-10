@@ -29,13 +29,13 @@ public class Imovel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dataAngariacao;
     
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private Proprietario proprietario;
     
-    @OneToOne()
+    @OneToOne
     private Contrato contrato;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Endereco endereco;
     
     private Integer estadoImovel;

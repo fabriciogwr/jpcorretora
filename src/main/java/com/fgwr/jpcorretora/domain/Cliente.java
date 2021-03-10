@@ -69,7 +69,7 @@ public class Cliente implements Serializable {
 
     private String obs;
     
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.REMOVE)
     private Contrato contrato;
 
 	public Cliente() {

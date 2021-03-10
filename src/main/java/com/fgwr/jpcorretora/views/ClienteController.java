@@ -165,8 +165,13 @@ public class ClienteController {
 	
 	public Imovel getImovelData() {
 		ImovelService imServ = (ImovelService)context.getBean("imovelService");
-    	imovel = imServ.findByContrato(clienteAux.getContrato());
-			return imovel;
+    	if (clienteAux.getContrato() != null) {
+		imovel = imServ.findByContrato(clienteAux.getContrato());
+			
+    	} else {
+    		imovel = null;
+    	}
+    	return imovel;
 	}
 	
 	public DadosBancarios getDadosBancariosData() {

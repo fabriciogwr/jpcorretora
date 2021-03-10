@@ -29,13 +29,13 @@ public class Contrato implements Serializable {
     @OneToOne
     private Cliente cliente;
 
-    @OneToOne(mappedBy = "contrato", cascade = CascadeType.ALL)
+    @OneToOne
     private Imovel imovel;
 
     private int qtdParcelas;
     private Double valorDeCadaParcela;
     
-    @OneToMany(mappedBy ="contrato")
+    @OneToMany(mappedBy ="contrato", cascade = CascadeType.ALL)
     private List<Duplicata> duplicatas;
     
     public Contrato () {

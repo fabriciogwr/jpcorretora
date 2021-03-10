@@ -227,7 +227,7 @@ public class FrontApp extends Application {
 	    }
 	}
 	
-	public boolean showNovoImovel(Imovel imovel, Proprietario proprietario, Endereco endereco) {
+	public boolean showNovoImovel(Imovel imovel , Endereco endereco) {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoImovel.fxml"));
 	        loader.setController(new NovoImovelController());
@@ -242,7 +242,7 @@ public class FrontApp extends Application {
 
 	        NovoImovelController controller = loader.getController();
 	        controller.setDialogStage(dialogStage);
-	        controller.setImovel(imovel, proprietario, endereco);
+	        controller.setImovel(imovel, endereco);
 
 	        dialogStage.showAndWait();
 

@@ -3,13 +3,13 @@ package com.fgwr.jpcorretora.views;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +27,7 @@ import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.services.DuplicataService;
+import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,6 +46,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 @Component
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+@Transactional
 public class NovoContratoController {
 
 	private Stage dialogStage;
@@ -78,7 +80,10 @@ public class NovoContratoController {
 	public List<Imovel> getImovelData() {
 		ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
     	List<Imovel>imoveis = imRepo.findAll();
-			return imoveis;
+
+			imoveis.removeIf(imovel -> imovel.getContrato() != null);
+			
+    	return imoveis;
 	}
 	
 	public List<Cliente> getClienteData() {
@@ -185,7 +190,6 @@ Calendar cal = Calendar.getInstance();
 			LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			
 			Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
-			System.out.println(Math.toIntExact(ChronoUnit.DAYS.between(date, date2)));
 			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 		    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
 			
@@ -194,17 +198,8 @@ Calendar cal = Calendar.getInstance();
 		}
 	});
 	
-	
-	
-	
-	
-	
 }
 	
-	@FXML
-	public void corrigirPrimeiraParcela () {
-		
-	}
 	public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
@@ -216,6 +211,73 @@ Calendar cal = Calendar.getInstance();
     @FXML
     private void handleCancel() {
         dialogStage.close();
+    }
+    
+    
+    
+    public void setContrato(Contrato contrato) {
+    	this.contrato = contrato;
+    	
+    }
+    
+    public Imovel findImovel (Integer id) {
+    	ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
+    	Optional<Imovel> obj = imRepo.findById(id);
+    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
+    }
+    
+    public Cliente findCliente (Integer id) {
+    	ClienteRepository cliRepo = (ClienteRepository)context.getBean("clienteRepository");
+    	Optional<Cliente> obj = cliRepo.findById(id);
+    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
+    }
+    
+    @FXML
+    private void handleOk() {
+        if (isInputValid()) {
+        	
+        	DuplicataService ds = (DuplicataService)context.getBean("duplicataService");
+        	ContratoRepository contRepo = (ContratoRepository)context.getBean("contratoRepository");
+        	DuplicataRepository dupRepo = (DuplicataRepository)context.getBean("duplicataRepository");
+        	ClienteRepository cliRepo = (ClienteRepository)context.getBean("clienteRepository");
+        	ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
+        	Date date = new Date();
+        	
+        	contrato.setCliente(clienteBox.getValue());
+        	contrato.setImovel(imovelBox.getValue());
+        	contrato.setData(date);
+        	contrato.setId(null);
+        	contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText()));
+        	contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));
+        	
+        	List<Duplicata> dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
+        	
+        	for (Duplicata duplicata : dups) {
+    			duplicata.setContrato(contrato);
+    		}
+        	
+
+    //    	Cliente cliente = clienteBox.getValue();
+        	Cliente cliente = findCliente(clienteBox.getValue().getId());
+        	cliente.setContrato(contrato);
+        	
+   //     	Imovel imovel = imovelBox.getValue();
+        	Imovel imovel = findImovel(imovelBox.getValue().getId());
+        	imovel.setContrato(contrato);
+        	
+        	contrato.setCliente(cliente);
+        	contrato.setImovel(imovel);
+        	contrato.setDuplicatas(dups);
+        	
+        	contRepo.save(contrato);
+        	cliRepo.save(cliente);     	
+        	dupRepo.saveAll(dups);        	
+        	imRepo.save(imovel);
+        	
+        	okClicked = true;
+        	dialogStage.close();
+        	
+        }
     }
     
     private boolean isInputValid() {
@@ -251,58 +313,6 @@ Calendar cal = Calendar.getInstance();
                 alert.showAndWait();
                 
             return false;
-        }
-    }
-    
-    public void setContrato(Contrato contrato) {
-    	this.contrato = contrato;
-    	
-    }
-    
-    @FXML
-    @Transactional
-    private void handleOk() {
-        if (isInputValid()) {
-        	
-        	DuplicataService ds = (DuplicataService)context.getBean("duplicataService");
-        	ContratoRepository contRepo = (ContratoRepository)context.getBean("contratoRepository");
-        	DuplicataRepository dupRepo = (DuplicataRepository)context.getBean("duplicataRepository");
-        	ClienteRepository cliRepo = (ClienteRepository)context.getBean("clienteRepository");
-        	ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
-        	Date date = new Date();
-        	
-        	contrato.setCliente(clienteBox.getValue());
-        	contrato.setImovel(imovelBox.getValue());
-        	contrato.setData(date);
-        	contrato.setId(null);
-        	contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText()));
-        	contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));
-        	
-        	List<Duplicata> dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
-        	
-        	for (Duplicata duplicata : dups) {
-    			duplicata.setContrato(contrato);
-    		}
-        	
-
-        	Cliente cliente = clienteBox.getValue();
-        	
-        	Imovel imovel = imovelBox.getValue();
-        	cliente.setContrato(contrato);
-        	cliRepo.save(cliente);
-        	System.out.println(imovel);
-        	imovel.setContrato(contrato);
-        	contrato.setImovel(imovel);
-        	imRepo.save(imovel);
-        	contRepo.save(contrato);
-        	contrato.setDuplicatas(dups);
-        	contRepo.save(contrato);
-        	
-        	    	
-        	dupRepo.saveAll(dups);
-        	
-        	
-        	
         }
     }
     

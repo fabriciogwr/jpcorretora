@@ -21,6 +21,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoCliente;
 
@@ -49,6 +52,7 @@ public class Proprietario implements Serializable {
     private String profissao;
     
     @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Imovel> imovel = new ArrayList<>();
     
 
