@@ -18,6 +18,7 @@ import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
+import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.enums.EstadoImovel;
 import com.fgwr.jpcorretora.enums.TipoEndereco;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
@@ -30,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -73,16 +75,21 @@ public class NovoImovelController {
     private TextField descricaoField;
     @FXML
     private TextField obsField;
+    @FXML
+    private Button checklistBtn;
+    
+    
+    
     
 private List<String> estadoImovelAux = new ArrayList<>();
     
     private Stage dialogStage;
-    private Endereco endereco;
     private boolean okClicked = false;
     
     private EstadoImovel[] estadoImovel = EstadoImovel.values();
 	private Imovel imovel;
 	private Proprietario proprietario;
+	private Endereco endereco;
 	
 	FrontApp frontApp = new FrontApp();
     
@@ -141,6 +148,7 @@ private List<String> estadoImovelAux = new ArrayList<>();
         return okClicked;
     }
     
+   
     @FXML
     private void handleCancel() {
         dialogStage.close();
@@ -189,6 +197,7 @@ private List<String> estadoImovelAux = new ArrayList<>();
 		this.imovel = imovel;
 		this.endereco = endereco;
 
+		if (imovel.getId() == null) {
         proprietarioBox.setValue(null);
         logradouroField.setText("");
         numeroField.setText("");
@@ -200,7 +209,30 @@ private List<String> estadoImovelAux = new ArrayList<>();
         estadoImovelBox.setValue(null);
         
         descricaoField.setText("");
-        
+		} else {
+			this.endereco = imovel.getEndereco(); 
+			proprietarioBox.setValue(imovel.getProprietario());
+	        logradouroField.setText(endereco.getLogradouro());
+	        numeroField.setText(endereco.getNumero());
+	        complementoField.setText(endereco.getComplemento());
+	        cidadeField.setText(endereco.getCidade());
+	        estadoField.setText(endereco.getEstado());
+	        obsField.setText(imovel.getObs());
+	        corretorField.setText(imovel.getCorretor());
+	        
+	        if (imovel.getDataAngariacao() != null) {
+	        	dataAngariacaoField.setValue(Instant.ofEpochMilli(imovel.getDataAngariacao().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+	            } else {
+	            	dataAngariacaoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+	            }
+	        
+	        bairroField.setText(endereco.getBairro());
+	        cepField.setText(endereco.getCep());
+	        
+	        estadoImovelBox.setValue(imovel.getEstadoImovel().getDescricao());
+	        
+	        descricaoField.setText(imovel.getDescricao());
+		}
 		
 	}
 	
@@ -226,6 +258,73 @@ private List<String> estadoImovelAux = new ArrayList<>();
 
 	    
 	}
+	
+	@FXML
+	private void handleChecklist() {
+	    ImovelChecklistDTO checklist = new ImovelChecklistDTO();
+	    
+	    if (imovel.getId() != null) {
+	    checklist.setDanoArCondicionado(imovel.isDanoArCondicionado());
+		checklist.setDanoAreaServico(imovel.isDanoAreaServico());
+		checklist.setDanoBanheiro(imovel.isDanoBanheiro());
+		checklist.setDanoBox(imovel.isDanoBox());
+		checklist.setDanoCercaEletrica(imovel.isDanoCercaEletrica());
+		checklist.setDanoChaves(imovel.isDanoChaves());
+		checklist.setDanoChuveiro(imovel.isDanoChuveiro());
+		checklist.setDanoControle(imovel.isDanoControle());
+		checklist.setDanoCozinha(imovel.isDanoCozinha());
+		checklist.setDanoDispensa(imovel.isDanoDispensa());
+		checklist.setDanoFechaduras(imovel.isDanoFechaduras());
+		checklist.setDanoGaragem(imovel.isDanoGaragem());
+		checklist.setDanoInfiltracao(imovel.isDanoInfiltracao());
+		checklist.setDanoJanelas(imovel.isDanoJanelas());
+		checklist.setDanoLampadas(imovel.isDanoLampadas());
+		checklist.setDanoMoveisVinculados(imovel.isDanoMoveisVinculados());
+		checklist.setDanoPia(imovel.isDanoPia());
+		checklist.setDanoPinturaExterna(imovel.isDanoPinturaExterna());
+		checklist.setDanoPinturaInterna(imovel.isDanoPinturaInterna());
+		checklist.setDanoPortao(imovel.isDanoPortao());
+		checklist.setDanoPortaoEletro(imovel.isDanoPortaoEletro());
+		checklist.setDanoPortas(imovel.isDanoPortas());
+		checklist.setDanoQuarto(imovel.isDanoQuarto());
+		checklist.setDanoSala(imovel.isDanoSala());
+		checklist.setDanoTomadas(imovel.isDanoTomadas());
+		checklist.setDanoVasoSanitario(imovel.isDanoVasoSanitario());
+	    }
+	        boolean okClicked = frontApp.showChecklist(checklist);
+	        if (okClicked) {
+	        	imovel.setDanoArCondicionado(checklist.isDanoArCondicionado());
+	    		imovel.setDanoAreaServico(checklist.isDanoAreaServico());
+	    		imovel.setDanoBanheiro(checklist.isDanoBanheiro());
+	    		imovel.setDanoBox(checklist.isDanoBox());
+	    		imovel.setDanoCercaEletrica(checklist.isDanoCercaEletrica());
+	    		imovel.setDanoChaves(checklist.isDanoChaves());
+	    		imovel.setDanoChuveiro(checklist.isDanoChuveiro());
+	    		imovel.setDanoControle(checklist.isDanoControle());
+	    		imovel.setDanoCozinha(checklist.isDanoCozinha());
+	    		imovel.setDanoDispensa(checklist.isDanoDispensa());
+	    		imovel.setDanoFechaduras(checklist.isDanoFechaduras());
+	    		imovel.setDanoGaragem(checklist.isDanoGaragem());
+	    		imovel.setDanoInfiltracao(checklist.isDanoInfiltracao());
+	    		imovel.setDanoJanelas(checklist.isDanoJanelas());
+	    		imovel.setDanoLampadas(checklist.isDanoLampadas());
+	    		imovel.setDanoMoveisVinculados(checklist.isDanoMoveisVinculados());
+	    		imovel.setDanoPia(checklist.isDanoPia());
+	    		imovel.setDanoPinturaExterna(checklist.isDanoPinturaExterna());
+	    		imovel.setDanoPinturaInterna(checklist.isDanoPinturaInterna());
+	    		imovel.setDanoPortao(checklist.isDanoPortao());
+	    		imovel.setDanoPortaoEletro(checklist.isDanoPortaoEletro());
+	    		imovel.setDanoPortas(checklist.isDanoPortas());
+	    		imovel.setDanoQuarto(checklist.isDanoQuarto());
+	    		imovel.setDanoSala(checklist.isDanoSala());
+	    		imovel.setDanoTomadas(checklist.isDanoTomadas());
+	    		imovel.setDanoVasoSanitario(checklist.isDanoVasoSanitario());
+	        }
+
+	    
+	}
+	
+	
 	
 	public Proprietario findProprietario (Integer id) {
 		ProprietarioRepository cliRepo = (ProprietarioRepository)context.getBean("proprietarioRepository");
@@ -256,6 +355,7 @@ private List<String> estadoImovelAux = new ArrayList<>();
 	            imovel.setCorretor(corretorField.getText());
 	            imovel.setDescricao(descricaoField.getText());
 	            imovel.setObs(obsField.getText());
+	            imovel.setEstadoImovel(EstadoImovel.valueOfDescricao(estadoImovelBox.getValue()));
 	            
 	            imovel.setEndereco(endereco);
 	        	imovel.setProprietario(proprietario);

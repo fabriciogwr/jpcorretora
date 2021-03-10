@@ -51,19 +51,19 @@ public class Proprietario implements Serializable {
     private Integer estadoCivil;
     private String profissao;
     
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Imovel> imovel = new ArrayList<>();
     
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "TELEFONE_PROP")
     private Set<String> telefones = new HashSet<>();
     
-    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "proprietario", cascade = CascadeType.ALL)
     private DadosBancarios dadosBancarios;
 
     private String obs;

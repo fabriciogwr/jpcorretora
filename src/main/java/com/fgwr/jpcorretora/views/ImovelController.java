@@ -1,6 +1,7 @@
 package com.fgwr.jpcorretora.views;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -10,12 +11,22 @@ import org.springframework.stereotype.Component;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Checklist;
+import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Proprietario;
+import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
+import com.fgwr.jpcorretora.repositories.ImovelRepository;
+import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.services.ImovelService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -25,6 +36,8 @@ import net.rgielen.fxweaver.core.FxmlView;
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ImovelController {
+	
+	ApplicationContext context = SpringContext.getAppContext();
 	
 	private ObservableList<Imovel> imovelData = FXCollections.observableArrayList();
 	
@@ -123,6 +136,63 @@ public class ImovelController {
 			
 		}
 	}
+	
+	@FXML
+	private void handleEditImovel() {
+		Imovel selectedImovel = imovelTable.getSelectionModel().getSelectedItem();
+		Endereco selectedEndereco = imovelTable.getSelectionModel().getSelectedItem().getEndereco();
+		
+		if (selectedImovel != null) {
+			boolean okClicked = frontApp.showNovoImovel(selectedImovel, selectedEndereco);
+			if (okClicked) {
+				showImovel(selectedImovel);
+			}
+
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Nenhuma seleção");
+			alert.setHeaderText("Nenhum Imóvel Selecionado");
+			alert.setContentText("Por favor, selecione um imóvel na tabela.");
+			alert.showAndWait();
+		}
+	}
+
+	@FXML
+	private void handleRemoveImovel() {
+
+		ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
+		Imovel selectedImovel = imovelTable.getSelectionModel().getSelectedItem();
+
+		if (selectedImovel != null) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Exclusão de Imóvel");
+			alert.setHeaderText("Confirmar Exclusão do Imóvel Selecionado?");
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				imovelData.remove(selectedImovel);
+				imvRepo.delete(selectedImovel);
+
+			}
+			imovelTable.refresh();
+		}
+	}
+	
+	@FXML
+	private void handleProprietario() {
+	    Proprietario proprietario = imovelTable.getSelectionModel().getSelectedItem().getProprietario();
+	    DadosBancarios db = proprietario.getDadosBancarios();
+	   System.out.println(proprietario.getNome());
+	   System.out.println(db.getAgencia());
+	        boolean okClicked = frontApp.showNovoProprietario(proprietario, db);
+	        if (okClicked) {
+	        	ProprietarioRepository propRepo = (ProprietarioRepository)context.getBean("proprietarioRepository");
+	        	propRepo.save(proprietario);
+	        	
+	        }
+
+	    
+	}
+	
 	public void setMainApp(FrontApp frontApp) {
         this.frontApp = frontApp;
 	}

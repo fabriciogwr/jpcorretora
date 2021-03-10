@@ -35,5 +35,14 @@ public enum EstadoImovel {
 		throw new IllegalArgumentException("Id inválido: " + cod);
 		
 	}
+	
+	public static EstadoImovel valueOfDescricao(String desc) {
+	    for (EstadoImovel estadoImovel: values()) {
+	        if (estadoImovel.descricao.equals(desc)) {
+	            return estadoImovel;
+	        }
+	    }
+	    return null;
+	}
 
 }

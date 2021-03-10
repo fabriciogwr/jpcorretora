@@ -198,7 +198,7 @@ public class Duplicata implements Serializable {
 	
 	public StringProperty dataPgto() {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		StringProperty dataPgto = null;
+		StringProperty dataPgto = new SimpleStringProperty("");
 		if (getDataPagamento() != null ) {
 		dataPgto = new SimpleStringProperty(df.format(getDataPagamento())); 
 		

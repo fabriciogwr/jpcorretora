@@ -16,9 +16,11 @@ import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Referencia;
+import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
+import com.fgwr.jpcorretora.views.ChecklistController;
 import com.fgwr.jpcorretora.views.ClienteController;
 import com.fgwr.jpcorretora.views.EditClienteController;
 import com.fgwr.jpcorretora.views.EditObsController;
@@ -322,6 +324,31 @@ public class FrontApp extends Application {
 	        controller.setDialogStage(dialogStage);
 	        controller.setClienteReferencia(cliente, selectedReferencia);
 
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showChecklist(ImovelChecklistDTO checklist) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Checklist.fxml"));
+	        loader.setController(new ChecklistController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Checklist");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        ChecklistController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setChecklist(checklist);
 	        dialogStage.showAndWait();
 
 	        return controller.isOkClicked();

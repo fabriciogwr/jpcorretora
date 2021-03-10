@@ -58,6 +58,8 @@ public class NovoClienteController {
     @FXML
     private TextField titularField;
     @FXML
+    private TextField obsField;
+    @FXML
     private ComboBox<String> bancoBox;
     @FXML
     private ComboBox<String> tipoContaBox;
@@ -199,6 +201,7 @@ private List<String> estadoCivilAux = new ArrayList<>();
 	            cliente.setRg(rgField.getText());
 	            cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
 	            cliente.setProfissao(profissaoField.getText());
+	            cliente.setObs(obsField.getText());
 	            
 	            db.setAgencia(agenciaField.getText());
 	            db.setConta(contaField.getText());

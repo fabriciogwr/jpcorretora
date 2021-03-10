@@ -250,8 +250,12 @@ Calendar cal = Calendar.getInstance();
         	contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText()));
         	contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));
         	
-        	List<Duplicata> dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
-        	
+        	List<Duplicata> dups; 
+        	if(vencimentosField.getText() != "" ) {
+        	dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
+        	} else {
+        		dups = ds.preencherDuplicata(contrato);
+        	}
         	for (Duplicata duplicata : dups) {
     			duplicata.setContrato(contrato);
     		}

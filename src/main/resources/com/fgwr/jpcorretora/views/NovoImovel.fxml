@@ -38,7 +38,8 @@
   
 <children>
 	<Label text="Proprietario" />
-	<Label text="Data de Angariacao" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="9" /><DatePicker fx:id="dataAngariacaoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+            <ComboBox fx:id="proprietarioBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleNovoProprietario" text="Novo Proprietário" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 	<Label text="Logradouro" GridPane.rowIndex="2" /><TextField fx:id="logradouroField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 	<Label text="Número" GridPane.rowIndex="3" /><TextField fx:id="numeroField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 	<Label text="Bairro" GridPane.rowIndex="4" /><TextField fx:id="bairroField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -46,22 +47,22 @@
 	<Label text="Cidade" GridPane.rowIndex="7" /><TextField fx:id="cidadeField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 	<Label text="Estado" GridPane.rowIndex="8" /><TextField fx:id="estadoField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 	<Label text="Complemento" GridPane.rowIndex="9" />
-	<Label text="Corretor" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-	<Label text="Descrição" GridPane.columnIndex="3" /><TextField fx:id="descricaoField" maxHeight="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowSpan="2" />
-            <Label alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" prefHeight="41.0" prefWidth="120.0" text="Observações do imóvel" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2" />
-            <TextField fx:id="obsField" maxHeight="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
             <TextField fx:id="complementoField" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <TextField fx:id="corretorField" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-            <Label text="Estado do Imóvel" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowSpan="10" />
-            <ChoiceBox fx:id="estadoImovelBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-            <ComboBox fx:id="proprietarioBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
-            <Button mnemonicParsing="false" onAction="#handleNovoProprietario" text="Novo Proprietário" GridPane.columnIndex="1" GridPane.rowIndex="1" />         
+	<Label text="Descrição" GridPane.columnIndex="3" /><TextField fx:id="descricaoField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowSpan="2" />
+            <Label text="Estado do Imóvel" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <ChoiceBox fx:id="estadoImovelBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Label text="CheckList" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Button fx:id="checklistBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleChecklist" text="Preencher Checklist" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+	<Label alignment="TOP_LEFT" text="Data de Angariacao" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="4" /><DatePicker fx:id="dataAngariacaoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Label alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" prefHeight="41.0" prefWidth="120.0" text="Observações do imóvel" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="6" GridPane.rowSpan="2" />
+            <TextField fx:id="obsField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="6" GridPane.rowSpan="2" />
+	<Label text="Corretor" GridPane.columnIndex="3" GridPane.rowIndex="9" />
+            <TextField fx:id="corretorField" GridPane.columnIndex="4" GridPane.rowIndex="9" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowSpan="10" />         
 </children>
 </GridPane>
 <HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
 <children><Button layoutX="197.1875" layoutY="241.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="90.0" text="OK" /><Button layoutX="249.375" layoutY="241.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0" text="Cancel" />
 </children>
 </HBox>
-      <Label layoutX="-264.0" layoutY="332.0" text="Label" />
 </children></AnchorPane>
