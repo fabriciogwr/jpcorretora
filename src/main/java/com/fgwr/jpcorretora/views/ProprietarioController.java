@@ -1,7 +1,5 @@
 package com.fgwr.jpcorretora.views;
 
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,25 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
-import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
-import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
-import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
-import com.fgwr.jpcorretora.enums.EstadoPagamento;
-import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
-import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
-import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.DuplicataService;
-import com.fgwr.jpcorretora.services.ImovelService;
-import com.fgwr.jpcorretora.services.PdfGen;
-import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,24 +38,23 @@ import net.rgielen.fxweaver.core.FxmlView;
 @FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
-public class ClienteController {
+public class ProprietarioController {
 
-	PdfGen pdfGen = new PdfGen();
 	@FXML
 	private BorderPane rootLayout;
 
-	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
+	private ObservableList<Proprietario> proprietarioData = FXCollections.observableArrayList();
 	private ObservableList<String> telefoneData = FXCollections.observableArrayList();
 	private ObservableList<Duplicata> duplicataData = FXCollections.observableArrayList();
 	private ObservableList<Duplicata> duplicataAux = FXCollections.observableArrayList();
 	private ObservableList<Referencia> referenciaData = FXCollections.observableArrayList();
 
 	@FXML
-	private TableView<Cliente> clienteTable;
+	private TableView<Proprietario> proprietarioTable;
 	@FXML
-	private TableColumn<Cliente, String> codColumn;
+	private TableColumn<Proprietario, String> codColumn;
 	@FXML
-	private TableColumn<Cliente, String> nomeColumn;
+	private TableColumn<Proprietario, String> nomeColumn;
 
 	@FXML
 	private TableView<Duplicata> duplicataTable;
@@ -150,8 +136,8 @@ public class ClienteController {
 	@FXML
 	private Button ref3Btn;
 
-	private Imovel imovel;
-	private Cliente clienteAux;
+	
+	private Proprietario proprietarioAux;
 	private DadosBancarios dadosBancarios;
 	private Integer contratoAtual;
 
@@ -159,70 +145,47 @@ public class ClienteController {
 
 	ApplicationContext context = SpringContext.getAppContext();
 
-	public ObservableList<Cliente> getClienteData() {
-		ClienteService cliServ = (ClienteService) context.getBean("clienteService");
-		List<Cliente> allcli = cliServ.findAll();
-		for (Cliente cliente : allcli) {
-			clienteData.add(cliente);
-		}
-		return clienteData;
+	public List<Proprietario> getProprietarioData() {
+		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
+		List<Proprietario> allProp = propRepo.findAll();
+		return allProp;
 	}
 
-	public ObservableList<Duplicata> getDuplicataData() {
+	public List<Duplicata> getDuplicataData() {
 		DuplicataService dupServ = (DuplicataService) context.getBean("duplicataService");
 		List<Duplicata> alldup = dupServ.findAll();
-		for (Duplicata duplicata : alldup) {
-			duplicataData.add(duplicata);
-		}
-		return duplicataData;
+		
+		return alldup;
 	}
 
-	public Imovel getImovelData() {
-		ImovelService imServ = (ImovelService) context.getBean("imovelService");
-		if (clienteAux.getContrato() != null) {
-			imovel = imServ.findByContrato(clienteAux.getContrato());
-
-		} else {
-			imovel = null;
-		}
-		return imovel;
-	}
+	
 
 	public DadosBancarios getDadosBancariosData() {
 		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
-		dadosBancarios = dbRepo.findByCliente(clienteAux);
+		dadosBancarios = dbRepo.findByProprietario(proprietarioAux);
 		return dadosBancarios;
-	}
-
-	public ObservableList<Referencia> getReferenciaData(Cliente cliente) {
-		ReferenciaRepository refRepo = (ReferenciaRepository) context.getBean("referenciaRepository");
-		List<Referencia> allRef = refRepo.findByCliente(cliente);
-		for (Referencia referencia : allRef) {
-			referenciaData.add(referencia);
-		}
-		return referenciaData;
 	}
 
 	@FXML
 	private void initialize() {
-		duplicataData = getDuplicataData();
-		clienteTable.setItems(getClienteData());
+		duplicataData = FXCollections.observableArrayList(getDuplicataData());
+		proprietarioTable.setItems(FXCollections.observableArrayList(getProprietarioData()));
 		nomeColumn.setCellValueFactory(cellData -> cellData.getValue().nome());
 		codColumn.setCellValueFactory(cellData -> cellData.getValue().cod());
-		showClient(null);
-		clienteTable.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> showClient(newValue));
+		showProprietario(null);
+		proprietarioTable.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> showProprietario(newValue));
 		duplicataTable.setItems(duplicataAux);
 	}
 
-	private void showClient(Cliente cliente) {
-		if (cliente != null) {
-			nomeLabel.setText(cliente.getNome());
-			cpfLabel.setText(cliente.getCpfOuCnpj());
-			rgLabel.setText(cliente.getRg());
-			emailLabel.setText(cliente.getEmail());
+	private void showProprietario(Proprietario proprietario) {
+		if (proprietario != null) {
+			nomeLabel.setText(proprietario.getNome());
+			cpfLabel.setText(proprietario.getCpfOuCnpj());
+			rgLabel.setText(proprietario.getRg());
+			emailLabel.setText(proprietario.getEmail());
 
-			Set<String> telefones = cliente.getTelefones();
+			Set<String> telefones = proprietario.getTelefones();
 			for (String string : telefones) {
 				telefoneData.add(string);
 			}
@@ -233,17 +196,13 @@ public class ClienteController {
 			} else
 				telefoneAltLabel.setText("");
 			telefoneData.clear();
-			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
-			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
-			profissaoLabel.setText(cliente.getProfissao());
-			if (cliente.getContrato() != null) {
-				contratoAtual = cliente.getContrato().getId();
-			} else {
-				contratoAtual = null;
-			}
-			clienteAux = cliente;
-			duplicataAux.clear();
-			imovel = getImovelData();
+			dataNascimentoLabel.setText(proprietario.getDataNascimentoString());
+			estadoCivilLabel.setText(proprietario.getEstadoCivil().getDescricao());
+			profissaoLabel.setText(proprietario.getProfissao());
+			
+			proprietarioAux = proprietario;
+			
+			
 			dadosBancarios = getDadosBancariosData();
 			bancoLabel
 					.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
@@ -252,8 +211,8 @@ public class ClienteController {
 			numeroContaLabel.setText(dadosBancarios.getConta());
 			titularLabel.setText(dadosBancarios.getTitular());
 			referenciaData.clear();
-			referenciaData = getReferenciaData(cliente);
-			obsLabel.setText(cliente.getObs());
+			
+			obsLabel.setText(proprietario.getObs());
 			ref1Btn.setText("Editar");
 			if (referenciaData.size() == 0) {
 				ref1Btn.setText("Cadastrar");
@@ -283,7 +242,7 @@ public class ClienteController {
 				ref3FoneLabel.setText("");
 			}
 
-			clienteTable.refresh();
+			proprietarioTable.refresh();
 			for (Duplicata duplicata : duplicataData) {
 				if (duplicata.getContrato().getId() == contratoAtual) {
 					duplicataAux.add(duplicata);
@@ -341,50 +300,52 @@ public class ClienteController {
 	}
 
 	@FXML
-	private void handleEditCliente() {
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		if (selectedCliente != null) {
-			boolean okClicked = frontApp.showEditCliente(selectedCliente);
+	private void handleEditProprietario() {
+		Proprietario selectedProprietario = proprietarioTable.getSelectionModel().getSelectedItem();
+		DadosBancarios db = selectedProprietario.getDadosBancarios();
+		if (selectedProprietario != null) {
+			boolean okClicked = frontApp.showNovoProprietario(selectedProprietario, db);
 			if (okClicked) {
-				showClient(selectedCliente);
-			}
+				showProprietario(selectedProprietario);
+			
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Nenhuma seleção");
-			alert.setHeaderText("Nenhuma Pessoa Selecionada");
-			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
+			alert.setHeaderText("Nenhum Proprietário Selecionado");
+			alert.setContentText("Por favor, selecione um proprietário na tabela.");
 			alert.showAndWait();
 		}
 	}
+	}
 
 	@FXML
-	private void handleRemoveCliente() {
+	private void handleRemoveProprietario() {
 
-		ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
+		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
+		Proprietario selectedProprietario = proprietarioTable.getSelectionModel().getSelectedItem();
 
-		if (selectedCliente != null) {
+		if (selectedProprietario != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Exclusão de Cliente");
-			alert.setHeaderText("Confirmar Exclusão do Cliente Selecionado?");
+			alert.setTitle("Exclusão de Proprietario");
+			alert.setHeaderText("Confirmar Exclusão do Proprietario Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				clienteData.remove(selectedCliente);
-				cliRepo.delete(selectedCliente);
+				
+				propRepo.delete(selectedProprietario);
 
 			}
-			clienteTable.refresh();
+			proprietarioTable.refresh();
 		}
 	}
 
 	@FXML
 	private void handleEditObs() {
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		if (selectedCliente != null) {
-			boolean okClicked = frontApp.showEditObs(selectedCliente);
+		Proprietario selectedProprietario = proprietarioTable.getSelectionModel().getSelectedItem();
+		if (selectedProprietario != null) {
+			boolean okClicked = frontApp.showEditObs(selectedProprietario);
 			if (okClicked) {
-				showClient(selectedCliente);
+				showProprietario(selectedProprietario);
 			}
 
 		} else {
@@ -396,108 +357,11 @@ public class ClienteController {
 		}
 	}
 
-	@FXML
-	private void handleEditRef1() throws IOException {
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		Referencia selectedReferencia;
-		if (referenciaData.size() == 0) {
-			selectedReferencia = new Referencia();
-		} else {
-			selectedReferencia = referenciaData.get(0);
-		}
-
-		if (selectedCliente != null && selectedReferencia != null) {
-			boolean okClicked = frontApp.showEditRef(selectedCliente, selectedReferencia);
-
-			if (okClicked) {
-
-				showClient(selectedCliente);
-			}
-
-		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Nenhuma seleção");
-			alert.setHeaderText("Nenhuma Pessoa Selecionada");
-			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
-			alert.showAndWait();
-		}
-	}
-
-	@FXML
-	private void handleEditRef2() throws IOException {
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		Referencia selectedReferencia;
-		if (referenciaData.size() == 2) {
-			selectedReferencia = referenciaData.get(1);
-		} else {
-			referenciaData.add(new Referencia());
-			selectedReferencia = referenciaData.get(1);
-		}
-
-		if (selectedCliente != null && selectedReferencia != null) {
-			boolean okClicked = frontApp.showEditRef(selectedCliente, selectedReferencia);
-
-			if (okClicked) {
-
-				showClient(selectedCliente);
-			}
-
-		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Nenhuma seleção");
-			alert.setHeaderText("Nenhuma Pessoa Selecionada");
-			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
-			alert.showAndWait();
-		}
-		referenciaData.clear();
-		referenciaData = getReferenciaData(clienteAux);
-	}
-
-	@FXML
-	private void handleEditRef3() throws IOException {
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		Referencia selectedReferencia = null;
-
-		if (referenciaData.size() == 1) {
-			referenciaData.add(new Referencia());
-			selectedReferencia = referenciaData.get(1);
-		} else if (referenciaData.size() == 2) {
-			referenciaData.add(new Referencia());
-			selectedReferencia = referenciaData.get(2);
-		} else if (referenciaData.size() == 3) {
-			selectedReferencia = referenciaData.get(2);
-		}
-
-		if (selectedCliente != null && selectedReferencia != null) {
-			boolean okClicked = frontApp.showEditRef(selectedCliente, selectedReferencia);
-
-			if (okClicked) {
-				showClient(selectedCliente);
-
-			}
-		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Nenhuma seleção");
-			alert.setHeaderText("Nenhuma Pessoa Selecionada");
-			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
-			alert.showAndWait();
-		}
-	}
-
-	public Recibo findRecibo (Integer id) {
-		ReciboRepository recRepo = (ReciboRepository)context.getBean("reciboRepository");
-    	Optional<Recibo> obj = recRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
-    }
-	
-	@Transactional
+/*	@Transactional
 	@FXML
 	private void handlePagamento() {
-		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
-		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-		
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
-		
+		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		Calendar cal = Calendar.getInstance();
 		if (selectedDuplicata != null) {
@@ -507,21 +371,22 @@ public class ClienteController {
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
-				boolean okClicked = frontApp.showConfiguraPagamento(selectedDuplicata);
-				if (okClicked) {
-					showClient(selectedCliente);
+				Recibo rec = new Recibo(null, proprietarioTable.getSelectionModel().getSelectedItem(),
+						selectedDuplicata.getValor(), selectedDuplicata.getParcela(),
+						selectedDuplicata.getDataVencimento(), cal.getTime());
+				selectedDuplicata.setDataPagamento(cal.getTime());
+				selectedDuplicata.setRecibo(rec);
+				dupRepo.save(selectedDuplicata);
+				recRepo.save(rec);
 
-				}
 				duplicataTable.refresh();
-				
-				
 
 				Alert alert2 = new Alert(AlertType.CONFIRMATION);
 				alert2.setTitle("Recibo");
 				alert2.setHeaderText("Visualizar o recibo do pagamento?");
 				Optional<ButtonType> result2 = alert2.showAndWait();
 				if (result2.get() == ButtonType.OK) {
-					
+					System.out.println(rec.getValor());
 
 				} else {
 					alert.close();
@@ -552,10 +417,8 @@ public class ClienteController {
 			duplicataTable.refresh();
 		}
 	}
-
+*/
 	public void setMainApp(FrontApp frontApp) {
 		this.frontApp = frontApp;
 	}
 }
-
-

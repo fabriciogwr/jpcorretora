@@ -1,17 +1,11 @@
 package com.fgwr.jpcorretora.views;
 
-import java.time.ZoneId;
-import java.util.Date;
-
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
-import com.fgwr.jpcorretora.enums.TipoEndereco;
-import com.fgwr.jpcorretora.repositories.EnderecoRepository;
-import com.fgwr.jpcorretora.repositories.ImovelRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;

@@ -46,8 +46,6 @@ public class RootController {
 	
 	FrontApp frontApp = new FrontApp();
 	
-	ClienteController cc;
-
 	public void initialize(URL url, ResourceBundle rb) {
 	    
 	} 
@@ -62,6 +60,12 @@ public class RootController {
     public void showCadastroImoveis(ActionEvent event) throws IOException {
         AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml"));
         rootLayout.setCenter(showCadastroImoveis);
+    }
+	
+	@FXML
+    public void showCadastroProprietarios(ActionEvent event) throws IOException {
+        AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml"));
+        rootLayout.setCenter(showCadastroProprietarios);
     }
 	
 	@FXML

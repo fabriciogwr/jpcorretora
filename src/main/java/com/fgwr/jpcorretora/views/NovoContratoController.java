@@ -5,7 +5,6 @@ import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,9 +71,6 @@ public class NovoContratoController {
 	
 	ApplicationContext context = SpringContext.getAppContext();
 	
-	private List<String> imovelAux = new ArrayList<>();
-	private List<String> clienteAux = new ArrayList<>();
-
 	private Contrato contrato;
 	
 	public List<Imovel> getImovelData() {
@@ -94,13 +90,6 @@ public class NovoContratoController {
 	
 	public void initialize () {
 		
-		
-	
-	imoveis = FXCollections.observableArrayList(getImovelData());
-	
-	for (Imovel imovel : imoveis) {
-		imovelAux.add(imovel.getProprietario().getNome());
-	}
 	imovelBox.setItems(FXCollections.observableArrayList(getImovelData()));
 	
 	Callback<ListView<Imovel>, ListCell<Imovel>> imovelCellFactory = new Callback<ListView<Imovel>, ListCell<Imovel>>() {
@@ -115,24 +104,16 @@ public class NovoContratoController {
 	                if (imovel == null || empty) {
 	                    setGraphic(null);
 	                } else {
-	                    setText(imovel.getProprietario().getNome());
+	                    setText(imovel.getProprietario().getNome() + " - " + imovel.getEndereco().getLogradouro() + ", " + imovel.getEndereco().getNumero());
 	                }
 	            }
 	        }; 
 	    }
-	
-
-
 	};
 
 	imovelBox.setButtonCell(imovelCellFactory.call(null));
 	imovelBox.setCellFactory(imovelCellFactory);
 	
-	clientes = FXCollections.observableArrayList(getClienteData());
-	
-	for (Cliente cliente : clientes) {
-		clienteAux.add(cliente.getNome());
-	}
 	clienteBox.setItems(FXCollections.observableArrayList(getClienteData()));
 	
 	Callback<ListView<Cliente>, ListCell<Cliente>> clienteCellFactory = new Callback<ListView<Cliente>, ListCell<Cliente>>() {
@@ -152,9 +133,6 @@ public class NovoContratoController {
 	            }
 	        }; 
 	    }
-	
-
-
 	};
 
 	clienteBox.setButtonCell(clienteCellFactory.call(null));

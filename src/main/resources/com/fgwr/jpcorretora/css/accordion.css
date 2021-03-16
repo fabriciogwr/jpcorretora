@@ -1,0 +1,18 @@
+.accordion {
+-fx-border-color: #CCA528;
+}
+
+.accordion .titled-pane .title {
+	-fx-background-color: #FFCF33;
+	-fx-text-fill: black;
+   -fx-font-weight: bold;
+   -fx-alignment: CENTER_LEFT;
+   -fx-border-color: #CCA528;
+   -fx-transition: all 0.35;
+}
+
+.accordion .titled-pane {
+	-fx-background-color: white;
+	-fx-transition: all 0.35;
+	}
+	

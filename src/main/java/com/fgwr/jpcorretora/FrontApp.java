@@ -12,6 +12,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
@@ -22,6 +23,7 @@ import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.views.ChecklistController;
 import com.fgwr.jpcorretora.views.ClienteController;
+import com.fgwr.jpcorretora.views.ConfiguraPagamentoController;
 import com.fgwr.jpcorretora.views.EditClienteController;
 import com.fgwr.jpcorretora.views.EditObsController;
 import com.fgwr.jpcorretora.views.EditRefController;
@@ -30,6 +32,7 @@ import com.fgwr.jpcorretora.views.NovoClienteController;
 import com.fgwr.jpcorretora.views.NovoContratoController;
 import com.fgwr.jpcorretora.views.NovoImovelController;
 import com.fgwr.jpcorretora.views.NovoProprietarioController;
+import com.fgwr.jpcorretora.views.ProprietarioController;
 import com.fgwr.jpcorretora.views.RootController;
 
 import javafx.application.Application;
@@ -144,6 +147,23 @@ public class FrontApp extends Application {
 			rootLayout.setCenter(imovelOverview);
 			
 			ImovelController controller = loader.getController();
+			controller.setMainApp(this);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showTelaProprietarios() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(FrontApp.class.getResource("views/TelaProprietarios.fxml"));
+			loader.setController(new ProprietarioController());
+			AnchorPane imovelOverview = (AnchorPane) loader.load();
+
+			rootLayout.setCenter(imovelOverview);
+			
+			ProprietarioController controller = loader.getController();
 			controller.setMainApp(this);
 			
 		} catch (IOException e) {
@@ -307,6 +327,58 @@ public class FrontApp extends Application {
 	    }
 	}
 	
+	public boolean showEditObs(Proprietario proprietario) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditObs.fxml"));
+	        loader.setController(new EditObsController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Editar Observação");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        EditObsController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setProprietario(proprietario);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean showConfiguraPagamento(Duplicata duplicata) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/ConfiguraPagamento.fxml"));
+	        loader.setController(new ConfiguraPagamentoController());
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("Configurar Pagamento");
+	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        ConfiguraPagamentoController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setDuplicata(duplicata);
+
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
 	public boolean showEditRef(Cliente cliente, Referencia selectedReferencia) {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditRef.fxml"));
@@ -332,6 +404,7 @@ public class FrontApp extends Application {
 	        return false;
 	    }
 	}
+	
 	
 	public boolean showChecklist(ImovelChecklistDTO checklist) {
 	    try {
