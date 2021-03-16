@@ -13,9 +13,11 @@ import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
@@ -98,6 +100,9 @@ public class EditRefController {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

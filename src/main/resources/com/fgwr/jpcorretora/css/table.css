@@ -19,6 +19,7 @@
 .table-row-cell:selected {
    -fx-background-color: #E5BA2D;
    -fx-text-background-color:  black;
+   -fx-table-cell-border-color: white;
 
 
 }

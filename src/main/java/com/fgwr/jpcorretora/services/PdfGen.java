@@ -3,6 +3,8 @@ package com.fgwr.jpcorretora.services;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -15,7 +17,8 @@ public class PdfGen {
 		
 		Document document = new Document();
 		try {
-			PdfWriter.getInstance(document, new FileOutputStream("D:\\Recibos\\" + recibo.getId().toString() + ".pdf" ));
+			String[] nomeArr = StringUtils.split(recibo.getCliente().getNome());
+			PdfWriter.getInstance(document, new FileOutputStream("D:\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf" ));
 			document.open();
 			
 			document.add(new Paragraph("Recibo nº: " + recibo.getId().toString()));

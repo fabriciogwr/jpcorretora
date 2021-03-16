@@ -1,6 +1,7 @@
 .button
 {
 	-fx-background-color: #FFCF33;
+	-fx-background-radius: 0px;
 	
 }
 
@@ -10,4 +11,16 @@
 
 .button:pressed {
 	-fx-background-color: #FFF;
+}
+
+.button:focused {
+	-fx-background-color: #FFF;
+	-fx-border-color: #E5BA2D;
+	-fx-border-width: 0px 0px 0px 5px;
+}
+
+.button:armed {
+	-fx-background-color: #FFF;
+	-fx-border-color: #E5BA2D;
+	-fx-border-width: 0px 0px 0px 5px;
 }

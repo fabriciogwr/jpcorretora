@@ -43,7 +43,7 @@
       </MenuBar>
    </top>
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: fff;" BorderPane.alignment="CENTER" />
    </center>
    <left>
       <VBox maxWidth="400.0" minHeight="-Infinity" prefWidth="400.0" style="-fx-background-color: #FFCF33;" BorderPane.alignment="CENTER">
@@ -61,7 +61,7 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" stylesheets="@../css/style.css" text="Clientes">
+            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroClientes" prefHeight="60.0" stylesheets="@../css/style.css" text="Clientes">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
@@ -71,7 +71,7 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" stylesheets="@../css/style.css" text="Imóveis">
+            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroImoveis" prefHeight="60.0" stylesheets="@../css/style.css" text="Imóveis">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

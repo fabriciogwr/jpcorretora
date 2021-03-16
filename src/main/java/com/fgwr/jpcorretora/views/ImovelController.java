@@ -26,7 +26,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.StageStyle;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -150,6 +152,9 @@ public class ImovelController {
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhum Imóvel Selecionado");
 			alert.setContentText("Por favor, selecione um imóvel na tabela.");
@@ -165,6 +170,9 @@ public class ImovelController {
 
 		if (selectedImovel != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Exclusão de Imóvel");
 			alert.setHeaderText("Confirmar Exclusão do Imóvel Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();

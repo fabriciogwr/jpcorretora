@@ -28,10 +28,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
@@ -311,6 +313,9 @@ public class ProprietarioController {
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhum Proprietário Selecionado");
 			alert.setContentText("Por favor, selecione um proprietário na tabela.");
@@ -327,6 +332,9 @@ public class ProprietarioController {
 
 		if (selectedProprietario != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Exclusão de Proprietario");
 			alert.setHeaderText("Confirmar Exclusão do Proprietario Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -350,6 +358,9 @@ public class ProprietarioController {
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhuma Pessoa Selecionada");
 			alert.setContentText("Por favor, selecione uma pessoa na tabela.");

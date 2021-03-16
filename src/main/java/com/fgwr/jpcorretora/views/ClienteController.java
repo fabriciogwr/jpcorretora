@@ -18,14 +18,12 @@ import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Imovel;
-import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
-import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
@@ -41,10 +39,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
@@ -502,8 +502,12 @@ public class ClienteController {
 		Calendar cal = Calendar.getInstance();
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Confirmar pagamento");
 			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
+			
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
@@ -517,6 +521,9 @@ public class ClienteController {
 				
 
 				Alert alert2 = new Alert(AlertType.CONFIRMATION);
+				alert.initStyle(StageStyle.UNDECORATED);
+				DialogPane dialogPane2 = alert.getDialogPane();			
+				dialogPane2.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 				alert2.setTitle("Recibo");
 				alert2.setHeaderText("Visualizar o recibo do pagamento?");
 				Optional<ButtonType> result2 = alert2.showAndWait();
@@ -537,7 +544,9 @@ public class ClienteController {
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		if (selectedDuplicata != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
+			Alert alert = new Alert(AlertType.CONFIRMATION);alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();			
+			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 			alert.setTitle("Cancelar pagamento");
 			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
 			Optional<ButtonType> result = alert.showAndWait();

@@ -1,0 +1,17 @@
+.dialog-pane {
+	-fx-border-color: #CCA528;
+}
+.dialog-pane .button {
+	-fx-background-color: #FFCF33;
+	-fx-background-radius: 0px;
+	-fx-border-color: #CCA528;
+}
+
+.dialog-pane .button:hover {
+	-fx-background-color: #E5BA2D;
+}
+
+.dialog-pane .button:pressed {
+	-fx-background-color: #FFF;
+}
+
