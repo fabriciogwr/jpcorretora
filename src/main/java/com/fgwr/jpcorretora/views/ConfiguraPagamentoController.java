@@ -27,10 +27,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class ConfiguraPagamentoController {

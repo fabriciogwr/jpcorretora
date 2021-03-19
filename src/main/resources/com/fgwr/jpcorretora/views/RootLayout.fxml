@@ -50,7 +50,8 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
-                  <Image url="@../imgs/logo.jpg" />
+	             <Image url="@../imgs/logo.jpg" /> <!--  DEV -->
+<!--             <Image url="resources/com/fgwr/jpcorretora/imgs/logo.jpg" /> --> <!-- BUILD -->
                </image>
                <VBox.margin>
                   <Insets left="25.0" right="25.0" top="10.0" />

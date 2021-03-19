@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -11,57 +12,288 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="626.0" prefWidth="380.0" style="-fx-background-color: fff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-<children><GridPane layoutX="-16.0" layoutY="31.0" prefHeight="566.0" prefWidth="360.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="120.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="240.0" />
-  </columnConstraints>
-  
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-	<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-	<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-	<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-  
+<AnchorPane prefHeight="752.0" prefWidth="1031.0" style="-fx-background-color: #FFCF33;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 <children>
-	<Label text="Nome" /><TextField fx:id="nomeField" GridPane.columnIndex="1" />
-	<Label text="Data de Nascimento" GridPane.rowIndex="1" /><DatePicker fx:id="dataNascimentoField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-	<Label text="Telefone Preferencial" GridPane.rowIndex="2" /><TextField fx:id="telefonePrefField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-	<Label text="Telefone Alternativo" GridPane.rowIndex="3" /><TextField fx:id="telefoneAltField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-	<Label text="E-mail" GridPane.rowIndex="4" /><TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-	<Label text="CPF" GridPane.rowIndex="5" /><TextField fx:id="cpfField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-	<Label text="RG" GridPane.rowIndex="6" /><TextField fx:id="rgField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-	<Label text="Profissão" GridPane.rowIndex="7" /><TextField fx:id="profissaoField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-	<Label text="Estado Civil" GridPane.rowIndex="8" /><ChoiceBox fx:id="estadoCivilBox" prefHeight="25.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-	<Label text="Banco" GridPane.rowIndex="10" /><ComboBox fx:id="bancoBox" prefHeight="25.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-	<Label text="Agência" GridPane.rowIndex="11" /><TextField fx:id="agenciaField" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-	<Label text="Tipo de Conta" GridPane.rowIndex="12" /><ComboBox fx:id="tipoContaBox" prefHeight="25.0" prefWidth="238.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-	<Label text="Número da Conta" GridPane.rowIndex="13" /><TextField fx:id="contaField" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-	<Label text="Titular" GridPane.rowIndex="14" /><TextField fx:id="titularField" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-            <Label alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" prefHeight="41.0" prefWidth="120.0" text="Observações do cliente" wrapText="true" GridPane.rowIndex="16" GridPane.rowSpan="2" />
-            <TextField fx:id="obsField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="16" GridPane.rowSpan="2" />         
-</children>
-</GridPane>
-<HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
-<children><Button layoutX="197.1875" layoutY="241.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="90.0" stylesheets="@../css/minorbuttons.css" text="OK" /><Button layoutX="249.375" layoutY="241.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0" stylesheets="@../css/minorbuttons.css" text="Cancel" />
-</children>
-</HBox>
-      <Label layoutX="-264.0" layoutY="332.0" text="Label" />
+      <AnchorPane layoutX="10.0" layoutY="-5.0" style="-fx-background-radius: 5px;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <AnchorPane prefHeight="796.0" prefWidth="1011.0" style="-fx-opacity: 70%; -fx-background-radius: 5px; -fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <VBox layoutX="20.0" layoutY="20.0" spacing="30.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+               <children>
+                  <Group>
+                     <children>
+                        <HBox layoutY="8.0" maxWidth="1.7976931348623157E308" prefHeight="178.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;" stylesheets="@../css/textfield.css">
+                           <children>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.0" minWidth="10.0" prefWidth="90.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.0" minWidth="10.0" prefWidth="389.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="130.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="374.0" minWidth="10.0" prefWidth="279.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                              	<Label text="Nome">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="nomeField" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="CPF" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="cpfField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="RG" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="rgField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="Data de Nascimento" GridPane.columnIndex="3">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="dataNascimentoField" maxWidth="1.7976931348623157E308" prefHeight="30.0" GridPane.columnIndex="4" />
+                              	<Label text="Profissão" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="profissaoField" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="Estado Civil" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ChoiceBox fx:id="estadoCivilBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="239.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="21.0" layoutY="-5.0" prefHeight="27.0" prefWidth="110.0" style="-fx-background-color: #FFCF33; -fx-background-radius: 10px;">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Identificação">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </Group>
+                  <Group>
+                     <children>
+                        <HBox layoutY="8.0" prefHeight="60.0" prefWidth="968.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;">
+                           <children>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="140.0" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="140.0" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                              	<Label text="Telefone Preferencial">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="telefonePrefField" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="Telefone Alternativo" GridPane.columnIndex="3">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="telefoneAltField" GridPane.columnIndex="4">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="E-mail" GridPane.columnIndex="6">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="emailField" GridPane.columnIndex="7">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="21.0" layoutY="-5.0" prefHeight="27.0" prefWidth="75.0" style="-fx-background-color: #FFCF33; -fx-background-radius: 10px;">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Contato">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </Group>
+                  <Group>
+                     <children>
+                        <HBox layoutY="8.0" prefHeight="173.0" prefWidth="968.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;">
+                           <children>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="300.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="120.0" prefWidth="120.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                              	<Label text="Banco">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="bancoBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="239.0" GridPane.columnIndex="1" />
+                              	<Label text="Tipo de Conta" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="tipoContaBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="238.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              	<Label text="Agência" GridPane.columnIndex="3">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="agenciaField" GridPane.columnIndex="4">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="Número da Conta" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="contaField" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                              	<Label text="Titular" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="titularField" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="20.0" layoutY="-5.0" prefHeight="27.0" prefWidth="140.0" style="-fx-background-color: #FFCF33; -fx-background-radius: 10px;">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Dados Bancários">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </Group>
+                  <Group>
+                     <children>
+                        <HBox layoutY="8.0" prefHeight="122.0" prefWidth="968.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;" stylesheets="@../css/textfield.css">
+                           <children>
+                              <GridPane prefHeight="52.0" prefWidth="926.0" HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="140.0" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="140.0" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="150.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <TextField fx:id="obsField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" prefWidth="240.0" GridPane.columnSpan="8" GridPane.rowSpan="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="21.0" layoutY="-5.0" prefHeight="27.0" prefWidth="195.0" style="-fx-background-color: #FFCF33; -fx-background-radius: 10px;">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Observações do Cliente">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </Group>
+            <HBox alignment="BOTTOM_RIGHT" spacing="15.0">
+            <children>
+                        <Button layoutX="197.1875" layoutY="241.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="90.0" stylesheets="@../css/minorbuttons.css" text="OK" />
+                        <Button layoutX="249.375" layoutY="241.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0" stylesheets="@../css/minorbuttons.css" text="Cancel" />
+            </children>
+            </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
 </children></AnchorPane>

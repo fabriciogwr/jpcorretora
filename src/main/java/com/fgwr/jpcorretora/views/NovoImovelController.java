@@ -42,10 +42,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class NovoImovelController {
 

@@ -18,9 +18,6 @@ import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.EnderecoRepository;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
-import net.rgielen.fxweaver.core.FxmlView;
-
-@FxmlView
 @Service
 public class ClienteService {
 

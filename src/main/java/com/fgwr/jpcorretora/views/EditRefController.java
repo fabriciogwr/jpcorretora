@@ -13,15 +13,13 @@ import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class EditRefController {
 

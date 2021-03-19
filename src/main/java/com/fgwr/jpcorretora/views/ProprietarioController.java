@@ -18,7 +18,6 @@ import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.DuplicataService;
 
 import javafx.collections.FXCollections;
@@ -34,10 +33,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.StageStyle;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class ProprietarioController {

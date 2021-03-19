@@ -1,6 +1,9 @@
 package com.fgwr.jpcorretora;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -72,6 +75,8 @@ public class FrontApp extends Application {
 	@Autowired
 	private ConfigurableApplicationContext applicationContext;
 
+	String dir = System.getProperty("user.dir");
+	
 	public FrontApp() {
 
 	}
@@ -108,11 +113,10 @@ public class FrontApp extends Application {
 
 	public void initRootLayout() {
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(FrontApp.class.getResource("views/RootLayout.fxml"));
+			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/RootLayout.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\RootLayout.fxml").toUri()).toUri().toURL()); //BUILD
 			loader.setController(new RootController());
 			rootLayout = (BorderPane) loader.load();
-
 			
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
@@ -124,8 +128,8 @@ public class FrontApp extends Application {
 
 	public void showTelaClientes() {
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(FrontApp.class.getResource("views/TelaClientes.fxml"));
+			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
 			AnchorPane personOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(personOverview);
@@ -140,8 +144,8 @@ public class FrontApp extends Application {
 	
 	public void showTelaImoveis() {
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(FrontApp.class.getResource("views/TelaImoveis.fxml"));
+			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaImoveis.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
@@ -156,8 +160,8 @@ public class FrontApp extends Application {
 	
 	public void showTelaProprietarios() {
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(FrontApp.class.getResource("views/TelaProprietarios.fxml"));
+			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaProprietarios.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
 			loader.setController(new ProprietarioController());
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
@@ -173,7 +177,8 @@ public class FrontApp extends Application {
 
 	public boolean showEditCliente(Cliente cliente) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditCliente.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new EditClienteController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -199,7 +204,8 @@ public class FrontApp extends Application {
 	
 	public boolean showNovoCliente(Cliente cliente, DadosBancarios db) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditCliente.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new NovoClienteController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -225,7 +231,8 @@ public class FrontApp extends Application {
 	
 	public boolean showNovoProprietario(Proprietario proprietario, DadosBancarios db) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoProprietario.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoProprietario.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoProprietario.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new NovoProprietarioController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -251,7 +258,8 @@ public class FrontApp extends Application {
 	
 	public boolean showNovoImovel(Imovel imovel , Endereco endereco) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoImovel.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoImovel.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoImovel.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new NovoImovelController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -277,7 +285,8 @@ public class FrontApp extends Application {
 	
 	public boolean showNovoContrato(Contrato contrato) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/NovoContrato.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoContrato.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoContrato.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new NovoContratoController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -303,7 +312,8 @@ public class FrontApp extends Application {
 	
 	public boolean showEditObs(Cliente cliente) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditObs.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new EditObsController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -329,7 +339,8 @@ public class FrontApp extends Application {
 	
 	public boolean showEditObs(Proprietario proprietario) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditObs.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new EditObsController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -355,7 +366,8 @@ public class FrontApp extends Application {
 	
 	public boolean showConfiguraPagamento(Duplicata duplicata) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/ConfiguraPagamento.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamento.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\ConfiguraPagamento.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new ConfiguraPagamentoController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -381,7 +393,8 @@ public class FrontApp extends Application {
 	
 	public boolean showEditRef(Cliente cliente, Referencia selectedReferencia) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/EditRef.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditRef.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditRef.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new EditRefController());
 	        AnchorPane page = (AnchorPane) loader.load();
 
@@ -408,7 +421,8 @@ public class FrontApp extends Application {
 	
 	public boolean showChecklist(ImovelChecklistDTO checklist) {
 	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Checklist.fxml"));
+	    	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/Checklist.fxml")); //DEV
+		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\Checklist.fxml").toUri()).toUri().toURL()); //BUILD
 	        loader.setController(new ChecklistController());
 	        AnchorPane page = (AnchorPane) loader.load();
 

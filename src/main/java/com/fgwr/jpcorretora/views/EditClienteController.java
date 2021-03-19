@@ -3,9 +3,7 @@ package com.fgwr.jpcorretora.views;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,10 +32,8 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class EditClienteController {
 	

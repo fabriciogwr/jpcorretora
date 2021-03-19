@@ -1,7 +1,9 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -17,13 +19,8 @@ import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
-import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
-import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
-import com.fgwr.jpcorretora.repositories.EnderecoRepository;
-import com.fgwr.jpcorretora.repositories.ImovelRepository;
-import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,11 +28,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-@FxmlView("RootLayout.fxml")
 public class RootController {
 
 	@FXML
@@ -46,25 +41,30 @@ public class RootController {
 	
 	FrontApp frontApp = new FrontApp();
 	
+	String dir = System.getProperty("user.dir");
+	
 	public void initialize(URL url, ResourceBundle rb) {
 	    
 	} 
 	
 	@FXML
     public void showCadastroClientes(ActionEvent event) throws IOException {
-        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
+    //  AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV    
         rootLayout.setCenter(showCadastroClientes);
     }
 	
 	@FXML
     public void showCadastroImoveis(ActionEvent event) throws IOException {
-        AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml"));
+    //  AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+		AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV 
         rootLayout.setCenter(showCadastroImoveis);
     }
 	
 	@FXML
     public void showCadastroProprietarios(ActionEvent event) throws IOException {
-        AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml"));
+    //  AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+		AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
         rootLayout.setCenter(showCadastroProprietarios);
     }
 	
@@ -81,7 +81,8 @@ public class RootController {
 	        repoCli.save(tempCliente);
 	        repoDb.save(db);
 	        
-	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
+	   //   AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaCLientes.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroClientes);
 	    }
 	}
@@ -93,8 +94,8 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoContrato(contrato);
 	    if (okClicked) {
-	        
-	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml"));
+	   //   AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+	    	AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroClientes);
 	    }
 	}
@@ -106,9 +107,8 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoImovel(imovel, endereco);
 	    if (okClicked) {
-	    	
-	        
-	        AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml"));
+	    //  AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+	        AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroImoveis);
 	    }
 	}

@@ -11,12 +11,10 @@ import org.springframework.stereotype.Component;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Checklist;
-import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
-import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.services.ImovelService;
@@ -26,16 +24,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.StageStyle;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import net.rgielen.fxweaver.core.FxmlView;
+import javafx.stage.StageStyle;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ImovelController {
 	

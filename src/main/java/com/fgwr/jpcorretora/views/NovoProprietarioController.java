@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fgwr.jpcorretora.domain.DadosBancarios;
-import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
@@ -31,10 +30,8 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class NovoProprietarioController {
 

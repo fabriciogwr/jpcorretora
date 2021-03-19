@@ -10,10 +10,8 @@ import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import net.rgielen.fxweaver.core.FxmlView;
 
 @Component
-@FxmlView
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class ChecklistController {
