@@ -494,10 +494,6 @@ public class ClienteController {
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
 		
-		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
-		
-		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
-		Calendar cal = Calendar.getInstance();
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
@@ -519,8 +515,8 @@ public class ClienteController {
 				
 
 				Alert alert2 = new Alert(AlertType.CONFIRMATION);
-				alert.initStyle(StageStyle.UNDECORATED);
-				DialogPane dialogPane2 = alert.getDialogPane();			
+				alert2.initStyle(StageStyle.UNDECORATED);
+				DialogPane dialogPane2 = alert2.getDialogPane();			
 				dialogPane2.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
 				alert2.setTitle("Recibo");
 				alert2.setHeaderText("Visualizar o recibo do pagamento?");

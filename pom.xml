@@ -32,6 +32,14 @@
 		<java.version>11</java.version>
 	</properties>
 
+<repositories>
+    <repository>
+        <id>dito</id>
+        <name>DITO Repository</name>
+        <url>https://repo.itextsupport.com/dito</url>
+    </repository>
+</repositories>
+
 	<dependencies>
 	
 	<dependency>
@@ -51,7 +59,13 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.13.2</version>
 		</dependency>
-
+		
+		<dependency>
+        <groupId>com.itextpdf.dito</groupId>
+        <artifactId>sdk-java</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+    
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

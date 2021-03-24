@@ -23,3 +23,7 @@
 
 
 }
+
+.table-row-cell:hover {
+	-fx-background-color: khaki;
+}

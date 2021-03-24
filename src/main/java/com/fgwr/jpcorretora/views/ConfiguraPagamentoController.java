@@ -1,5 +1,6 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Instant;
@@ -112,7 +113,7 @@ public class ConfiguraPagamentoController {
 	}
 
 	@FXML
-	private void handleOk() {
+	private void handleOk() throws FileNotFoundException {
 		ApplicationContext context = SpringContext.getAppContext();
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
@@ -122,6 +123,7 @@ public class ConfiguraPagamentoController {
 				duplicata.getParcela(), duplicata.getDataVencimento(), dataPgto);
 		duplicata.setDataPagamento(dataPgto);
 		duplicata.setRecibo(rec);
+		rec.setDuplicata(duplicata);
 		duplicata = dupRepo.save(duplicata);
 	//	rec = recRepo.save(rec);
 		 rec = duplicata.getRecibo();
