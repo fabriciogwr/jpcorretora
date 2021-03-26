@@ -49,22 +49,22 @@ public class RootController {
 	
 	@FXML
     public void showCadastroClientes(ActionEvent event) throws IOException {
-    //  AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
-        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV    
+      AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+    //    AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV    
         rootLayout.setCenter(showCadastroClientes);
     }
 	
 	@FXML
     public void showCadastroImoveis(ActionEvent event) throws IOException {
-    //  AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
-		AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV 
+      AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+	//	AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV 
         rootLayout.setCenter(showCadastroImoveis);
     }
 	
 	@FXML
     public void showCadastroProprietarios(ActionEvent event) throws IOException {
-    //  AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
-		AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
+      AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
         rootLayout.setCenter(showCadastroProprietarios);
     }
 	
@@ -81,8 +81,8 @@ public class RootController {
 	        repoCli.save(tempCliente);
 	        repoDb.save(db);
 	        
-	   //   AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
-	        AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaCLientes.fxml")); //DEV
+	      AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+	   //     AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaCLientes.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroClientes);
 	    }
 	}
@@ -94,8 +94,8 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoContrato(contrato);
 	    if (okClicked) {
-	   //   AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
-	    	AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV
+	      AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+	   // 	AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroClientes);
 	    }
 	}
@@ -107,8 +107,8 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoImovel(imovel, endereco);
 	    if (okClicked) {
-	    //  AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
-	        AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV
+	      AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+	    //    AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroImoveis);
 	    }
 	}

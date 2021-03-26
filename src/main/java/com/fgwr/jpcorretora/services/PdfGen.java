@@ -4,11 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +34,6 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
-import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 
@@ -62,20 +66,28 @@ public class PdfGen {
 
 	}
 
+	public String fileToString ( File file ) {
+	    try {
+	        return file.toURI().toURL().toString();
+	    } catch ( MalformedURLException e ) {
+	        return null;
+	    }
+	}
+	
 	public void geraRecibo(Recibo recibo) throws FileNotFoundException {
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(recibo.getDataPagamento());
-		
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 		String[] nomeArr = StringUtils.split(recibo.getCliente().getNome());
 		PdfWriter writer = new PdfWriter(
-				"D:\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+				docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
 		PdfDocument pdfDoc = new PdfDocument(writer);
 		Document document = new Document(pdfDoc);
 
 		try {
 
-			ImageData header = ImageDataFactory.create(getClass().getResource("../imgs/logo.png").toString());
+			ImageData header = ImageDataFactory.create(fileToString( new File("imgs/logo.png")));
 			Image logoHeader = new Image(header);
 			logoHeader.setWidth(250);
 
@@ -140,7 +152,22 @@ public class PdfGen {
 			table2.addCell(cell);
 
 			cell = new Cell();
-			cell.add(new Paragraph("a importância de " + recibo.getValor() + ","));
+			NumberFormat real = NumberFormat.getNumberInstance();
+			real.setMinimumFractionDigits(2);
+			real.setMaximumFractionDigits(2);
+			
+			
+			String valor = real.format(recibo.getValor());
+			Text textValor = new Text("");
+			textValor.setText(valor);
+			textValor.setBold();
+			Text sinal = new Text("R$ ");
+			sinal.setBold();
+			p = new Paragraph("a importância de ");
+			p.add(sinal);
+			p.add(textValor);
+			p.add(",");
+			cell.add(p);
 			cell.setHeight(30);
 			cell.setBorder(b2);
 			table2.addCell(cell);
@@ -154,8 +181,7 @@ public class PdfGen {
 			table2.addCell(cell);
 
 			cell = new Cell();
-			cell.add(new Paragraph("Do contrato de locação de imóvel nº " + recibo.getDuplicata().getContrato().getId() + "."));
-			// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.add(new Paragraph("Do contrato "+ recibo.getDuplicata().getContrato().getId() + " de locação de imóvel."));
 			cell.setHeight(30);
 			cell.setBorder(b2);
 			cell.setBorderBottom(b1);
@@ -165,7 +191,6 @@ public class PdfGen {
 			table2.addCell(cell);
 			
 			cell.add(new Paragraph("Para clareza, firmamos o presente."));
-			// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			cell.setHeight(30);
 			cell.setBorder(b2);
 			table2.addCell(cell);
@@ -173,7 +198,6 @@ public class PdfGen {
 			cell = new Cell();
 			p = new Paragraph("Vilhena, " + cal.get(Calendar.DAY_OF_MONTH) + " de " + new SimpleDateFormat("MMMMM", new Locale ("pt", "BR")).format(recibo.getDataPagamento()) + " de " + cal.get(Calendar.YEAR) + ".");
 			
-			cell.add(p);
 			cell.setTextAlignment(TextAlignment.RIGHT);
 			cell.setHeight(30);
 			cell.setBorder(b2);
@@ -181,7 +205,8 @@ public class PdfGen {
 			
 			cell = new Cell();
 			table2.addCell(cell);
-			p = new Paragraph("____________________________________________\nJoão Paulo Escritório Imobiliário      ");
+			table2.addCell(cell);
+			p = new Paragraph("________________________________________\nJoão Paulo Escritório Imobiliário");
 			cell.add(p);
 			cell.setTextAlignment(TextAlignment.RIGHT);
 			cell.setHeight(60);

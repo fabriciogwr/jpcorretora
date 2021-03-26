@@ -142,6 +142,12 @@ public class Duplicata implements Serializable {
 	public void setRecibo(Recibo recibo) {
 		this.recibo = recibo;
 	}
+	
+	public String getDataVencimentoForm() {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String vencimento = (df.format(dataVencimento));
+		return vencimento;
+	}
 
 
 	@Override

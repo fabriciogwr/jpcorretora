@@ -1,11 +1,16 @@
 package com.fgwr.jpcorretora.views;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.swing.filechooser.FileSystemView;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -35,6 +40,7 @@ import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -43,6 +49,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.StageStyle;
 
@@ -50,10 +57,12 @@ import javafx.stage.StageStyle;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class ClienteController {
-
+	
+	String dir = System.getProperty("user.dir");
 	PdfGen pdfGen = new PdfGen();
 	@FXML
 	private BorderPane rootLayout;
+
 
 	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
 	private ObservableList<String> telefoneData = FXCollections.observableArrayList();
@@ -83,6 +92,10 @@ public class ClienteController {
 	@FXML
 	private TableColumn<Duplicata, String> dataPgtoColumn;
 
+	@FXML
+	private Accordion accordion;
+	@FXML
+	private TitledPane financeiro;
 	@FXML
 	private Label nomeLabel;
 	@FXML
@@ -488,17 +501,27 @@ public class ClienteController {
     	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
     }
 	
+	public String fileToStylesheetString ( File stylesheetFile ) {
+	    try {
+	        return stylesheetFile.toURI().toURL().toString();
+	    } catch ( MalformedURLException e ) {
+	        return null;
+	    }
+	}
+	
 	@Transactional
 	@FXML
-	private void handlePagamento() {
+	private void handlePagamento() throws IOException {
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
+		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
+		
 		
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			DialogPane dialogPane = alert.getDialogPane();	
+			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
 			alert.setTitle("Confirmar pagamento");
 			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
 			
@@ -508,39 +531,44 @@ public class ClienteController {
 				boolean okClicked = frontApp.showConfiguraPagamento(selectedDuplicata);
 				if (okClicked) {
 					showClient(selectedCliente);
-
-				}
-				duplicataTable.refresh();
-				
-				
-
-				Alert alert2 = new Alert(AlertType.CONFIRMATION);
-				alert2.initStyle(StageStyle.UNDECORATED);
-				DialogPane dialogPane2 = alert2.getDialogPane();			
-				dialogPane2.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
-				alert2.setTitle("Recibo");
-				alert2.setHeaderText("Visualizar o recibo do pagamento?");
-				Optional<ButtonType> result2 = alert2.showAndWait();
-				if (result2.get() == ButtonType.OK) {
+					Recibo rec = recRepo.findByDuplicata(selectedDuplicata);
+					selectedDuplicata.setRecibo(rec);
 					
+					Alert alert2 = new Alert(AlertType.CONFIRMATION);
+					alert2.initStyle(StageStyle.UNDECORATED);
+					DialogPane dialogPane2 = alert2.getDialogPane();			
+					dialogPane2.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+					alert2.setTitle("Recibo");
+					alert2.setHeaderText("Visualizar o recibo do pagamento?");
+					Optional<ButtonType> result2 = alert2.showAndWait();
+					if (result2.get() == ButtonType.OK) {
+						visualizaRecibo(selectedDuplicata.getRecibo());
 
-				} else {
-					alert.close();
+					} else {
+						alert.close();
+					}
+
+					
 				}
+
+				
+				
+
+				
 			}
 
 		}
 	}
 
 	@FXML
-	public void handleCancelaPagamento() {
+	public void handleCancelaPagamento() throws IOException {
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
 			alert.setTitle("Cancelar pagamento");
 			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -551,9 +579,36 @@ public class ClienteController {
 				selectedDuplicata.setRecibo(null);
 				dupRepo.save(selectedDuplicata);
 				recRepo.delete(rec);
+				
 			}
+			
 			duplicataTable.refresh();
 		}
+		
+		
+	}
+	
+	@FXML
+	public void visualizaRecibo() throws IOException {
+		Duplicata duplicata = duplicataTable.getSelectionModel().getSelectedItem();
+
+		Recibo recibo = duplicata.getRecibo();
+		String[] nomeArr = StringUtils.split(recibo.getCliente().getNome());
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		File file = new File(docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		System.out.println(docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		Desktop desktop = Desktop.getDesktop();
+		desktop.open(file);
+		
+	}
+	
+	public void visualizaRecibo(Recibo rec) throws IOException {
+		String[] nomeArr = StringUtils.split(rec.getCliente().getNome());
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		File file = new File(docFolder + "\\Recibos\\" + rec.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		System.out.println(docFolder + "\\Recibos\\" + rec.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		Desktop desktop = Desktop.getDesktop();
+		desktop.open(file);
 	}
 
 	public void setMainApp(FrontApp frontApp) {

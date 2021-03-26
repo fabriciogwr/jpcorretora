@@ -3,6 +3,7 @@ package com.fgwr.jpcorretora.views;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,6 +37,9 @@ public class ConfiguraPagamentoController {
 
 	PdfGen pdfGen = new PdfGen();
 	
+	LocalDate dataPgto;
+	LocalDate dataVcm;
+	
 	@FXML
 	private CheckBox abaterJurosCheck;
 
@@ -55,7 +59,11 @@ public class ConfiguraPagamentoController {
 	private TextField totalPagoField;
 
 	private Double juros;
-
+	
+	private Double valorCorrigido;
+	private Double valorCorrigidoCalc;
+	private String valorCorrigidoStr;
+	
 	private Stage dialogStage;
 	private boolean okClicked = false;
 
@@ -83,43 +91,80 @@ public class ConfiguraPagamentoController {
 
 	public void setDuplicata(Duplicata duplicata) {
 		this.duplicata = duplicata;
-
+		NumberFormat real = NumberFormat.getNumberInstance();
+		real.setMinimumFractionDigits(2);
+		real.setMaximumFractionDigits(2);
+		
+		
+		String valor = "R$ " + real.format(duplicata.getValor());
+		valorVencimentoField.setText(valor);
 		Date now = new Date();
 
-		cal.setTime(now);
+		cal.setTime(duplicata.getDataVencimento());
 		Double valorPorDia = duplicata.getValor() / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		DecimalFormatSymbols separador = new DecimalFormatSymbols();
 		separador.setDecimalSeparator('.');
 		DecimalFormat df = new DecimalFormat("0.00", separador);
 		String valorPorDiaString = df.format(valorPorDia);
-
+		
 		dataPagamentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
-		Integer dia = dataPagamentoField.getValue().getDayOfMonth();
-		Integer mes = dataPagamentoField.getValue().getMonthValue();
-		Integer ano = dataPagamentoField.getValue().getYear();
+		
+		dataPgto = dataPagamentoField.getValue();
+		vencimentoField.setText(duplicata.getDataVencimentoForm());
+		dataVcm = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+		valorCorrigidoCalc = duplicata.getValor() + juros;
+		valorCorrigido = valorCorrigidoCalc;
+		valorCorrigidoStr = "R$ " + real.format(valorCorrigidoCalc);
+		valorCorrigidoField.setText(valorCorrigidoStr);
+		
+		dataPagamentoField.valueProperty().addListener((observable, oldValue, newValue) -> {
+			dataPgto = dataPagamentoField.getValue();
+			
+			dataVcm = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+			valorCorrigidoCalc = (juros <= 0 ) ? duplicata.getValor() : duplicata.getValor() + juros;
+			valorCorrigido = valorCorrigidoCalc;
+			valorCorrigidoStr = "R$ " + real.format(valorCorrigidoCalc);
+			valorCorrigidoField.setText(valorCorrigidoStr);
+		});
 
-		LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-		cal.set(ano, mes - 1, dia);
-		LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-		juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
-
-		vencimentoField.setText(duplicata.getDataVencimento().toString());
-
-		Double valorCorrigido = duplicata.getValor() + juros;
-		valorCorrigidoField.setText(valorCorrigido.toString());
+		
+		
+		abaterJurosCheck.armedProperty().addListener((observable, oldValue, newValue) -> {
+			if (abaterJurosCheck.isSelected()) {
+				valorCorrigido = duplicata.getValor();
+			valorCorrigidoField.setText(valor);
+			} else {
+				valorCorrigido = valorCorrigidoCalc;
+				valorCorrigidoField.setText(valorCorrigidoStr);
+			}
+			
+		});
 
 	}
+	
 
 	@FXML
 	private void handleOk() throws FileNotFoundException {
 		ApplicationContext context = SpringContext.getAppContext();
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
+		
+		Double valorPago;
+		
+		if (totalPagoField.getText().length() > 0) {
+			valorPago = Double.parseDouble(totalPagoField.getText().replace(",","."));
 
+		} else {
+			valorPago = valorCorrigido;
+			
+		}
+		
+		
+	
 		Date dataPgto = Date.from(dataPagamentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), duplicata.getValor(),
+		Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago,
 				duplicata.getParcela(), duplicata.getDataVencimento(), dataPgto);
 		duplicata.setDataPagamento(dataPgto);
 		duplicata.setRecibo(rec);
@@ -132,6 +177,9 @@ public class ConfiguraPagamentoController {
 		 
 		 okClicked = true;
 		 dialogStage.close();
+	//	 return rec;
+		 
+		 
 	}
 
 }
