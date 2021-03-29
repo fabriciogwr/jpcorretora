@@ -28,6 +28,7 @@ public class ImovelChecklistDTO {
 	private boolean danoPortao;
 	private boolean danoPinturaInterna;
 	private boolean danoPinturaExterna;
+	private String obs;
 	
 	public ImovelChecklistDTO() {
 		
@@ -39,7 +40,7 @@ public class ImovelChecklistDTO {
 			boolean danoPortaoEletro, boolean danoCercaEletrica, boolean danoControle, boolean danoInfiltracao,
 			boolean danoPia, boolean danoVasoSanitario, boolean danoBox, boolean danoArCondicionado,
 			boolean danoMoveisVinculados, boolean danoPortas, boolean danoJanelas, boolean danoPortao,
-			boolean danoPinturaInterna, boolean danoPinturaExterna) {
+			boolean danoPinturaInterna, boolean danoPinturaExterna, String obs) {
 		super();
 		this.danoSala = danoSala;
 		this.danoCozinha = danoCozinha;
@@ -67,6 +68,7 @@ public class ImovelChecklistDTO {
 		this.danoPortao = danoPortao;
 		this.danoPinturaInterna = danoPinturaInterna;
 		this.danoPinturaExterna = danoPinturaExterna;
+		this.obs = obs;
 	}
 
 
@@ -278,6 +280,13 @@ public class ImovelChecklistDTO {
 	public void setDanoPinturaExterna(boolean danoPinturaExterna) {
 		this.danoPinturaExterna = danoPinturaExterna;
 	}
-	
-	
+
+	public String getObs() {
+		return obs;
+	}
+
+	public void setObs(String obs) {
+		this.obs = obs;
+	}
+
 }

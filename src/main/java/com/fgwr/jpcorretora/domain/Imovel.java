@@ -69,8 +69,6 @@ public class Imovel implements Serializable {
     private Boolean danoPinturaInterna;
     private Boolean danoPinturaExterna;
     
-    private String obs;
-    
     @Temporal(TemporalType.DATE)
     private Date dataLaudo;
     
@@ -90,7 +88,7 @@ public class Imovel implements Serializable {
 			Boolean danoCercaEletrica, Boolean danoControle, Boolean danoInfiltracao, Boolean danoPia,
 			Boolean danoVasoSanitario, Boolean danoBox, Boolean danoArCondicionado, Boolean danoMoveisVinculados,
 			Boolean danoPortas, Boolean danoJanelas, Boolean danoPortao, Boolean danoPinturaInterna,
-			Boolean danoPinturaExterna, String obs, Date dataLaudo, String corretor ) {
+			Boolean danoPinturaExterna, Date dataLaudo, String corretor ) {
         this.id = id;
         this.dataAngariacao = dataAngariacao;
         this.descricao = descricao;
@@ -121,7 +119,6 @@ public class Imovel implements Serializable {
 		this.danoPortao = danoPortao;
 		this.danoPinturaInterna = danoPinturaInterna;
 		this.danoPinturaExterna = danoPinturaExterna;
-		this.obs = obs;
 		this.dataLaudo = dataLaudo;
 		this.corretor = corretor;
     }
@@ -395,14 +392,6 @@ public class Imovel implements Serializable {
 
 	public void setDanoPinturaExterna(Boolean danoPinturaExterna) {
 		this.danoPinturaExterna = danoPinturaExterna;
-	}
-
-	public String getObs() {
-		return obs;
-	}
-
-	public void setObs(String obs) {
-		this.obs = obs;
 	}
 
 	public Date getDataLaudo() {

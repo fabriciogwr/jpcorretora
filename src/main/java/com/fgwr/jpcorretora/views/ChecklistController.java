@@ -9,6 +9,7 @@ import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 @Component
@@ -68,6 +69,8 @@ public class ChecklistController {
 	private CheckBox danoPinturaInternaCheck;
 	@FXML
 	private CheckBox danoPinturaExternaCheck;
+	@FXML
+	private TextArea obsField;
 
 	private Stage dialogStage;
 	private boolean okClicked = false;
@@ -122,6 +125,7 @@ public class ChecklistController {
 		danoTomadasCheck.setSelected(checklist.isDanoTomadas());
 		danoVasoSanitarioCheck.setSelected(checklist.isDanoVasoSanitario());
 
+		obsField.setText(checklist.getObs());
 	}
 	
 	@FXML
@@ -153,15 +157,14 @@ public class ChecklistController {
 		checklist.setDanoSala(danoSalaCheck.isSelected());
 		checklist.setDanoTomadas(danoTomadasCheck.isSelected());
 		checklist.setDanoVasoSanitario(danoVasoSanitarioCheck.isSelected());
-
+		checklist.setObs(obsField.getText());
 		
-        	
-	        
-            
+		
             
             okClicked = true;
             dialogStage.close();
         //    return checklist;
         
     }
+
 }

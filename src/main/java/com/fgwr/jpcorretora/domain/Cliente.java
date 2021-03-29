@@ -64,7 +64,7 @@ public class Cliente implements Serializable {
     @CollectionTable(name = "TELEFONE_CLI")
     private Set<String> telefones = new HashSet<>();
     
-    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "cliente", cascade = {CascadeType.ALL})
     private DadosBancarios dadosBancarios;
 
     private String obs;
