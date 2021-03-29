@@ -37,7 +37,7 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 
-public class PdfGen {
+public class ReciboPdfGen {
 
 	private InputStream getFileFromResourceAsStream(String fileName) {
 		ClassLoader classLoader = getClass().getClassLoader();
@@ -166,6 +166,8 @@ public class PdfGen {
 			p = new Paragraph("a importância de ");
 			p.add(sinal);
 			p.add(textValor);
+			
+			p.add(" (" + ValorExtenso.valorPorExtenso(recibo.getValor()) + ")"); 
 			p.add(",");
 			cell.add(p);
 			cell.setHeight(30);
