@@ -1,8 +1,6 @@
 package com.fgwr.jpcorretora;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +45,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 @SpringBootApplication
 public class FrontApp extends Application {
@@ -76,6 +75,7 @@ public class FrontApp extends Application {
 	private ConfigurableApplicationContext applicationContext;
 
 	String dir = System.getProperty("user.dir");
+	//String dir = "D:\\jpcorretora";
 	
 	FileResourcesUtils fru = new FileResourcesUtils();
 	
@@ -86,6 +86,8 @@ public class FrontApp extends Application {
 	@Override
 	public void init() {
 
+		
+		
 		ApplicationContextInitializer<GenericApplicationContext> initializer = ac -> {
 
 			ac.registerBean(Application.class, () -> FrontApp.this);
@@ -186,7 +188,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Cliente");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -213,7 +217,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Novo Cliente");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -240,7 +246,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Dados do Proprietario");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -267,7 +275,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Dados do Novo Imóvel");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -294,7 +304,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Novo Contrato");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -321,7 +333,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Observação");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -348,7 +362,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Observação");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -375,7 +391,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Configurar Pagamento");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -402,7 +420,9 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Referência");
-	        dialogStage.initModality(Modality.NONE);
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
@@ -430,7 +450,10 @@ public class FrontApp extends Application {
 
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Checklist");
-	        dialogStage.initModality(Modality.NONE);
+	        
+	        dialogStage.setResizable(false);
+	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);

@@ -2,8 +2,6 @@ package com.fgwr.jpcorretora;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -25,6 +23,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 		
 			String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 			new File(docFolder + "/Recibos").mkdir();
+			new File(docFolder + "/Imoveis").mkdir();
 		
 		
 		
