@@ -203,12 +203,15 @@ public class ProprietarioController {
 			
 			
 			dadosBancarios = getDadosBancariosData();
+			
+			if (dadosBancarios.getBanco() !=null) {
 			bancoLabel
 					.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
 			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
 			agenciaLabel.setText(dadosBancarios.getAgencia());
 			numeroContaLabel.setText(dadosBancarios.getConta());
 			titularLabel.setText(dadosBancarios.getTitular());
+			}
 			referenciaData.clear();
 			
 			obsLabel.setText(proprietario.getObs());

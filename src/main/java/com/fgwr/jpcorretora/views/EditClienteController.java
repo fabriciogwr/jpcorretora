@@ -143,12 +143,14 @@ public class EditClienteController {
         	estadoCivilBox.setValue(null);
         }
         profissaoField.setText(cliente.getProfissao());
+        
+        if (cliente.getDadosBancarios() != null) {
         agenciaField.setText(cliente.getDadosBancarios().getAgencia());
         titularField.setText(cliente.getDadosBancarios().getTitular());
         contaField.setText(cliente.getDadosBancarios().getConta());
         obsField.setText(cliente.getObs());
 		
-        if (cliente.getDadosBancarios() != null) {
+        
         bancoBox.setValue(cliente.getDadosBancarios().getBanco().getFullCod() + " - " + cliente.getDadosBancarios().getBanco().getDescricao());
         tipoContaBox.setValue(cliente.getDadosBancarios().getTipo().getDesc());
         } else {

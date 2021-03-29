@@ -79,7 +79,7 @@ public class RootController {
         	ClienteRepository repoCli = (ClienteRepository)context.getBean("clienteRepository");
         	DadosBancariosRepository repoDb = (DadosBancariosRepository)context.getBean("dadosBancariosRepository");
 	        repoCli.save(tempCliente);
-	        repoDb.save(db);
+	        
 	        
 	      AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
 	   //     AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaCLientes.fxml")); //DEV

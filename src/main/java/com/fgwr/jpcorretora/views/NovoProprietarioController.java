@@ -256,15 +256,22 @@ public class NovoProprietarioController {
 			proprietario.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
 			proprietario.setProfissao(profissaoField.getText());
 			proprietario.setObs(obsField.getText());
-
+			
+			if(titularField.getText() != "") {
 			db.setAgencia(agenciaField.getText());
 			db.setConta(contaField.getText());
 			db.setTitular(titularField.getText());
+			 if(bancoBox.getValue() != null) {
 			db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+			 }
+			 if (tipoContaBox.getValue() != null) {
 			db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
-			proprietario.setDadosBancarios(db);
-			db.setProprietario(proprietario);
+			 }
+			 db.setProprietario(proprietario);
+			 proprietario.setDadosBancarios(db);
+			
 
+			}
 			okClicked = true;
 			dialogStage.close();
 		}

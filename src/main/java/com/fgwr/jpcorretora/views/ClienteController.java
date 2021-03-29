@@ -256,12 +256,14 @@ public class ClienteController {
 			duplicataAux.clear();
 			imovel = getImovelData();
 			dadosBancarios = getDadosBancariosData();
-			bancoLabel
-					.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
+			
+			if (dadosBancarios.getBanco() !=null) {
+			bancoLabel.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
 			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
 			agenciaLabel.setText(dadosBancarios.getAgencia());
 			numeroContaLabel.setText(dadosBancarios.getConta());
 			titularLabel.setText(dadosBancarios.getTitular());
+			}
 			referenciaData.clear();
 			referenciaData = getReferenciaData(cliente);
 			obsLabel.setText(cliente.getObs());
