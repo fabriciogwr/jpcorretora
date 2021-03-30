@@ -457,7 +457,7 @@ public class ContratoPdfGen {
 		
 		document.add(new Paragraph("\n\n\n "));
 		
-		Table table3 = new Table(new float[] {4, 2, 4}).useAllAvailableWidth();
+		Table table3 = new Table(new float[] {90, 10, 90}, true).useAllAvailableWidth();
 		cell = new Cell();
 		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + cpfFormat(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
 		cell.add(p);

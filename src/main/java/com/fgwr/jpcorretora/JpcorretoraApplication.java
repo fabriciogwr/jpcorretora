@@ -24,9 +24,8 @@ public class JpcorretoraApplication implements CommandLineRunner {
 			String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 			new File(docFolder + "/Recibos").mkdir();
 			new File(docFolder + "/Imoveis").mkdir();
-		
-		
-		
+			new File(docFolder + "/Contratos").mkdir();
+			
 		Application.launch(FrontApp.class, args);
 		
 

@@ -1,5 +1,6 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
@@ -21,11 +22,14 @@ import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Testemunha;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
+import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.DuplicataService;
+import com.fgwr.jpcorretora.services.TableHeader;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
 import javafx.collections.FXCollections;
@@ -51,7 +55,8 @@ public class NovoContratoController {
 	private Stage dialogStage;
 	private boolean okClicked = false;
 	Double primeiraParcela;
-	 
+	ContratoPdfGen pdfGen = new ContratoPdfGen(); 
+	
 	ObservableList<Imovel> imoveis;
 	ObservableList<Cliente> clientes;
 	@FXML
@@ -66,6 +71,14 @@ public class NovoContratoController {
 	private TextField vencimentosField;
 	@FXML
 	private TextField primeiraParcelaField;
+	@FXML
+	private TextField testemunha1Field;
+	@FXML
+	private TextField testemunha1CpfField;
+	@FXML
+	private TextField testemunha2Field;
+	@FXML
+	private TextField testemunha2CpfField;
 	@FXML
 	private Label primeiraParcelaLabel;
 	
@@ -211,7 +224,7 @@ Calendar cal = Calendar.getInstance();
     }
     
     @FXML
-    private void handleOk() {
+    private void handleOk() throws FileNotFoundException {
         if (isInputValid()) {
         	
         	DuplicataService ds = (DuplicataService)context.getBean("duplicataService");
@@ -251,11 +264,21 @@ Calendar cal = Calendar.getInstance();
         	contrato.setImovel(imovel);
         	contrato.setDuplicatas(dups);
         	
-        	contRepo.save(contrato);
+        	contrato = contRepo.save(contrato);
         	cliRepo.save(cliente);     	
         	dupRepo.saveAll(dups);        	
         	imRepo.save(imovel);
+        	System.out.println(contrato.getQtdParcelas());
         	
+        	Testemunha t1 = new Testemunha(testemunha1Field.getText(), testemunha1CpfField.getText());
+        	Testemunha t2 = new Testemunha(testemunha2Field.getText(), testemunha2CpfField.getText());
+        	try {
+				pdfGen.geraContrato(contrato, t1, t2);
+				//new TableHeader().manipulatePdf(path);
+			} catch (Exception e) {
+				System.out.println("Falha ao gerar contrato");
+				e.printStackTrace();
+			}
         	okClicked = true;
         	dialogStage.close();
         	

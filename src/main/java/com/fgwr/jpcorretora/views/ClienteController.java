@@ -34,7 +34,7 @@ import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ImovelService;
-import com.fgwr.jpcorretora.services.PdfGen;
+import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
 import javafx.collections.FXCollections;
@@ -59,7 +59,7 @@ import javafx.stage.StageStyle;
 public class ClienteController {
 	
 	String dir = System.getProperty("user.dir");
-	PdfGen pdfGen = new PdfGen();
+	ReciboPdfGen reciboPdfGen = new ReciboPdfGen();
 	@FXML
 	private BorderPane rootLayout;
 

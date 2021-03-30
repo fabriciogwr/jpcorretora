@@ -181,9 +181,9 @@ public class Duplicata implements Serializable {
 		return contrato;
 	}
 	
-	public StringProperty parcela() {
-		StringProperty nome = new SimpleStringProperty(this.parcela.toString());
-		return nome;
+	public StringProperty parcela() {		
+		StringProperty parc = (parcela.toString().length()==1) ? new SimpleStringProperty("0" + this.parcela.toString()) : new SimpleStringProperty(this.parcela.toString());
+		return parc;
 	}
 	
 	public StringProperty vencimento() {

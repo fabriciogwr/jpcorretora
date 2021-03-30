@@ -1,5 +1,7 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -115,7 +117,13 @@ public class NovoProprietarioController {
 	private void handleCancel() {
 		dialogStage.close();
 	}
-
+	public String fileToStylesheetString ( File stylesheetFile ) {
+	    try {
+	        return stylesheetFile.toURI().toURL().toString();
+	    } catch ( MalformedURLException e ) {
+	        return null;
+	    }
+	}
 	private boolean isInputValid() {
 		String errorMessage = "";
 
@@ -142,13 +150,14 @@ public class NovoProprietarioController {
 
 		}
 
+		
 		if (errorMessage.length() == 0) {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

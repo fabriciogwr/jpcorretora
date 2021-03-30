@@ -320,6 +320,37 @@ public class NovoImovelController {
 			
 			obs = checklist.getObs();
 
+		} else {
+			
+			imovel.setDanoArCondicionado(false);
+			imovel.setDanoAreaServico(false);
+			imovel.setDanoBanheiro(false);
+			imovel.setDanoBox(false);
+			imovel.setDanoCercaEletrica(false);
+			imovel.setDanoChaves(false);
+			imovel.setDanoChuveiro(false);
+			imovel.setDanoControle(false);
+			imovel.setDanoCozinha(false);
+			imovel.setDanoDispensa(false);
+			imovel.setDanoFechaduras(false);
+			imovel.setDanoGaragem(false);
+			imovel.setDanoInfiltracao(false);
+			imovel.setDanoJanelas(false);
+			imovel.setDanoLampadas(false);
+			imovel.setDanoMoveisVinculados(false);
+			imovel.setDanoPia(false);
+			imovel.setDanoPinturaExterna(false);
+			imovel.setDanoPinturaInterna(false);
+			imovel.setDanoPortao(false);
+			imovel.setDanoPortaoEletro(false);
+			imovel.setDanoPortas(false);
+			imovel.setDanoQuarto(false);
+			imovel.setDanoSala(false);
+			imovel.setDanoTomadas(false);
+			imovel.setDanoVasoSanitario(false);
+			
+			obs = "Sem observações";
+			
 		}
 
 	}

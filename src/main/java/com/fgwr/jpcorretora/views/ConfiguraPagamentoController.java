@@ -22,7 +22,7 @@ import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
-import com.fgwr.jpcorretora.services.PdfGen;
+import com.fgwr.jpcorretora.services.ReciboPdfGen;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 @Transactional
 public class ConfiguraPagamentoController {
 
-	PdfGen pdfGen = new PdfGen();
+	ReciboPdfGen reciboPdfGen = new ReciboPdfGen();
 	
 	LocalDate dataPgto;
 	LocalDate dataVcm;
@@ -173,7 +173,7 @@ public class ConfiguraPagamentoController {
 	//	rec = recRepo.save(rec);
 		 rec = duplicata.getRecibo();
 		 
-		 pdfGen.geraRecibo(rec);
+		 reciboPdfGen.geraRecibo(rec);
 		 
 		 okClicked = true;
 		 dialogStage.close();

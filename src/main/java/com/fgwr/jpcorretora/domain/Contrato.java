@@ -42,7 +42,7 @@ public class Contrato implements Serializable {
     	
     }
 
-	public Contrato(Integer id, Date data, int qtdParcelas, Double valorDeCadaParcela ) {
+	public Contrato(Integer id, Date data, Integer qtdParcelas, Double valorDeCadaParcela ) {
 		super();
 		this.id = id;
 		this.data = data;
@@ -82,7 +82,7 @@ public class Contrato implements Serializable {
 		this.imovel = imovel;
 	}
 
-	public int getQtdParcelas() {
+	public Integer getQtdParcelas() {
 		return qtdParcelas;
 	}
 

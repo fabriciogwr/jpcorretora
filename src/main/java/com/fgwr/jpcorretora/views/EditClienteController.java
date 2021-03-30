@@ -144,7 +144,7 @@ public class EditClienteController {
         }
         profissaoField.setText(cliente.getProfissao());
         
-        if (cliente.getDadosBancarios() != null) {
+        if (cliente.getDadosBancarios().getBanco() != null) {
         agenciaField.setText(cliente.getDadosBancarios().getAgencia());
         titularField.setText(cliente.getDadosBancarios().getTitular());
         contaField.setText(cliente.getDadosBancarios().getConta());
@@ -186,11 +186,14 @@ public class EditClienteController {
             cliente.setRg(rgField.getText());
             cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
             cliente.setProfissao(profissaoField.getText());
+            
+            if (cliente.getDadosBancarios().getBanco() != null ) {
             cliente.getDadosBancarios().setAgencia(agenciaField.getText());
             cliente.getDadosBancarios().setConta(contaField.getText());
             cliente.getDadosBancarios().setTitular(titularField.getText());
             cliente.getDadosBancarios().setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
             cliente.getDadosBancarios().setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+            }
             cliente.setObs(obsField.getText());
             repo.save(cliente);
             
