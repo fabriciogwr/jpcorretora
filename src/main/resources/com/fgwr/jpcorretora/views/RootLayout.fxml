@@ -62,7 +62,7 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroClientes" prefHeight="60.0" stylesheets="@../css/style.css" text="Clientes">
+            <Button fx:id="clientesBtn" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroClientes" prefHeight="60.0" stylesheets="@../css/style.css" text="Clientes">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

@@ -119,15 +119,14 @@ public class EditClienteController {
         nomeField.setText(cliente.getNome());
         emailField.setText(cliente.getEmail());
         
-        Set<String> telefones = cliente.getTelefones();
-		for (String string : telefones) {
-			telefoneData.add(string);
-		}
-		telefonePrefField.setText(telefoneData.get(0));
-		if (telefoneData.size() == 2 ) {
-			telefoneAltField.setText(telefoneData.get(0)); telefonePrefField.setText(telefoneData.get(1)); } else { telefoneAltField.setText("");
-    }
         
+		telefonePrefField.setText(cliente.getTelefonePref());
+		if (!cliente.getTelefoneAlt().isBlank()) {
+			telefoneAltField.setText(cliente.getTelefoneAlt());
+			
+		} else {
+			telefoneAltField.setText("");
+		}
         
         if (cliente.getDataNascimento() != null) {
         dataNascimentoField.setValue(Instant.ofEpochMilli(cliente.getDataNascimento().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
@@ -172,15 +171,13 @@ public class EditClienteController {
         	ClienteRepository repo = (ClienteRepository)context.getBean("clienteRepository");
         	cliente.setNome(nomeField.getText());
             cliente.setEmail(emailField.getText());
-            
-            if (!telefoneAltField.getText().isBlank() ) {
-            	Set<String> telefones = Sets.newHashSet(telefoneAltField.getText());
-            	telefones.add(telefonePrefField.getText());
-            	cliente.setTelefones(telefones);
-            } else {
-            	Set<String> telefones = Sets.newHashSet(telefonePrefField.getText());
-            	cliente.setTelefones(telefones);
-            }
+            cliente.setTelefonePref(telefonePrefField.getText());
+
+			if (!telefoneAltField.getText().isBlank()) {
+				cliente.setTelefoneAlt(telefoneAltField.getText());
+			} else {
+				cliente.setTelefoneAlt("");
+			}
             cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             cliente.setCpfOuCnpj(cpfField.getText());
             cliente.setRg(rgField.getText());

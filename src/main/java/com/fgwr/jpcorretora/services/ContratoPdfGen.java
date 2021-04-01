@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -18,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Testemunha;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -61,17 +59,10 @@ public class ContratoPdfGen {
 	    }
 	}
 	
-	private String cpfFormat(String cpf) {
-	StringBuilder sb = new StringBuilder(cpf);
-	sb.insert(3, ".");
-	sb.insert(7, ".");
-	sb.insert(11, "-");
-	return sb.toString();
-	}
 	
 	String DEST;
 	public void geraContrato(Contrato contrato, Testemunha test1, Testemunha test2) throws Exception {
-
+		
 		Calendar cal = Calendar.getInstance();
 	//	cal.setTime(contrato.getDataPagamento());
 		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
@@ -82,12 +73,9 @@ public class ContratoPdfGen {
 		PdfDocument pdfDoc = new PdfDocument(writer);
 		Document document = new Document(pdfDoc);
 		
-		List<String> telefoneData = new ArrayList<>();
-		Set<String> telefones = contrato.getCliente().getTelefones();
-		for (String string : telefones) {
-			telefoneData.add(string);
-		}
-
+		
+		
+		
 		
 		TableHeaderEventHandler handler = new TableHeaderEventHandler(document, contrato.getId());
         pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
@@ -142,10 +130,10 @@ public class ContratoPdfGen {
 		Text locStr = new Text("LOCATÁRIO: ").setBold();
 		p = new Paragraph();
 		p.add(locStr);
-		p.add(contrato.getCliente().getNome().toUpperCase() + ", CPF: " + cpfFormat(contrato.getCliente().getCpfOuCnpj()) + ", RG: "
+		p.add(contrato.getCliente().getNome().toUpperCase() + ", CPF: " + StringsUtils.formatarCpf(contrato.getCliente().getCpfOuCnpj()) + ", RG: "
 				+ contrato.getCliente().getRg() + ", " + contrato.getCliente().getEstadoCivil().getDescricao().toUpperCase()
 				+ ", " + contrato.getCliente().getProfissao().toUpperCase()
-				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone " + telefoneData.get(0) + ".\n");
+				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone Principal" + StringsUtils.formatarTelefone(contrato.getCliente().getTelefonePref()) + ".\n");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
 		cell.setBorder(b2);
@@ -459,18 +447,16 @@ public class ContratoPdfGen {
 		
 		Table table3 = new Table(new float[] {90, 10, 90}, true).useAllAvailableWidth();
 		cell = new Cell();
-		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + cpfFormat(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
+		p = new Paragraph("João Paulo Santos Teodoro\nCPF: 657.114.292-20\nAdministrador");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
 		cell.setBorderTop(b3);
 		table3.addCell(cell);
 		
-		
-		
 		cell = new Cell();
 		table3.addCell(cell);
-		p = new Paragraph("João Paulo Santos Teodoro\nCPF: 657.114.292-20\nAdministrador");
+		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + StringsUtils.formatarCpf(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
@@ -485,7 +471,7 @@ public class ContratoPdfGen {
 		table3.addCell(cell);
 		
 		cell = new Cell();
-		p = new Paragraph(test1.getNome() + "\nCPF: " + cpfFormat(test1.getCpf()) + "\nTestemunha");
+		p = new Paragraph(test1.getNome() + "\nCPF: " + StringsUtils.formatarCpf(test1.getCpf()) + "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
@@ -497,7 +483,7 @@ public class ContratoPdfGen {
 		table3.addCell(cell);
 		
 		cell = new Cell();
-		p = new Paragraph(test2.getNome() + "\nCPF: " + cpfFormat(test2.getCpf())+ "\nTestemunha");
+		p = new Paragraph(test2.getNome() + "\nCPF: " + StringsUtils.formatarCpf(test2.getCpf())+ "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);

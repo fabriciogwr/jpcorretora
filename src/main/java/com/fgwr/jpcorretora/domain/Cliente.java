@@ -50,6 +50,8 @@ public class Cliente implements Serializable {
     private Integer tipo;
     private Integer estadoCivil;
     private String profissao;
+    private String telefonePref;
+    private String  telefoneAlt;
     
     
 
@@ -59,10 +61,6 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.REMOVE)
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Referencia> referencia = new ArrayList<>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "TELEFONE_CLI")
-    private Set<String> telefones = new HashSet<>();
     
     @OneToOne(mappedBy = "cliente", cascade = {CascadeType.ALL})
     private DadosBancarios dadosBancarios;
@@ -76,7 +74,7 @@ public class Cliente implements Serializable {
     	
     }
 
-	public Cliente(Integer id, String nome, Date dataNascimento, String email, String cpfOuCnpj, String rg, String obs, TipoCliente tipo, EstadoCivil estadoCivil, String profissao) {
+	public Cliente(Integer id, String nome, Date dataNascimento, String email, String cpfOuCnpj, String rg, String telefonePref, String telefoneAlt, String obs, TipoCliente tipo, EstadoCivil estadoCivil, String profissao) {
         super();
         this.id = id;
         this.nome = nome;
@@ -88,6 +86,8 @@ public class Cliente implements Serializable {
         this.tipo = tipo.getCod();
         this.estadoCivil = estadoCivil.getCod();
 		this.profissao = profissao;
+		this.telefonePref = telefonePref;
+		this.telefoneAlt = telefoneAlt;
     }
 
     public Integer getId() {
@@ -153,14 +153,6 @@ public class Cliente implements Serializable {
 		this.enderecos = enderecos;
 	}
 
-    public Set<String> getTelefones() {
-        return telefones;
-    }
-
-    public void setTelefones(Set<String> telefones) {
-        this.telefones = telefones;
-    }
-
     public List<Referencia> getReferencia() {
         return referencia;
     }
@@ -212,6 +204,22 @@ public class Cliente implements Serializable {
 
 	public DadosBancarios getDadosBancarios() {
 		return dadosBancarios;
+	}
+
+	public String getTelefonePref() {
+		return telefonePref;
+	}
+
+	public void setTelefonePref(String telefonePref) {
+		this.telefonePref = telefonePref;
+	}
+
+	public String getTelefoneAlt() {
+		return telefoneAlt;
+	}
+
+	public void setTelefoneAlt(String telefoneAlt) {
+		this.telefoneAlt = telefoneAlt;
 	}
 
 	public void setDadosBancarios(DadosBancarios dadosBancarios) {

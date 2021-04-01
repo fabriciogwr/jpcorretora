@@ -50,6 +50,8 @@ public class Proprietario implements Serializable {
     private Integer tipo;
     private Integer estadoCivil;
     private String profissao;
+    private String telefonePref;
+    private String  telefoneAlt;
     
     @OneToMany(orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -59,10 +61,6 @@ public class Proprietario implements Serializable {
     @OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "TELEFONE_PROP")
-    private Set<String> telefones = new HashSet<>();
-    
     @OneToOne(mappedBy = "proprietario", cascade = CascadeType.ALL)
     private DadosBancarios dadosBancarios;
 
@@ -150,14 +148,6 @@ public class Proprietario implements Serializable {
 		this.enderecos = enderecos;
 	}
 
-    public Set<String> getTelefones() {
-        return telefones;
-    }
-
-    public void setTelefones(Set<String> telefones) {
-        this.telefones = telefones;
-    }
-
     public String getObs() {
         return obs;
     }
@@ -205,6 +195,22 @@ public class Proprietario implements Serializable {
 
 	public void setDadosBancarios(DadosBancarios dadosBancarios) {
 		this.dadosBancarios = dadosBancarios;
+	}
+
+	public String getTelefonePref() {
+		return telefonePref;
+	}
+
+	public void setTelefonePref(String telefonePref) {
+		this.telefonePref = telefonePref;
+	}
+
+	public String getTelefoneAlt() {
+		return telefoneAlt;
+	}
+
+	public void setTelefoneAlt(String telefoneAlt) {
+		this.telefoneAlt = telefoneAlt;
 	}
 
 	@Override

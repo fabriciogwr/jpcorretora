@@ -19,6 +19,7 @@ import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.services.DuplicataService;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -180,21 +181,16 @@ public class ProprietarioController {
 	private void showProprietario(Proprietario proprietario) {
 		if (proprietario != null) {
 			nomeLabel.setText(proprietario.getNome());
-			cpfLabel.setText(proprietario.getCpfOuCnpj());
+			cpfLabel.setText(StringsUtils.formatarCpf(proprietario.getCpfOuCnpj()));
 			rgLabel.setText(proprietario.getRg());
 			emailLabel.setText(proprietario.getEmail());
-
-			Set<String> telefones = proprietario.getTelefones();
-			for (String string : telefones) {
-				telefoneData.add(string);
-			}
-			telefonePrefLabel.setText(telefoneData.get(0));
-			if (telefoneData.size() == 2) {
-				telefoneAltLabel.setText(telefoneData.get(0));
-				telefonePrefLabel.setText(telefoneData.get(1));
-			} else
+			telefonePrefLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefonePref()));
+			if (!proprietario.getTelefoneAlt().isBlank()) {
+				telefoneAltLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefoneAlt()));
+				
+			} else {
 				telefoneAltLabel.setText("");
-			telefoneData.clear();
+			}
 			dataNascimentoLabel.setText(proprietario.getDataNascimentoString());
 			estadoCivilLabel.setText(proprietario.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(proprietario.getProfissao());
@@ -223,12 +219,12 @@ public class ProprietarioController {
 			}
 			if (referenciaData.size() == 1) {
 				ref1Label.setText(referenciaData.get(0).getNome());
-				ref1FoneLabel.setText(referenciaData.get(0).getTelefone());
+				ref1FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(0).getTelefone()));
 			}
 			if (referenciaData.size() >= 2) {
 				ref2Btn.setText("Editar");
 				ref2Label.setText(referenciaData.get(1).getNome());
-				ref2FoneLabel.setText(referenciaData.get(1).getTelefone());
+				ref2FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(1).getTelefone()));
 			} else {
 				ref2Btn.setText("Cadastrar");
 				ref2Label.setText("");
@@ -237,7 +233,7 @@ public class ProprietarioController {
 			if (referenciaData.size() == 3) {
 				ref3Btn.setText("Editar");
 				ref3Label.setText(referenciaData.get(2).getNome());
-				ref3FoneLabel.setText(referenciaData.get(2).getTelefone());
+				ref3FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(2).getTelefone()));
 			} else {
 				ref3Btn.setText("Cadastrar");
 				ref3Label.setText("");

@@ -59,19 +59,14 @@ public class ClienteService {
 	}
 	
 	public Cliente fromDTO(ClienteDTO objDto) {
-		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getDataNascimento(), objDto.getEmail(), null, null, null, null, null, null);
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getDataNascimento(), objDto.getEmail(), null, null, null, null, null, null, null, null);
 	}
 	
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getDataNascimento(), objDto.getEmail(), objDto.getCpfOuCnpj(), objDto.getRg(), objDto.getObs(), TipoCliente.toEnum(objDto.getTipoCli()), EstadoCivil.toEnum(objDto.getEstadoCivil()), objDto.getProfissao());
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getDataNascimento(), objDto.getEmail(), objDto.getCpfOuCnpj(), objDto.getRg(), objDto.getObs(), null, null, TipoCliente.toEnum(objDto.getTipoCli()), EstadoCivil.toEnum(objDto.getEstadoCivil()), objDto.getProfissao());
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), objDto.getCidade(), objDto.getEstado(), TipoEndereco.toEnum(objDto.getTipoEnd()));
 		cli.getEnderecos().add(end);
-		cli.getTelefones().add(objDto.getTelefone1());
-		if (objDto.getTelefone2()!=null) {
-			cli.getTelefones().add(objDto.getTelefone2());
-		} if (objDto.getTelefone3()!=null ) {
-			cli.getTelefones().add(objDto.getTelefone3());
-		}
+		
 		return cli;
 		
 	}

@@ -2,6 +2,8 @@ package com.fgwr.jpcorretora.views;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -197,14 +199,27 @@ public class NovoClienteController {
 
 			cliente.setNome(nomeField.getText());
 			cliente.setEmail(emailField.getText());
+			cliente.setTelefonePref(telefonePrefField.getText());
 
 			if (!telefoneAltField.getText().isBlank()) {
-				cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
+				cliente.setTelefoneAlt(telefoneAltField.getText());
 			} else {
-				cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText()));
+				cliente.setTelefoneAlt("");
 			}
-			cliente.setDataNascimento(
-					Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			
+			if (dataNascimentoField.getEditor().getText().isBlank()) {
+				cliente.setDataNascimento(
+						Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+		            cliente.setDataNascimento(date);
+		        } catch (ParseException e) {
+		            e.printStackTrace();
+		        }
+			}
+			
 			cliente.setCpfOuCnpj(cpfField.getText());
 			cliente.setRg(rgField.getText());
 			cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));

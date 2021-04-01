@@ -2,6 +2,8 @@ package com.fgwr.jpcorretora.views;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -172,24 +174,17 @@ public class NovoProprietarioController {
 		this.db = db;
 
 		if (proprietario != null) {
-			ObservableList<String> telefoneData = FXCollections.observableArrayList();
+			
 			nomeField.setText(proprietario.getNome());
 			emailField.setText(proprietario.getEmail());
 
-			Set<String> telefones = proprietario.getTelefones();
-			for (String string : telefones) {
-				telefoneData.add(string);
-			}
-			if (telefoneData.size() == 1) {
-				telefonePrefField.setText(telefoneData.get(0));
-			}
-			if (telefoneData.size() == 2) {
-				telefoneAltField.setText(telefoneData.get(0));
-				telefonePrefField.setText(telefoneData.get(1));
+			telefonePrefField.setText(proprietario.getTelefonePref());
+			if (!proprietario.getTelefoneAlt().isBlank()) {
+				telefoneAltField.setText(proprietario.getTelefoneAlt());
+				
 			} else {
 				telefoneAltField.setText("");
 			}
-
 			if (proprietario.getDataNascimento() != null) {
 				dataNascimentoField.setValue(Instant.ofEpochMilli(proprietario.getDataNascimento().getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDate());
@@ -252,14 +247,26 @@ public class NovoProprietarioController {
 			proprietario.setNome(nomeField.getText());
 			proprietario.setEmail(emailField.getText());
 
+			proprietario.setTelefonePref(telefonePrefField.getText());
+
 			if (!telefoneAltField.getText().isBlank()) {
-				proprietario.getTelefones()
-						.addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
+				proprietario.setTelefoneAlt(telefoneAltField.getText());
 			} else {
-				proprietario.getTelefones().addAll(Arrays.asList(telefonePrefField.getText()));
+				proprietario.setTelefoneAlt("");
 			}
-			proprietario.setDataNascimento(
-					Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+			if (dataNascimentoField.getEditor().getText().isBlank()) {
+				proprietario.setDataNascimento(
+						Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+		            proprietario.setDataNascimento(date);
+		        } catch (ParseException e) {
+		            e.printStackTrace();
+		        }
+			}
 			proprietario.setCpfOuCnpj(cpfField.getText());
 			proprietario.setRg(rgField.getText());
 			proprietario.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));

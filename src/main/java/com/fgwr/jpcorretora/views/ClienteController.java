@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -36,6 +35,7 @@ import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,7 +65,6 @@ public class ClienteController {
 
 
 	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
-	private ObservableList<String> telefoneData = FXCollections.observableArrayList();
 	private ObservableList<Duplicata> duplicataData = FXCollections.observableArrayList();
 	private ObservableList<Duplicata> duplicataAux = FXCollections.observableArrayList();
 	private ObservableList<Referencia> referenciaData = FXCollections.observableArrayList();
@@ -233,21 +232,17 @@ public class ClienteController {
 	private void showClient(Cliente cliente) {
 		if (cliente != null) {
 			nomeLabel.setText(cliente.getNome());
-			cpfLabel.setText(cliente.getCpfOuCnpj());
+			cpfLabel.setText(StringsUtils.formatarCpf(cliente.getCpfOuCnpj()));
 			rgLabel.setText(cliente.getRg());
 			emailLabel.setText(cliente.getEmail());
 
-			Set<String> telefones = cliente.getTelefones();
-			for (String string : telefones) {
-				telefoneData.add(string);
-			}
-			telefonePrefLabel.setText(telefoneData.get(0));
-			if (telefoneData.size() == 2) {
-				telefoneAltLabel.setText(telefoneData.get(0));
-				telefonePrefLabel.setText(telefoneData.get(1));
-			} else
+			telefonePrefLabel.setText(StringsUtils.formatarTelefone(cliente.getTelefonePref()));
+			if (!cliente.getTelefoneAlt().isBlank()) {
+				telefoneAltLabel.setText(StringsUtils.formatarTelefone(cliente.getTelefoneAlt()));
+				
+			} else {
 				telefoneAltLabel.setText("");
-			telefoneData.clear();
+			}
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
@@ -279,12 +274,12 @@ public class ClienteController {
 			}
 			if (referenciaData.size() == 1) {
 				ref1Label.setText(referenciaData.get(0).getNome());
-				ref1FoneLabel.setText(referenciaData.get(0).getTelefone());
+				ref1FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(0).getTelefone()));
 			}
 			if (referenciaData.size() >= 2) {
 				ref2Btn.setText("Editar");
 				ref2Label.setText(referenciaData.get(1).getNome());
-				ref2FoneLabel.setText(referenciaData.get(1).getTelefone());
+				ref2FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(1).getTelefone()));
 			} else {
 				ref2Btn.setText("Cadastrar");
 				ref2Label.setText("");
@@ -293,7 +288,7 @@ public class ClienteController {
 			if (referenciaData.size() == 3) {
 				ref3Btn.setText("Editar");
 				ref3Label.setText(referenciaData.get(2).getNome());
-				ref3FoneLabel.setText(referenciaData.get(2).getTelefone());
+				ref3FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(2).getTelefone()));
 			} else {
 				ref3Btn.setText("Cadastrar");
 				ref3Label.setText("");
@@ -320,19 +315,6 @@ public class ClienteController {
 				}
 			}
 
-			/*
-			 * if (imovel != null) {
-			 * logradouroLabel.setText(imovel.getEndereco().getLogradouro());
-			 * numeroLabel.setText(imovel.getEndereco().getNumero());
-			 * bairroLabel.setText(imovel.getEndereco().getBairro());
-			 * cepLabel.setText(imovel.getEndereco().getCep());
-			 * cidadeLabel.setText(imovel.getEndereco().getCidade());
-			 * complementoLabel.setText(imovel.getEndereco().getComplemento());
-			 * dataLocacaoLabel.setText(imovel.getDataLaudo().toString()); } else {
-			 * logradouroLabel.setText(""); numeroLabel.setText("");
-			 * bairroLabel.setText(""); cepLabel.setText(""); cidadeLabel.setText("");
-			 * complementoLabel.setText(""); dataLocacaoLabel.setText(""); }
-			 */
 		} else {
 			nomeLabel.setText("");
 			cpfLabel.setText("");
@@ -525,7 +507,7 @@ public class ClienteController {
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		
 		
-		if (selectedDuplicata != null) {
+		if (selectedDuplicata != null && selectedDuplicata.getEstado() == EstadoPagamento.PENDENTE) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();	
@@ -565,6 +547,13 @@ public class ClienteController {
 				
 			}
 
+		} else {
+			Alert alert3 = new Alert(AlertType.WARNING);
+			alert3.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane3 = alert3.getDialogPane();			
+			dialogPane3.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			alert3.setTitle("Mensalidade Já Paga");
+			alert3.setHeaderText("A mensalidade selecionada já está paga.");
 		}
 	}
 

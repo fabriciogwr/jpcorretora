@@ -74,15 +74,12 @@ public class PopularBanco {
 		Calendar cal = Calendar.getInstance();
 		
 		cal.set(1994, 7, 1);
-		Cliente cli1 = new Cliente(null, "Fabrício", cal.getTime(), "fabricio.gwr@gmail.com", "01284257258", "1161177", "cliente ok", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Desenvolvedor de Sistemas");
+		Cliente cli1 = new Cliente(null, "Fabrício", cal.getTime(), "fabricio.gwr@gmail.com", "01284257258", "1161177", "cliente ok", "69993557900", "", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Desenvolvedor de Sistemas");
 		cal.set(1980, 1, 21);
-		Cliente cli2 = new Cliente(null, "Fábio", cal.getTime(), "fabio@gmail.com", "01234567891", "12345678", "cliente ok", TipoCliente.PESSOAJURIDICA, EstadoCivil.CASADO, "Corretor de Imóveis");
+		Cliente cli2 = new Cliente(null, "Fábio", cal.getTime(), "fabio@gmail.com", "01234567891", "12345678", "cliente ok", "123456789", "", TipoCliente.PESSOAJURIDICA, EstadoCivil.CASADO, "Corretor de Imóveis");
 
 		Referencia ref1 = new Referencia(null, "Fábia", "84014444");
 		Referencia ref2 = new Referencia(null, "Mell", "12345678");
-
-		cli1.getTelefones().addAll(Arrays.asList("993557900", "34225987"));
-		cli2.getTelefones().addAll(Arrays.asList("84023706"));
 
 		cli1.getReferencia().addAll(Arrays.asList(ref1));
 		cli2.getReferencia().addAll(Arrays.asList(ref2));
