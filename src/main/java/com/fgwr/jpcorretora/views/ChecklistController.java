@@ -1,5 +1,11 @@
 package com.fgwr.jpcorretora.views;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -9,6 +15,8 @@ import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
@@ -71,6 +79,10 @@ public class ChecklistController {
 	private CheckBox danoPinturaExternaCheck;
 	@FXML
 	private TextArea obsField;
+	@FXML
+	private Label dataLaudoLabel;
+	@FXML
+	private DatePicker dataLaudoPicker;
 
 	private Stage dialogStage;
 	private boolean okClicked = false;
@@ -96,8 +108,19 @@ public class ChecklistController {
 	}
 	
 	public void setChecklist(ImovelChecklistDTO checklist) {
+		
+		if (checklist.isControl()) {
+			dataLaudoLabel.setVisible(false);
+			dataLaudoPicker.setVisible(false);
+		}
 		this.checklist = checklist;
 		
+		if (checklist.getDataLaudo() != null) {
+		dataLaudoPicker.setValue(Instant.ofEpochMilli(checklist.getDataLaudo().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+		} else {
+			dataLaudoPicker.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+			
+		}
 		danoArCondicionadoCheck.setSelected(checklist.isDanoArCondicionado());
 		danoAreaServicoCheck.setSelected(checklist.isDanoAreaServico());
 		danoBanheiroCheck.setSelected(checklist.isDanoBanheiro());
@@ -157,10 +180,28 @@ public class ChecklistController {
 		checklist.setDanoSala(danoSalaCheck.isSelected());
 		checklist.setDanoTomadas(danoTomadasCheck.isSelected());
 		checklist.setDanoVasoSanitario(danoVasoSanitarioCheck.isSelected());
+		
+		if (dataLaudoPicker.getEditor().getText().isBlank()) {
+			checklist.setDataLaudo(
+					Date.from(dataLaudoPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		} else if (!dataLaudoPicker.getEditor().getText().isBlank()) {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+			try {
+				Date date = formatter.parse(dataLaudoPicker.getEditor().getText());
+				checklist.setDataLaudo(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if ( obsField.getText() == null || obsField.getText().isBlank()) {
+			checklist.setObs("Sem Observações");
+		} else {
 		checklist.setObs(obsField.getText());
+		}
 		
 		
-            
             okClicked = true;
             dialogStage.close();
         //    return checklist;

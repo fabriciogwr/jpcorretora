@@ -13,14 +13,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
+import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +42,8 @@ import javafx.stage.StageStyle;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class NovoProprietarioController {
 
+	ApplicationContext context = SpringContext.getAppContext();
+	
 	@FXML
 	private TextField nomeField;
 	@FXML
@@ -173,17 +178,17 @@ public class NovoProprietarioController {
 		this.proprietario = proprietario;
 		this.db = db;
 
-		if (proprietario != null) {
+		if (proprietario.getId() != null) {
 			
 			nomeField.setText(proprietario.getNome());
 			emailField.setText(proprietario.getEmail());
 
 			telefonePrefField.setText(proprietario.getTelefonePref());
-			if (!proprietario.getTelefoneAlt().isBlank()) {
+			if (proprietario.getTelefoneAlt().isBlank()) {
+				telefoneAltField.setText("");		
+			} else {
 				telefoneAltField.setText(proprietario.getTelefoneAlt());
 				
-			} else {
-				telefoneAltField.setText("");
 			}
 			if (proprietario.getDataNascimento() != null) {
 				dataNascimentoField.setValue(Instant.ofEpochMilli(proprietario.getDataNascimento().getTime())
@@ -244,6 +249,9 @@ public class NovoProprietarioController {
 	private void handleOk() {
 		if (isInputValid()) {
 
+			if (proprietario == null) {
+				proprietario = new Proprietario();
+			}
 			proprietario.setNome(nomeField.getText());
 			proprietario.setEmail(emailField.getText());
 
@@ -286,7 +294,6 @@ public class NovoProprietarioController {
 			 db.setProprietario(proprietario);
 			 proprietario.setDadosBancarios(db);
 			
-
 			}
 			okClicked = true;
 			dialogStage.close();

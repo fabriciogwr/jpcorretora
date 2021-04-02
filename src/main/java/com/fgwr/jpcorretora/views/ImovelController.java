@@ -2,15 +2,17 @@ package com.fgwr.jpcorretora.views;
 
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +45,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -101,6 +104,8 @@ public class ImovelController {
 	@FXML
 	private GridPane fotoGridPane;
 	
+	@FXML
+	private DatePicker dataLaudo;
 
 	@FXML
 	private CheckBox danoSalaCheck;
@@ -187,7 +192,7 @@ public class ImovelController {
 	}
 	
 	@FXML
-	private void initialize() {
+	private void initialize() throws IOException {
 		imovelData = getImovelData();
 		imovelTable.setItems(imovelData);
 		proprietarioColumn.setCellValueFactory(cellData -> cellData.getValue().proprietario());
@@ -195,7 +200,14 @@ public class ImovelController {
 		showImovel(null);
 		
 		imovelTable.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> showImovel(newValue));
+				.addListener((observable, oldValue, newValue) -> {
+					try {
+						showImovel(newValue);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
 		
 		EventHandler<MouseEvent> handler = MouseEvent::consume;
 
@@ -205,7 +217,7 @@ public class ImovelController {
 		
 		}
 	
-	private void showImovel(Imovel imovel) {
+	private void showImovel(Imovel imovel) throws IOException {
 		if (imovel != null) {
 			logradouroLabel.setText(imovel.getEndereco().getLogradouro());
 			numeroLabel.setText(imovel.getEndereco().getNumero());
@@ -216,8 +228,7 @@ public class ImovelController {
 			imovelAux.clear();
 			imovelAux = getImovelChecklist(imovel);
 
-			
-			
+			dataLaudo.setValue(Instant.ofEpochMilli(imovel.getDataLaudo().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 			danoArCondicionadoCheck.setSelected(imovel.isDanoArCondicionado());
 			danoAreaServicoCheck.setSelected(imovel.isDanoAreaServico());
 			danoBanheiroCheck.setSelected(imovel.isDanoBanheiro());
@@ -269,7 +280,7 @@ public class ImovelController {
 	}
 	
 	@FXML
-	private void handleEditImovel() {
+	private void handleEditImovel() throws IOException {
 		Imovel selectedImovel = imovelTable.getSelectionModel().getSelectedItem();
 		Endereco selectedEndereco = imovelTable.getSelectionModel().getSelectedItem().getEndereco();
 		
@@ -292,7 +303,7 @@ public class ImovelController {
 	}
 	
 	@FXML
-	private void handleChecklist() {
+	private void handleChecklist() throws IOException {
 		Imovel selectedImovel = imovelTable.getSelectionModel().getSelectedItem();
 		ImovelChecklistDTO checklist = new ImovelChecklistDTO();
 		
@@ -323,6 +334,7 @@ public class ImovelController {
 		checklist.setDanoTomadas(selectedImovel.isDanoTomadas());
 		checklist.setDanoVasoSanitario(selectedImovel.isDanoVasoSanitario());
 		checklist.setObs(readObs(selectedImovel.getId()));
+		checklist.setDataLaudo(selectedImovel.getDataLaudo());
 		
 		boolean okClicked = frontApp.showChecklist(checklist);
 		if (okClicked) {
@@ -352,6 +364,7 @@ public class ImovelController {
 			selectedImovel.setDanoSala(checklist.isDanoSala());
 			selectedImovel.setDanoTomadas(checklist.isDanoTomadas());
 			selectedImovel.setDanoVasoSanitario(checklist.isDanoVasoSanitario());
+			selectedImovel.setDataLaudo(checklist.getDataLaudo());
 			
 			String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 			
@@ -361,6 +374,8 @@ public class ImovelController {
 				System.out.println("NÃO FOI POSSÍVEL SALVAR O ARQUIVO DE OBS");
 				e.printStackTrace();
 			}
+			ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
+			selectedImovel = imvRepo.save(selectedImovel);
 			showImovel(selectedImovel);
 		}
 	}
@@ -447,32 +462,27 @@ public class ImovelController {
 
 				
 	}
-	private String readDescricao(Integer imovelId) {
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		Path fileName = Path.of(docFolder + "/Imoveis/" + imovelId + "/descricao.txt");
+	private String readDescricao(Integer imovelId) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/Imoveis/" + imovelId + "/descricao.txt"));
 		String descTemp = "";
-		try {
-			descTemp = Files.readString(fileName);
-		} catch (IOException e) {
-			System.out.println("Arquivo DESCRIÇÃO não encontrado");
-			e.printStackTrace();
+		while (br.ready()) {
+			descTemp = descTemp + br.readLine() + "\n";
 		}
+		br.close();
 		return descTemp;
 		
 	}
 	
 	
 
-	private String readObs(Integer imovelId) {
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		Path fileName = Path.of(docFolder + "/Imoveis/" + imovelId + "/obs.txt");
+	private String readObs(Integer imovelId) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/Imoveis/" + imovelId + "/obs.txt"));
 		String obsTemp = "";
-		try {
-			obsTemp = Files.readString(fileName);
-		} catch (IOException e) {
-			System.out.println("Arquivo OBS não encontrado");
-			e.printStackTrace();
+		while (br.ready()) {
+			obsTemp = obsTemp + br.readLine() + "\n";
 		}
+		System.out.println(obsTemp);
+		br.close();
 		return obsTemp;
 		
 	}

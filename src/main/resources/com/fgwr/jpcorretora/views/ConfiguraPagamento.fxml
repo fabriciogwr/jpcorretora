@@ -35,10 +35,10 @@
             <Label text="Valor corrigido" GridPane.rowIndex="6" />
             <Label text="Data do Pagamento" GridPane.rowIndex="3" />
             <Label text="Total Pago" GridPane.rowIndex="7" />
-            <CheckBox fx:id="abaterJurosCheck" mnemonicParsing="false" text="Abater Juros" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <DatePicker fx:id="dataPagamentoField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="vencimentoField" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="valorVencimentoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <DatePicker fx:id="dataPagamentoField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <CheckBox fx:id="abaterJurosCheck" mnemonicParsing="false" text="Abater Juros" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="valorCorrigidoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <TextField fx:id="totalPagoField" GridPane.columnIndex="1" GridPane.rowIndex="7" />         
 </children>

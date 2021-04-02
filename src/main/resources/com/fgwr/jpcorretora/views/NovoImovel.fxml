@@ -55,22 +55,22 @@
 	<Label text="Complemento" GridPane.rowIndex="10" />
             <TextField fx:id="complementoField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 	<Label text="Descrição" GridPane.columnIndex="3" GridPane.valignment="BOTTOM" />
-            <Label text="Estado do Imóvel" GridPane.columnIndex="6" GridPane.valignment="BOTTOM" />
-            <ChoiceBox fx:id="estadoImovelBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Label text="Checklist e Observações" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <Button fx:id="checklistBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleChecklist" stylesheets="@../css/minorbuttons.css" text="Preencher" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-	<Label alignment="TOP_LEFT" text="Data de Angariacao" GridPane.columnIndex="6" GridPane.rowIndex="7" GridPane.valignment="BOTTOM" /><DatePicker fx:id="dataAngariacaoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
-	<Label text="Corretor" GridPane.columnIndex="6" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="corretorField" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="10" />
-            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="10" />
-            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="10" />
             <TextArea fx:id="descricaoField" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.rowSpan="10" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets bottom="2.0" top="5.0" />
                </GridPane.margin>
             </TextArea>
+            <Label text="Estado do Imóvel" GridPane.columnIndex="6" GridPane.valignment="BOTTOM" />
+            <ChoiceBox fx:id="estadoImovelBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Label text="Checklist e Observações" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Button fx:id="checklistBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleChecklist" stylesheets="@../css/minorbuttons.css" text="Preencher" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="3" />
             <Label text="Data do último Laudo" GridPane.columnIndex="6" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <DatePicker fx:id="dataLaudoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5" />         
+            <DatePicker fx:id="dataLaudoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+	<Label alignment="TOP_LEFT" text="Data de Angariacao" GridPane.columnIndex="6" GridPane.rowIndex="7" GridPane.valignment="BOTTOM" /><DatePicker fx:id="dataAngariacaoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+	<Label text="Corretor" GridPane.columnIndex="6" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="corretorField" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="10" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="10" />         
 </children>
 </GridPane>
 <HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

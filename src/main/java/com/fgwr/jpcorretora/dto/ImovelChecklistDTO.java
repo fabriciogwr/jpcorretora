@@ -1,7 +1,10 @@
 package com.fgwr.jpcorretora.dto;
 
+import java.util.Date;
+
 public class ImovelChecklistDTO {
 
+	private boolean control=false;
 	private boolean danoSala;
 	private boolean danoCozinha;
 	private boolean danoQuarto;
@@ -29,6 +32,8 @@ public class ImovelChecklistDTO {
 	private boolean danoPinturaInterna;
 	private boolean danoPinturaExterna;
 	private String obs;
+	
+	private Date dataLaudo;
 	
 	public ImovelChecklistDTO() {
 		
@@ -287,6 +292,22 @@ public class ImovelChecklistDTO {
 
 	public void setObs(String obs) {
 		this.obs = obs;
+	}
+
+	public boolean isControl() {
+		return control;
+	}
+
+	public void setControl(boolean control) {
+		this.control = control;
+	}
+
+	public Date getDataLaudo() {
+		return dataLaudo;
+	}
+
+	public void setDataLaudo(Date dataLaudo) {
+		this.dataLaudo = dataLaudo;
 	}
 
 }

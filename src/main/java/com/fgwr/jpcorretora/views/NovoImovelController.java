@@ -1,9 +1,13 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -85,7 +89,7 @@ public class NovoImovelController {
 	private TextArea descricaoField;
 	@FXML
 	private TextArea obsField;
-	
+
 	private String obs;
 	@FXML
 	private Button checklistBtn;
@@ -103,6 +107,7 @@ public class NovoImovelController {
 	private Endereco endereco;
 
 	FrontApp frontApp = new FrontApp();
+	ImovelChecklistDTO checklist = new ImovelChecklistDTO();
 
 	public List<Proprietario> getProprietarioData() {
 		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
@@ -195,7 +200,7 @@ public class NovoImovelController {
 		}
 	}
 
-	public void setImovel(Imovel imovel, Endereco endereco) {
+	public void setImovel(Imovel imovel, Endereco endereco) throws IOException {
 		this.imovel = imovel;
 		this.endereco = endereco;
 
@@ -204,13 +209,13 @@ public class NovoImovelController {
 			logradouroField.setText("");
 			numeroField.setText("");
 			complementoField.setText("");
+			dataLaudoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
 			dataAngariacaoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
 			bairroField.setText("");
 			cepField.setText("");
 
 			estadoImovelBox.setValue(null);
 
-			
 		} else {
 			this.endereco = imovel.getEndereco();
 			proprietarioBox.setValue(imovel.getProprietario());
@@ -219,10 +224,18 @@ public class NovoImovelController {
 			complementoField.setText(endereco.getComplemento());
 			cidadeField.setText(endereco.getCidade());
 			estadoField.setText(endereco.getEstado());
-			//obsField.setText(readObs(imovel.getId()));
+			// obsField.setText(readObs(imovel.getId()));
 			corretorField.setText(imovel.getCorretor());
 			descricaoField.setText(readDescricao(imovel.getId()));
+
 			
+			if (imovel.getDataLaudo() != null) {
+				dataLaudoField.setValue(Instant.ofEpochMilli(imovel.getDataLaudo().getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDate());
+			} else {
+				dataLaudoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+			}
+
 			if (imovel.getDataAngariacao() != null) {
 				dataAngariacaoField.setValue(Instant.ofEpochMilli(imovel.getDataAngariacao().getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDate());
@@ -234,10 +247,6 @@ public class NovoImovelController {
 			cepField.setText(endereco.getCep());
 
 			estadoImovelBox.setValue(imovel.getEstadoImovel().getDescricao());
-			
-			
-			
-			
 
 		}
 
@@ -251,22 +260,19 @@ public class NovoImovelController {
 		boolean okClicked = frontApp.showNovoProprietario(proprietario, db);
 		if (okClicked) {
 			ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
-			propRepo.save(proprietario);
+			proprietario = propRepo.save(proprietario);
 			this.proprietario = proprietario;
-
-			System.out.println(proprietario.getNome());
-			System.out.println(this.proprietario.getNome());
-
 			proprietarioBox.getItems().add(proprietario);
 			proprietarioBox.setValue(proprietario);
 		}
 
 	}
-
+	
 	@FXML
-	private void handleChecklist() {
-		ImovelChecklistDTO checklist = new ImovelChecklistDTO();
-
+	private void handleChecklist() throws IOException {
+		checklist.setControl(true);
+		boolean okClicked = false;
+		
 		if (imovel.getId() != null) {
 			checklist.setDanoArCondicionado(imovel.isDanoArCondicionado());
 			checklist.setDanoAreaServico(imovel.isDanoAreaServico());
@@ -295,10 +301,43 @@ public class NovoImovelController {
 			checklist.setDanoTomadas(imovel.isDanoTomadas());
 			checklist.setDanoVasoSanitario(imovel.isDanoVasoSanitario());
 			checklist.setObs(readObs(imovel.getId()));
-			
+			checklist.setDataLaudo(imovel.getDataLaudo());
+
 		}
-		boolean okClicked = frontApp.showChecklist(checklist);
 		if (okClicked) {
+			checklist.setDanoArCondicionado(imovel.isDanoArCondicionado());
+			checklist.setDanoAreaServico(imovel.isDanoAreaServico());
+			checklist.setDanoBanheiro(imovel.isDanoBanheiro());
+			checklist.setDanoBox(imovel.isDanoBox());
+			checklist.setDanoCercaEletrica(imovel.isDanoCercaEletrica());
+			checklist.setDanoChaves(imovel.isDanoChaves());
+			checklist.setDanoChuveiro(imovel.isDanoChuveiro());
+			checklist.setDanoControle(imovel.isDanoControle());
+			checklist.setDanoCozinha(imovel.isDanoCozinha());
+			checklist.setDanoDispensa(imovel.isDanoDispensa());
+			checklist.setDanoFechaduras(imovel.isDanoFechaduras());
+			checklist.setDanoGaragem(imovel.isDanoGaragem());
+			checklist.setDanoInfiltracao(imovel.isDanoInfiltracao());
+			checklist.setDanoJanelas(imovel.isDanoJanelas());
+			checklist.setDanoLampadas(imovel.isDanoLampadas());
+			checklist.setDanoMoveisVinculados(imovel.isDanoMoveisVinculados());
+			checklist.setDanoPia(imovel.isDanoPia());
+			checklist.setDanoPinturaExterna(imovel.isDanoPinturaExterna());
+			checklist.setDanoPinturaInterna(imovel.isDanoPinturaInterna());
+			checklist.setDanoPortao(imovel.isDanoPortao());
+			checklist.setDanoPortaoEletro(imovel.isDanoPortaoEletro());
+			checklist.setDanoPortas(imovel.isDanoPortas());
+			checklist.setDanoQuarto(imovel.isDanoQuarto());
+			checklist.setDanoSala(imovel.isDanoSala());
+			checklist.setDanoTomadas(imovel.isDanoTomadas());
+			checklist.setDanoVasoSanitario(imovel.isDanoVasoSanitario());
+			checklist.setObs(readObs(imovel.getId()));
+			checklist.setDataLaudo(imovel.getDataLaudo());
+
+		}
+		okClicked = frontApp.showChecklist(checklist);
+		if (okClicked) {
+			
 			imovel.setDanoArCondicionado(checklist.isDanoArCondicionado());
 			imovel.setDanoAreaServico(checklist.isDanoAreaServico());
 			imovel.setDanoBanheiro(checklist.isDanoBanheiro());
@@ -325,9 +364,43 @@ public class NovoImovelController {
 			imovel.setDanoSala(checklist.isDanoSala());
 			imovel.setDanoTomadas(checklist.isDanoTomadas());
 			imovel.setDanoVasoSanitario(checklist.isDanoVasoSanitario());
-			
-			obs = checklist.getObs();
+			imovel.setDataLaudo(checklist.getDataLaudo());
 
+			obs = checklist.getObs();
+			
+			System.out.println(okClicked);
+			System.out.println(imovel.isDanoArCondicionado());
+
+		}
+		if (!okClicked ){
+			imovel.setDanoArCondicionado(false);
+			imovel.setDanoAreaServico(false);
+			imovel.setDanoBanheiro(false);
+			imovel.setDanoBox(false);
+			imovel.setDanoCercaEletrica(false);
+			imovel.setDanoChaves(false);
+			imovel.setDanoChuveiro(false);
+			imovel.setDanoControle(false);
+			imovel.setDanoCozinha(false);
+			imovel.setDanoDispensa(false);
+			imovel.setDanoFechaduras(false);
+			imovel.setDanoGaragem(false);
+			imovel.setDanoInfiltracao(false);
+			imovel.setDanoJanelas(false);
+			imovel.setDanoLampadas(false);
+			imovel.setDanoMoveisVinculados(false);
+			imovel.setDanoPia(false);
+			imovel.setDanoPinturaExterna(false);
+			imovel.setDanoPinturaInterna(false);
+			imovel.setDanoPortao(false);
+			imovel.setDanoPortaoEletro(false);
+			imovel.setDanoPortas(false);
+			imovel.setDanoQuarto(false);
+			imovel.setDanoSala(false);
+			imovel.setDanoTomadas(false);
+			imovel.setDanoVasoSanitario(false);
+			imovel.setDataLaudo(Date.from(dataLaudoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			obs = "Sem Observações";
 		}
 	}
 
@@ -340,45 +413,11 @@ public class NovoImovelController {
 	@FXML
 	private void handleOk() throws IOException {
 		if (isInputValid()) {
-			
-			
+
 			ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
 			EnderecoRepository endRepo = (EnderecoRepository) context.getBean("enderecoRepository");
 			proprietario = findProprietario(proprietarioBox.getValue().getId());
 
-			if (!isOkClicked()) {
-				
-				imovel.setDanoArCondicionado(false);
-				imovel.setDanoAreaServico(false);
-				imovel.setDanoBanheiro(false);
-				imovel.setDanoBox(false);
-				imovel.setDanoCercaEletrica(false);
-				imovel.setDanoChaves(false);
-				imovel.setDanoChuveiro(false);
-				imovel.setDanoControle(false);
-				imovel.setDanoCozinha(false);
-				imovel.setDanoDispensa(false);
-				imovel.setDanoFechaduras(false);
-				imovel.setDanoGaragem(false);
-				imovel.setDanoInfiltracao(false);
-				imovel.setDanoJanelas(false);
-				imovel.setDanoLampadas(false);
-				imovel.setDanoMoveisVinculados(false);
-				imovel.setDanoPia(false);
-				imovel.setDanoPinturaExterna(false);
-				imovel.setDanoPinturaInterna(false);
-				imovel.setDanoPortao(false);
-				imovel.setDanoPortaoEletro(false);
-				imovel.setDanoPortas(false);
-				imovel.setDanoQuarto(false);
-				imovel.setDanoSala(false);
-				imovel.setDanoTomadas(false);
-				imovel.setDanoVasoSanitario(false);
-				
-				obs = "Sem observações";
-				
-			}
-			
 			endereco.setLogradouro(logradouroField.getText());
 			endereco.setBairro(bairroField.getText());
 			endereco.setCep(cepField.getText());
@@ -390,52 +429,53 @@ public class NovoImovelController {
 			endRepo.save(endereco);
 
 			imovel.setProprietario(proprietario);
-			
+
 			if (dataAngariacaoField.getEditor().getText().isBlank()) {
 				imovel.setDataAngariacao(
 						Date.from(dataAngariacaoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			} else if (!dataAngariacaoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-		            Date date = formatter.parse(dataAngariacaoField.getEditor().getText());
-		            imovel.setDataAngariacao(date);
-		        } catch (ParseException e) {
-		            e.printStackTrace();
-		        }
+					Date date = formatter.parse(dataAngariacaoField.getEditor().getText());
+					imovel.setDataAngariacao(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
+
+			
 			
 			imovel.setCorretor(corretorField.getText());
 			imovel.setDescricao(descricaoField.getText());
 			imovel.setEstadoImovel(EstadoImovel.valueOfDescricao(estadoImovelBox.getValue()));
 			if (dataLaudoField.getEditor().getText().isBlank()) {
-			imovel.setDataLaudo(
-					Date.from(dataLaudoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				imovel.setDataLaudo(
+						Date.from(dataLaudoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			} else if (!dataLaudoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		        
-		        try {
-		            Date date = formatter.parse(dataLaudoField.getEditor().getText());
-		            imovel.setDataLaudo(date);
-		        } catch (ParseException e) {
-		            e.printStackTrace();
-		        }
+
+				try {
+					Date date = formatter.parse(dataLaudoField.getEditor().getText());
+					imovel.setDataLaudo(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
-			
+
 			imovel.setEndereco(endereco);
 			imovel.setProprietario(proprietario);
 
 			proprietario.getImovel().add(imovel);
 			endereco.setImovel(imovel);
 			imovel = imvRepo.save(imovel);
-			
+
 			String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 			new File(docFolder + "/Imoveis/" + imovel.getId()).mkdir();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/descricao.txt").delete();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/descricao.txt").createNewFile();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/obs.txt").delete();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/obs.txt").createNewFile();
-			
-			
+
 			saveDescricao(descricaoField.getText(), docFolder, imovel.getId());
 			saveObs(obs, docFolder, imovel.getId());
 
@@ -445,45 +485,44 @@ public class NovoImovelController {
 	}
 
 	private void saveDescricao(String descricao, String docFolder, Integer imovelId) throws IOException {
-		BufferedWriter bf = new BufferedWriter(
-				new FileWriter(new File(docFolder + "/Imoveis/" + imovelId + "/descricao.txt")));
+		FileOutputStream outputStream = new FileOutputStream(
+				new File(docFolder + "/Imoveis/" + imovelId + "/descricao.txt"));
+		BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream));
 		bf.write(descricao);
 		bf.close();
 	}
 
-	private String readDescricao(Integer imovelId) {
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		Path fileName = Path.of(docFolder + "/Imoveis/" + imovelId + "/descricao.txt");
+	private String readDescricao(Integer imovelId) throws IOException {
+		BufferedReader br = new BufferedReader(
+				new FileReader(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/Imoveis/"
+						+ imovelId + "/descricao.txt"));
 		String descTemp = "";
-		try {
-			descTemp = Files.readString(fileName);
-		} catch (IOException e) {
-			System.out.println("Arquivo Descrição não encontrado");
-			e.printStackTrace();
+		while (br.ready()) {
+			descTemp = descTemp + br.readLine() + "\n";
 		}
+		br.close();
 		return descTemp;
-		
-	
+
 	}
-	
+
 	private void saveObs(String obs, String docFolder, Integer imovelId) throws IOException {
-		BufferedWriter bf = new BufferedWriter(
-				new FileWriter(new File(docFolder + "/Imoveis/" + imovelId + "/obs.txt")));
+		FileOutputStream outputStream = new FileOutputStream(new File(docFolder + "/Imoveis/" + imovelId + "/obs.txt"));
+		BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream));
 		bf.write(obs);
 		bf.close();
 	}
 
-	private String readObs(Integer imovelId) {
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		Path fileName = Path.of(docFolder + "/Imoveis/" + imovelId + "/obs.txt");
+	private String readObs(Integer imovelId) throws IOException {
+		BufferedReader br = new BufferedReader(
+				new FileReader(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/Imoveis/"
+						+ imovelId + "/obs.txt"));
 		String obsTemp = "";
-		try {
-			obsTemp = Files.readString(fileName);
-		} catch (IOException e) {
-			System.out.println("Arquivo OBS não encontrado");
-			e.printStackTrace();
+		while (br.ready()) {
+			obsTemp = obsTemp + br.readLine() + "\n";
 		}
+		System.out.println(obsTemp);
+		br.close();
 		return obsTemp;
-		
+
 	}
 }

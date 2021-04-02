@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
@@ -53,11 +54,11 @@
             <CheckBox fx:id="danoChavesCheck" mnemonicParsing="false" text="Danos nas Chaves" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <CheckBox fx:id="danoPortaoEletroCheck" mnemonicParsing="false" text="Danos no Portão Elétrico" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <CheckBox fx:id="danoCercaEletricaCheck" mnemonicParsing="false" text="Danos na Cerca Elétrica" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <CheckBox fx:id="danoControleCheck" mnemonicParsing="false" text="Danos no Controle" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <CheckBox fx:id="danoInfiltracaoCheck" mnemonicParsing="false" text="Danos de Infiltrações" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <CheckBox fx:id="danoPiaCheck" mnemonicParsing="false" text="Danos na Pia" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <CheckBox fx:id="danoVasoSanitarioCheck" mnemonicParsing="false" text="Danos no Vaso Sanitário" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <CheckBox fx:id="danoBoxCheck" mnemonicParsing="false" text="Danos no Box" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <CheckBox fx:id="danoControleCheck" mnemonicParsing="false" text="Danos no Controle" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <CheckBox fx:id="danoArCondicionadoCheck" mnemonicParsing="false" text="Danos no Ar Condicionado" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <CheckBox fx:id="danoMoveisVinculadosCheck" mnemonicParsing="false" text="Danos nos Móveis Vinculados" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <CheckBox fx:id="danoPortasCheck" mnemonicParsing="false" text="Danos em Portas" GridPane.columnIndex="2" GridPane.rowIndex="4" />
@@ -65,6 +66,8 @@
             <CheckBox fx:id="danoPortaoCheck" mnemonicParsing="false" text="Danos no Portão" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <CheckBox fx:id="danoPinturaInternaCheck" mnemonicParsing="false" text="Danos na Pintura Interna" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <CheckBox fx:id="danoPinturaExternaCheck" mnemonicParsing="false" text="Danos na Pintura Externa" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <DatePicker fx:id="dataLaudoPicker" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" />
+            <TextArea fx:id="obsField" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="13" GridPane.rowSpan="3" />
             <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="9" />
             <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="9" />
             <Label text="OBSERVAÇÕES" GridPane.rowIndex="12">
@@ -72,13 +75,13 @@
                   <Font name="BebasNeue" size="28.0" />
                </font>
             </Label>
-            <Separator GridPane.columnSpan="3" GridPane.rowIndex="10" GridPane.valignment="BOTTOM" />
+            <Separator GridPane.columnSpan="3" GridPane.rowIndex="11" GridPane.valignment="TOP" />
             <Label text="Checklist">
                <font>
                   <Font name="BebasNeue" size="28.0" />
                </font>
             </Label>
-            <TextArea fx:id="obsField" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="13" GridPane.rowSpan="3" />
+            <Label fx:id="dataLaudoLabel" text="Data do Último Laudo" GridPane.columnIndex="2" GridPane.rowIndex="10" GridPane.valignment="TOP" />
          </children>
 </GridPane>
 <HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

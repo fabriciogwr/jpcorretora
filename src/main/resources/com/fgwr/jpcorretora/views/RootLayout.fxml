@@ -16,14 +16,6 @@
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Cadastros">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#showCadastroClientes" text="Clientes" />
-                  <MenuItem mnemonicParsing="false" onAction="#showCadastroImoveis" text="Imóveis" />
-                  <MenuItem mnemonicParsing="false" onAction="#showCadastroImoveis" text="Contratos" />
-                  <MenuItem mnemonicParsing="false" onAction="#showCadastroProprietarios" text="Proprietários" />
-            </items>
-          </Menu>
           <Menu mnemonicParsing="false" text="Novo">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleNovoCliente" text="Cliente" />
