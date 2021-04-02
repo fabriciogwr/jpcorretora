@@ -1,7 +1,10 @@
 package com.fgwr.jpcorretora;
 
+import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -19,8 +22,9 @@ public class JpcorretoraApplication implements CommandLineRunner {
 	@Autowired
 	PopularBanco pb;
 	
+	
+	
 	public static void main(String[] args) throws MalformedURLException {
-		
 			String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 			new File(docFolder + "/Recibos").mkdir();
 			new File(docFolder + "/Imoveis").mkdir();

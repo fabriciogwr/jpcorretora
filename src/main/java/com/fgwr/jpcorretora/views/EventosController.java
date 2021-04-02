@@ -1,5 +1,8 @@
 package com.fgwr.jpcorretora.views;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +19,7 @@ import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
+import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 
@@ -80,38 +84,34 @@ public class EventosController {
 	public void initialize() {
     	Calendar cal = new GregorianCalendar();
     	cal = Calendar.getInstance();
-    	cal.add(Calendar.DAY_OF_MONTH, -5);
-    	Date vencimentoStart = cal.getTime();
+    	Date now = cal.getTime();
     	
-    	cal.add(Calendar.DAY_OF_MONTH, 13);
+    	cal.add(Calendar.DAY_OF_MONTH, 7);
     	Date vencimentoEnd = cal.getTime();
     	
     	List<Duplicata> dups = getDuplicataData();
     	for (Duplicata duplicata : dups) {
-			if (duplicata.getDataVencimento().after(vencimentoStart) && duplicata.getDataVencimento().before(vencimentoEnd)) {
+			if (duplicata.getDataVencimento().before(now) && duplicata.getEstado().equals(EstadoPagamento.PENDENTE)){
+				filterDups.add(duplicata);
+			} else if (duplicata.getDataVencimento().before(vencimentoEnd)) {
 				filterDups.add(duplicata);
 			}
 			
 		}
     	
     	
-    	
-    	cal = Calendar.getInstance();
-    	cal.add(Calendar.DAY_OF_MONTH, -5);
-    	
-    	Date start = cal.getTime();
-    	cal.add(Calendar.DAY_OF_MONTH, 13);
-    	
-    	Date end = cal.getTime();
-    	
     	List<Contrato> contratos = getContratoData();
+    	
+    	LocalDate ldNow = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); 
+    	
     	
     	for (Contrato contrato : contratos) {
     		cal.setTime(contrato.getData());
     		cal.add(Calendar.MONTH, contrato.getQtdParcelas()-1);
-    		Date dataFim = cal.getTime();
+    		LocalDate ldEnd = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    		Integer count = Math.toIntExact(ChronoUnit.DAYS.between(ldNow, ldEnd));
     		
-    		if (dataFim.after(start) && dataFim.before(end)) {
+    		if (count <61) {
 				filterContratos.add(contrato);
 				
 			}
