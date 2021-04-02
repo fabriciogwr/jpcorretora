@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileSystemView;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fgwr.jpcorretora.domain.Recibo;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -38,33 +39,6 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 
 public class ReciboPdfGen {
-
-	private InputStream getFileFromResourceAsStream(String fileName) {
-		ClassLoader classLoader = getClass().getClassLoader();
-		InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
-		if (inputStream == null) {
-			throw new IllegalArgumentException("file not found! " + fileName);
-		} else {
-			return inputStream;
-		}
-	}
-
-	private File getFileFromResource(String fileName) throws URISyntaxException {
-
-		ClassLoader classLoader = getClass().getClassLoader();
-		URL resource = classLoader.getResource(fileName);
-		if (resource == null) {
-			throw new IllegalArgumentException("file not found! " + fileName);
-		} else {
-
-			// failed if files have whitespaces or special characters
-			// return new File(resource.getFile());
-
-			return new File(resource.toURI());
-		}
-
-	}
 
 	public String fileToString ( File file ) {
 	    try {
@@ -151,13 +125,9 @@ public class ReciboPdfGen {
 
 			table2.addCell(cell);
 
-			cell = new Cell();
-			NumberFormat real = NumberFormat.getNumberInstance();
-			real.setMinimumFractionDigits(2);
-			real.setMaximumFractionDigits(2);
+			cell = new Cell();			
 			
-			
-			String valor = real.format(recibo.getValor());
+			String valor = StringsUtils.formatarReal(recibo.getValor());
 			Text textValor = new Text("");
 			textValor.setText(valor);
 			textValor.setBold();

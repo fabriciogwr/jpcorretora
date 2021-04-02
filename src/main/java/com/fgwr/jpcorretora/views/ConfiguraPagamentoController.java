@@ -23,6 +23,7 @@ import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -90,30 +91,22 @@ public class ConfiguraPagamentoController {
 	}
 
 	public void setDuplicata(Duplicata duplicata) {
-		this.duplicata = duplicata;
-		NumberFormat real = NumberFormat.getNumberInstance();
-		real.setMinimumFractionDigits(2);
-		real.setMaximumFractionDigits(2);
+		this.duplicata = duplicata;	
 		
-		
-		String valor = "R$ " + real.format(duplicata.getValor());
+		String valor = "R$ " + StringsUtils.formatarReal(duplicata.getValor());
 		valorVencimentoField.setText(valor);
 		cal.setTime(duplicata.getDataVencimento());
 		Double valorPorDia = duplicata.getValor() / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		DecimalFormatSymbols separador = new DecimalFormatSymbols();
-		separador.setDecimalSeparator('.');
-		DecimalFormat df = new DecimalFormat("0.00", separador);
-		String valorPorDiaString = df.format(valorPorDia);
 		
 		dataPagamentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
 		
 		dataPgto = dataPagamentoField.getValue();
 		vencimentoField.setText(duplicata.getDataVencimentoForm());
 		dataVcm = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+		juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
 		valorCorrigidoCalc = duplicata.getValor() + juros;
 		valorCorrigido = valorCorrigidoCalc;
-		valorCorrigidoStr = "R$ " + real.format(valorCorrigidoCalc);
+		valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
 		valorCorrigidoField.setText(valorCorrigidoStr);
 		
 		dataPgto = Instant.now().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -122,12 +115,12 @@ public class ConfiguraPagamentoController {
 		if (dataPgto.isBefore(dataVcm)) {
 			juros = 0.0 ;
 		} else {
-			juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+			juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
 		}
 		
 		valorCorrigidoCalc = (juros == 0.0 ) ? duplicata.getValor() : duplicata.getValor() + juros;
 		valorCorrigido = valorCorrigidoCalc;
-		valorCorrigidoStr = "R$ " + real.format(valorCorrigidoCalc);
+		valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
 		valorCorrigidoField.setText(valorCorrigidoStr);
 		
 		dataPagamentoField.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -136,12 +129,12 @@ public class ConfiguraPagamentoController {
 			if (dataPgto.isBefore(dataVcm)) {
 				juros = 0.0 ;
 			} else {
-				juros = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+				juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
 			}
 			
 			valorCorrigidoCalc = (juros == 0.0 ) ? duplicata.getValor() : duplicata.getValor() + juros;
 			valorCorrigido = valorCorrigidoCalc;
-			valorCorrigidoStr = "R$ " + real.format(valorCorrigidoCalc);
+			valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
 			valorCorrigidoField.setText(valorCorrigidoStr);
 		});
 

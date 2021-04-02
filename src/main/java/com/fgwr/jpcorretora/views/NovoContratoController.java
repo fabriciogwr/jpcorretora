@@ -30,6 +30,7 @@ import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
@@ -169,31 +170,25 @@ Calendar cal = Calendar.getInstance();
 	public void correct(String vencimentos, Calendar cal, Date now) {
 		if (vencimentos.isBlank() || Integer.parseInt(vencimentos) == 0) {
 			primeiraParcelaField.setText("");
+			System.out.println("empty");
 		}else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) > 0 && Integer.parseInt(vencimentos) > cal.get(Calendar.DAY_OF_MONTH)) {
 			Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-			DecimalFormatSymbols separador = new DecimalFormatSymbols();
-			separador.setDecimalSeparator('.');				
-			DecimalFormat df = new DecimalFormat("0.00", separador);
-			String valorPorDiaString = df.format(valorPorDia);
-			Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH));
+			Double diferencaDeVencimento = valorPorDia * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH));
 			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
-		    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
+		    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
+		    System.out.println("laço 1");
 			} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) <= cal.get(Calendar.DAY_OF_MONTH)){
-				Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-				DecimalFormatSymbols separador = new DecimalFormatSymbols();
-				separador.setDecimalSeparator('.');				
-				DecimalFormat df = new DecimalFormat("0.00", separador);
-				String valorPorDiaString = df.format(valorPorDia);
-				
+				Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);				
 				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				
 				cal.add(Calendar.MONTH, 1);
 				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.parseInt(vencimentos));
 				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				
-				Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+				Double diferencaDeVencimento = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
 				primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
-			    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
+			    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
+			    System.out.println("laço 2");
 				
 			} else {
 				primeiraParcelaField.setText("");
