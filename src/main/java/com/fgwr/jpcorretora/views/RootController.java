@@ -37,11 +37,12 @@ public class RootController {
 	@FXML
 	private MenuBar menuBar;
 	
+	private Stage secStage;
+	
 	@FXML
 	private BorderPane rootLayout;
 	
 	FrontApp frontApp = new FrontApp();
-	
 	String dir = System.getProperty("user.dir");
 	
 	public void initialize(URL url, ResourceBundle rb) {
@@ -71,7 +72,7 @@ public class RootController {
 	
 	@FXML
     public void showRelatorios(ActionEvent event) throws IOException {
-      AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+      AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
 	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
         rootLayout.setCenter(showCadastroProprietarios);
     }
@@ -91,18 +92,16 @@ public class RootController {
 				loader.setController(new EventosController());
 				AnchorPane eventosOverview = (AnchorPane) loader.load();
 
-
-				
-				Stage secStage = new Stage();
+				secStage = new Stage();
 				Scene scene2 = new Scene(eventosOverview);
 				secStage.setScene(scene2);
 				secStage.show();
-				
+
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		
+
     }
 	
 	@FXML
