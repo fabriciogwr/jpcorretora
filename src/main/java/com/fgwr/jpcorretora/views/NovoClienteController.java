@@ -1,13 +1,11 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +18,8 @@ import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
+import com.fgwr.jpcorretora.utils.AutoCompleteBox;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -29,9 +29,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -64,7 +68,7 @@ public class NovoClienteController {
 	@FXML
 	private TextField obsField;
 	@FXML
-	private ComboBox<String> bancoBox;
+	private ComboBox<Banco> bancoBox;
 	@FXML
 	private ComboBox<String> tipoContaBox;
 
@@ -100,7 +104,32 @@ public class NovoClienteController {
 		}
 
 		estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
-		bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
+		bancoBox.setItems(FXCollections.observableArrayList(Banco.values()));
+		
+		Callback<ListView<Banco>, ListCell<Banco>> bancoCellFactory = new Callback<ListView<Banco>, ListCell<Banco>>() {
+
+			@Override
+			public ListCell<Banco> call(ListView<Banco> l) {
+				return new ListCell<Banco>() {
+
+					@Override
+					protected void updateItem(Banco banco, boolean empty) {
+						super.updateItem(banco, empty);
+						if (banco == null || empty) {
+							setGraphic(null);
+						} else {
+							setText(banco.getFullCod() + " - " + banco.getDescricao());
+						}
+					}
+				};
+			}
+
+		};
+		bancoBox.setButtonCell(bancoCellFactory.call(null));
+		bancoBox.setCellFactory(bancoCellFactory);
+		bancoBox.setTooltip(new Tooltip());
+		
+		new AutoCompleteBox<Banco>(bancoBox);
 		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
 
 	}
@@ -118,28 +147,27 @@ public class NovoClienteController {
 		dialogStage.close();
 	}
 
-	public String fileToStylesheetString(File stylesheetFile) {
-		try {
-			return stylesheetFile.toURI().toURL().toString();
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
-
 	private boolean isInputValid() {
 		String errorMessage = "";
 
 		if (nomeField.getText() == null || nomeField.getText().length() == 0) {
 			errorMessage += "Nome inválido\n";
 		}
-		if (emailField.getText() == null || emailField.getText().length() == 0) {
+		if ((emailField.getText() == null || emailField.getText().length() == 0) || (emailField.getText().length() > 5 && !emailField.getText().matches("@"))) {
 			errorMessage += "Email inválido\n";
 		}
-		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
+		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido\n";
 		}
+		
+		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {
+			errorMessage += "Adicione ao menos 1 telefone\n";
+			if (telefonePrefField.getText().length() <10 || telefonePrefField.getText().length() > 11) {
+				errorMessage += "Telefone inválico\n";
+			}
+		}
 
-		if (rgField.getText() == null || rgField.getText().length() == 0) {
+		if (rgField.getText() == null || rgField.getText().length() == 0  || rgField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "RG inválido\n";
 		}
 
@@ -147,7 +175,7 @@ public class NovoClienteController {
 			errorMessage += "Selecione um Estado Civil\n";
 		}
 
-		if (dataNascimentoField.getValue() == null) {
+		if ((dataNascimentoField.getValue() == null || dataNascimentoField.getEditor().getText().isBlank()) && dataNascimentoField.getEditor().getText().length() < 8) {
 			errorMessage += "Data de Nascimento inválida\n";
 
 		}
@@ -158,7 +186,7 @@ public class NovoClienteController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(fileToStylesheetString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);
@@ -232,7 +260,7 @@ public class NovoClienteController {
 				db.setConta(contaField.getText());
 				db.setTitular(titularField.getText());
 				if (bancoBox.getValue() != null) {
-					db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+					db.setBanco(bancoBox.getValue());
 				}
 				if (tipoContaBox.getValue() != null) {
 					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));

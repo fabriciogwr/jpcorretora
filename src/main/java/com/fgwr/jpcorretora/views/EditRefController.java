@@ -1,5 +1,7 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -10,6 +12,7 @@ import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -33,11 +36,11 @@ public class EditRefController {
 	private Cliente cliente;
 	private Referencia referencia;
 	private boolean okClicked = false;
-	
+
 	ApplicationContext context = SpringContext.getAppContext();
 	ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
 	ReferenciaRepository refRepo = (ReferenciaRepository) context.getBean("referenciaRepository");
-	
+
 	@FXML
 	private void initialize() {
 
@@ -50,11 +53,12 @@ public class EditRefController {
 	public void setClienteReferencia(Cliente cliente, Referencia referencia) {
 		this.cliente = cliente;
 		this.referencia = referencia;
-		
+
 		refNomeField.setText(referencia.getNome());
 		refFoneField.setText(referencia.getTelefone());
-		
+
 	}
+
 	public boolean isOkClicked() {
 		return okClicked;
 	}
@@ -62,7 +66,7 @@ public class EditRefController {
 	@FXML
 	private void handleOk() {
 		if (isInputValid()) {
-			
+
 			if (!refNomeField.getText().isBlank()) {
 				referencia.setNome(refNomeField.getText());
 				referencia.setTelefone(refFoneField.getText());
@@ -70,15 +74,14 @@ public class EditRefController {
 				referencia.setCliente(cliente);
 				cliRepo.save(cliente);
 				refRepo.save(referencia);
-			} else if (refNomeField.getText().isBlank()){
-				
+			} else if (refNomeField.getText().isBlank()) {
+
 				refRepo.delete(referencia);
-				
+
 			}
 			okClicked = true;
 			dialogStage.close();
 		}
-
 	}
 
 	@FXML
@@ -89,18 +92,18 @@ public class EditRefController {
 	private boolean isInputValid() {
 		String errorMessage = "";
 
-		if (refFoneField.getText() == null || refFoneField.getText().length() == 0) {
+		if (refFoneField.getText() == null || refFoneField.getText().length() == 0
+				|| refFoneField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "Telefone inválido\n";
 		}
-		 
 
 		if (errorMessage.length() == 0) {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

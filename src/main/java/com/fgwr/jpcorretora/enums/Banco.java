@@ -112,7 +112,7 @@ public enum Banco {
 	PARMETAL(194, "Parmetal Distribuidora de Títulos e Valores Mobiliários LTDA"),
 	FAIR(196, "Fair Corretora de Câmbio S.A."),
 	STONEPGTOS(197, "Stone Pagamentos S.A."),
-	BRADESCOCARTOES(204, "Banco Bradesco CartÃµes S.A."),
+	BRADESCOCARTOES(204, "Banco Bradesco Cartões S.A."),
 	BTGPACTUAL(208, "Banco BTG Pactual S.A."),
 	ORIGINAL(212, "Banco Original S.A."),
 	ARBI(213, "Banco Arbi S.A."),

@@ -1,5 +1,6 @@
 package com.fgwr.jpcorretora;
 
+import java.awt.SplashScreen;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -43,6 +44,7 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -54,19 +56,19 @@ public class FrontApp extends Application {
 
 	@Autowired
 	ClienteController cc;
-	
+
 	@Autowired
 	EditClienteController ecs;
-	
+
 	@Autowired
 	ClienteService cs;
-	
+
 	@Autowired
 	ImovelController ic;
-	
+
 	@Autowired
 	ImovelService is;
-	
+
 	@Autowired
 	ClienteRepository repo;
 
@@ -78,10 +80,10 @@ public class FrontApp extends Application {
 	private ConfigurableApplicationContext applicationContext;
 
 	String dir = System.getProperty("user.dir");
-	//String dir = "D:\\jpcorretora";
-	
+	// String dir = "D:\\jpcorretora";
+
 	FileResourcesUtils fru = new FileResourcesUtils();
-	
+
 	public FrontApp() {
 
 	}
@@ -89,8 +91,6 @@ public class FrontApp extends Application {
 	@Override
 	public void init() {
 
-		
-		
 		ApplicationContextInitializer<GenericApplicationContext> initializer = ac -> {
 
 			ac.registerBean(Application.class, () -> FrontApp.this);
@@ -112,26 +112,36 @@ public class FrontApp extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("JPCorretora");
+		primaryStage.getIcons().add(new Image("file:\\\\"+ dir+ "\\imgs\\icone.ico"));
+		
+		System.out.println("file:" + dir + "\\imgs\\icone.ico");
 		this.secStage = new Stage();
 		this.secStage.setTitle("Eventos");
 
 		initRootLayout();
 
 		showTelaClientes();
-		
+
 		showEventos();
 	}
 
 	public void initRootLayout() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/RootLayout.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\RootLayout.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/RootLayout.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\RootLayout.fxml").toUri()).toUri().toURL()); // BUILD
 			loader.setController(new RootController());
 			rootLayout = (BorderPane) loader.load();
-			
+
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setMaximized(true);
+			final SplashScreen splash = SplashScreen.getSplashScreen();
+			if (splash != null) {
+				splash.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -139,12 +149,14 @@ public class FrontApp extends Application {
 
 	public void showTelaClientes() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); // BUILD
 			AnchorPane personOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(personOverview);
-			
+
 			ClienteController controller = loader.getController();
 			controller.setMainApp(this);
 
@@ -152,366 +164,393 @@ public class FrontApp extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void showEventos() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); // BUILD
 			loader.setController(new EventosController());
 			AnchorPane eventosOverview = (AnchorPane) loader.load();
 
-			
 			Scene scene2 = new Scene(eventosOverview);
 			secStage.setScene(scene2);
 			secStage.show();
-			
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void showTelaImoveis() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaImoveis.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/TelaImoveis.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); // BUILD
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
-			
+
 			ImovelController controller = loader.getController();
 			controller.setMainApp(this);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void showTelaProprietarios() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaProprietarios.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/TelaProprietarios.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); // BUILD
 			loader.setController(new ProprietarioController());
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
-			
+
 			ProprietarioController controller = loader.getController();
 			controller.setMainApp(this);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void showContratos() {
 		try {
-		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaContratos.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); //BUILD
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/TelaContratos.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); // BUILD
 			loader.setController(new ContratoController());
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
-			
+
 			ContratoController controller = loader.getController();
 			controller.setMainApp(this);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public boolean showEditCliente(Cliente cliente) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new EditClienteController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new EditClienteController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Editar Cliente");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar Cliente");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        EditClienteController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setCliente(cliente);
+			EditClienteController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setCliente(cliente);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showNovoCliente(Cliente cliente, DadosBancarios db) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new NovoClienteController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditCliente.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new NovoClienteController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Novo Cliente");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Novo Cliente");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        NovoClienteController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setCliente(cliente, db);
+			NovoClienteController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setCliente(cliente, db);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showNovoProprietario(Proprietario proprietario, DadosBancarios db) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoProprietario.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoProprietario.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new NovoProprietarioController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/NovoProprietario.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\NovoProprietario.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new NovoProprietarioController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Dados do Proprietario");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Dados do Proprietario");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        NovoProprietarioController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setProprietario(proprietario, db);
+			NovoProprietarioController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setProprietario(proprietario, db);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
-	public boolean showNovoImovel(Imovel imovel , Endereco endereco) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoImovel.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoImovel.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new NovoImovelController());
-	        AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Dados do Novo Imóvel");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+	public boolean showNovoImovel(Imovel imovel, Endereco endereco) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/NovoImovel.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\NovoImovel.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new NovoImovelController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        NovoImovelController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setImovel(imovel, endereco);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Dados do Novo Imóvel");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        dialogStage.showAndWait();
+			NovoImovelController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setImovel(imovel, endereco);
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showNovoContrato(Contrato contrato) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/NovoContrato.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\NovoContrato.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new NovoContratoController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/NovoContrato.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\NovoContrato.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new NovoContratoController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Novo Contrato");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Novo Contrato");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        NovoContratoController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setContrato(contrato);
+			NovoContratoController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setContrato(contrato);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showEditObs(Cliente cliente) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new EditObsController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new EditObsController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Editar Observação");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar Observação");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        EditObsController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setCliente(cliente);
+			EditObsController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setCliente(cliente);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showEditObs(Proprietario proprietario) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new EditObsController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditObs.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditObs.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new EditObsController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Editar Observação");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar Observação");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        EditObsController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setProprietario(proprietario);
+			EditObsController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setProprietario(proprietario);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showConfiguraPagamento(Duplicata duplicata) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamento.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\ConfiguraPagamento.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new ConfiguraPagamentoController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamento.fxml"));
+			// //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\ConfiguraPagamento.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new ConfiguraPagamentoController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Configurar Pagamento");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Configurar Pagamento");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        ConfiguraPagamentoController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setDuplicata(duplicata);
+			ConfiguraPagamentoController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setDuplicata(duplicata);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public boolean showEditRef(Cliente cliente, Referencia selectedReferencia) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/EditRef.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\EditRef.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new EditRefController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditRef.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditRef.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new EditRefController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Editar Referência");
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar Referência");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        EditRefController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setClienteReferencia(cliente, selectedReferencia);
+			EditRefController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setClienteReferencia(cliente, selectedReferencia);
 
-	        dialogStage.showAndWait();
+			dialogStage.showAndWait();
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
-	
+
 	public boolean showChecklist(ImovelChecklistDTO checklist) {
-	    try {
-	    //	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/Checklist.fxml")); //DEV
-			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\Checklist.fxml").toUri()).toUri().toURL()); //BUILD
-	        loader.setController(new ChecklistController());
-	        AnchorPane page = (AnchorPane) loader.load();
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/Checklist.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\Checklist.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new ChecklistController());
+			AnchorPane page = (AnchorPane) loader.load();
 
-	        Stage dialogStage = new Stage();
-	        dialogStage.setTitle("Checklist");
-	        
-	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNIFIED);
-	        dialogStage.initModality(Modality.APPLICATION_MODAL);
-	        dialogStage.initOwner(primaryStage);
-	        Scene scene = new Scene(page);
-	        dialogStage.setScene(scene);
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Checklist");
 
-	        ChecklistController controller = loader.getController();
-	        controller.setDialogStage(dialogStage);
-	        controller.setChecklist(checklist);
-	        dialogStage.showAndWait();
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
-	        return controller.isOkClicked();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+			ChecklistController controller = loader.getController();
+			page.setOnKeyPressed(controller::handleOnKeyPressed);
+			controller.setDialogStage(dialogStage);
+			controller.setChecklist(checklist);
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
+
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}

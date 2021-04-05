@@ -90,8 +90,6 @@ public class DuplicataService {
 				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				
 				Double diferençaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
-				System.out.println(contrato.getValorDeCadaParcela());
-				System.out.println(diferençaDeVencimento);
 				duplicata.setValor(contrato.getValorDeCadaParcela() + diferençaDeVencimento);
 			} else {
 			duplicata.setValor(contrato.getValorDeCadaParcela()); }
@@ -120,7 +118,7 @@ public class DuplicataService {
 		return repo.findAll();
 	}
 
-	public List<Duplicata> findContrato(Integer contrato) {
+	public List<Duplicata> findByContrato(Contrato contrato) {
 		
 		List<Duplicata> dup = repo.findByContrato(contrato);
 		if (dup == null) {

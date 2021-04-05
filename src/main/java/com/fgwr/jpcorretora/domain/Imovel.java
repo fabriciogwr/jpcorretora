@@ -437,9 +437,31 @@ public class Imovel implements Serializable {
 		return proprietario;
 	}
 	
+	public StringProperty endereco() {
+		StringProperty endereco = new SimpleStringProperty((String) this.endereco.getLogradouro() + ", " + this.endereco.getNumero());
+		return endereco;
+	}
+	
+	public StringProperty dataAngariacao() {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		StringProperty dataAngariacao = new SimpleStringProperty(df.format(this.dataAngariacao));
+		return dataAngariacao;
+	}
+	
 	public StringProperty cod() {
 		StringProperty cod = new SimpleStringProperty((String) this.id.toString());
 		return cod;
+	}
+	
+	public StringProperty locacao() {
+		Boolean locado = (this.getContrato() == null) ? false : true;
+		StringProperty locadoStr;
+		if(locado) {
+		locadoStr = new SimpleStringProperty("Já alugado");
+		} else {
+			locadoStr = new SimpleStringProperty("Disponível");
+		}return locadoStr;
+		
 	}
 
 }

@@ -1,8 +1,8 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -13,12 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
-import com.fgwr.jpcorretora.domain.Duplicata;
+import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
+import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.services.DuplicataService;
+import com.fgwr.jpcorretora.utils.FileUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
@@ -43,10 +44,6 @@ public class ProprietarioController {
 	@FXML
 	private BorderPane rootLayout;
 
-	private ObservableList<Proprietario> proprietarioData = FXCollections.observableArrayList();
-	private ObservableList<String> telefoneData = FXCollections.observableArrayList();
-	private ObservableList<Duplicata> duplicataData = FXCollections.observableArrayList();
-	private ObservableList<Duplicata> duplicataAux = FXCollections.observableArrayList();
 	private ObservableList<Referencia> referenciaData = FXCollections.observableArrayList();
 
 	@FXML
@@ -57,19 +54,15 @@ public class ProprietarioController {
 	private TableColumn<Proprietario, String> nomeColumn;
 
 	@FXML
-	private TableView<Duplicata> duplicataTable;
+	private TableView<Imovel> imovelTable;
 	@FXML
-	private TableColumn<Duplicata, String> contratoColumn;
+	private TableColumn<Imovel, String> codIColumn;
 	@FXML
-	private TableColumn<Duplicata, String> parcelaColumn;
+	private TableColumn<Imovel, String> enderecoColumn;
 	@FXML
-	private TableColumn<Duplicata, String> vencimentoColumn;
+	private TableColumn<Imovel, String> dataAngariacaoColumn;
 	@FXML
-	private TableColumn<Duplicata, String> valorColumn;
-	@FXML
-	private TableColumn<Duplicata, String> estadoColumn;
-	@FXML
-	private TableColumn<Duplicata, String> dataPgtoColumn;
+	private TableColumn<Imovel, String> locacaoColumn;
 
 	@FXML
 	private Label nomeLabel;
@@ -136,10 +129,7 @@ public class ProprietarioController {
 	@FXML
 	private Button ref3Btn;
 
-	
-	private Proprietario proprietarioAux;
 	private DadosBancarios dadosBancarios;
-	private Integer contratoAtual;
 
 	FrontApp frontApp = new FrontApp();
 
@@ -151,65 +141,62 @@ public class ProprietarioController {
 		return allProp;
 	}
 
-	public List<Duplicata> getDuplicataData() {
-		DuplicataService dupServ = (DuplicataService) context.getBean("duplicataService");
-		List<Duplicata> alldup = dupServ.findAll();
-		
-		return alldup;
+	public List<Imovel> getImovelData(Proprietario p) {
+		ImovelRepository imServ = (ImovelRepository) context.getBean("imovelRepository");
+		List<Imovel> imoveis = imServ.findByProprietario(p);
+		return imoveis;
 	}
 
-	
-
-	public DadosBancarios getDadosBancariosData() {
+	public DadosBancarios getDadosBancariosData(Proprietario p) {
 		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
-		dadosBancarios = dbRepo.findByProprietario(proprietarioAux);
+
+		dadosBancarios = dbRepo.findByProprietario(p);
+		if (dadosBancarios == null || dadosBancarios.getTitular().isBlank()) {
+			dadosBancarios = null;
+		}
 		return dadosBancarios;
 	}
 
 	@FXML
 	private void initialize() {
-		duplicataData = FXCollections.observableArrayList(getDuplicataData());
+
 		proprietarioTable.setItems(FXCollections.observableArrayList(getProprietarioData()));
 		nomeColumn.setCellValueFactory(cellData -> cellData.getValue().nome());
 		codColumn.setCellValueFactory(cellData -> cellData.getValue().cod());
 		showProprietario(null);
 		proprietarioTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showProprietario(newValue));
-		duplicataTable.setItems(duplicataAux);
+
 	}
 
 	private void showProprietario(Proprietario proprietario) {
 		if (proprietario != null) {
 			nomeLabel.setText(proprietario.getNome());
-			cpfLabel.setText(StringsUtils.formatarCpf(proprietario.getCpfOuCnpj()));
+			cpfLabel.setText(StringsUtils.formatarCpfOuCnpj(proprietario.getCpfOuCnpj()));
 			rgLabel.setText(proprietario.getRg());
 			emailLabel.setText(proprietario.getEmail());
 			telefonePrefLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefonePref()));
 			if (!proprietario.getTelefoneAlt().isBlank()) {
 				telefoneAltLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefoneAlt()));
-				
+
 			} else {
 				telefoneAltLabel.setText("");
 			}
 			dataNascimentoLabel.setText(proprietario.getDataNascimentoString());
 			estadoCivilLabel.setText(proprietario.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(proprietario.getProfissao());
-			
-			proprietarioAux = proprietario;
-			
-			
-			dadosBancarios = getDadosBancariosData();
-			
-			if (dadosBancarios.getBanco() !=null) {
-			bancoLabel
-					.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
-			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
-			agenciaLabel.setText(dadosBancarios.getAgencia());
-			numeroContaLabel.setText(dadosBancarios.getConta());
-			titularLabel.setText(dadosBancarios.getTitular());
+
+			dadosBancarios = getDadosBancariosData(proprietario);
+			if (dadosBancarios != null) {
+				bancoLabel.setText(
+						dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
+				tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
+				agenciaLabel.setText(dadosBancarios.getAgencia());
+				numeroContaLabel.setText(dadosBancarios.getConta());
+				titularLabel.setText(dadosBancarios.getTitular());
 			}
 			referenciaData.clear();
-			
+
 			obsLabel.setText(proprietario.getObs());
 			ref1Btn.setText("Editar");
 			if (referenciaData.size() == 0) {
@@ -241,36 +228,15 @@ public class ProprietarioController {
 			}
 
 			proprietarioTable.refresh();
-			for (Duplicata duplicata : duplicataData) {
-				if (duplicata.getContrato().getId() == contratoAtual) {
-					duplicataAux.add(duplicata);
-				}
 
-				if (duplicata != null) {
-					contratoColumn.setCellValueFactory(cellData -> cellData.getValue().contrato());
-					parcelaColumn.setCellValueFactory(cellData -> cellData.getValue().parcela());
-					vencimentoColumn.setCellValueFactory(cellData -> cellData.getValue().vencimento());
-					valorColumn.setCellValueFactory(cellData -> cellData.getValue().valor());
-					estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
-					dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
-					duplicataTable.getSortOrder().add(parcelaColumn);
+			imovelTable.setItems(FXCollections.observableArrayList(getImovelData(proprietario)));
 
-				}
-			}
+			codIColumn.setCellValueFactory(cellData -> cellData.getValue().cod());
+			enderecoColumn.setCellValueFactory(cellData -> cellData.getValue().endereco());
+			dataAngariacaoColumn.setCellValueFactory(cellData -> cellData.getValue().dataAngariacao());
+			locacaoColumn.setCellValueFactory(cellData -> cellData.getValue().locacao());
+			imovelTable.getSortOrder().add(codIColumn);
 
-			/*
-			 * if (imovel != null) {
-			 * logradouroLabel.setText(imovel.getEndereco().getLogradouro());
-			 * numeroLabel.setText(imovel.getEndereco().getNumero());
-			 * bairroLabel.setText(imovel.getEndereco().getBairro());
-			 * cepLabel.setText(imovel.getEndereco().getCep());
-			 * cidadeLabel.setText(imovel.getEndereco().getCidade());
-			 * complementoLabel.setText(imovel.getEndereco().getComplemento());
-			 * dataLocacaoLabel.setText(imovel.getDataLaudo().toString()); } else {
-			 * logradouroLabel.setText(""); numeroLabel.setText("");
-			 * bairroLabel.setText(""); cepLabel.setText(""); cidadeLabel.setText("");
-			 * complementoLabel.setText(""); dataLocacaoLabel.setText(""); }
-			 */
 		} else {
 			nomeLabel.setText("");
 			cpfLabel.setText("");
@@ -305,19 +271,18 @@ public class ProprietarioController {
 			boolean okClicked = frontApp.showNovoProprietario(selectedProprietario, db);
 			if (okClicked) {
 				showProprietario(selectedProprietario);
-			
 
-		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
-			alert.setTitle("Nenhuma seleção");
-			alert.setHeaderText("Nenhum Proprietário Selecionado");
-			alert.setContentText("Por favor, selecione um proprietário na tabela.");
-			alert.showAndWait();
+			} else {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.initStyle(StageStyle.UNDECORATED);
+				DialogPane dialogPane = alert.getDialogPane();
+				dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+				alert.setTitle("Nenhuma seleção");
+				alert.setHeaderText("Nenhum Proprietário Selecionado");
+				alert.setContentText("Por favor, selecione um proprietário na tabela.");
+				alert.showAndWait();
+			}
 		}
-	}
 	}
 
 	@FXML
@@ -329,14 +294,15 @@ public class ProprietarioController {
 		if (selectedProprietario != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Exclusão de Proprietario");
 			alert.setHeaderText("Confirmar Exclusão do Proprietario Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				
+
 				propRepo.delete(selectedProprietario);
+				proprietarioTable.getItems().remove(selectedProprietario);
 
 			}
 			proprietarioTable.refresh();
@@ -355,8 +321,8 @@ public class ProprietarioController {
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhuma Pessoa Selecionada");
 			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
@@ -364,67 +330,6 @@ public class ProprietarioController {
 		}
 	}
 
-/*	@Transactional
-	@FXML
-	private void handlePagamento() {
-		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
-		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
-		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
-		Calendar cal = Calendar.getInstance();
-		if (selectedDuplicata != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Confirmar pagamento");
-			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK) {
-				selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
-				Recibo rec = new Recibo(null, proprietarioTable.getSelectionModel().getSelectedItem(),
-						selectedDuplicata.getValor(), selectedDuplicata.getParcela(),
-						selectedDuplicata.getDataVencimento(), cal.getTime());
-				selectedDuplicata.setDataPagamento(cal.getTime());
-				selectedDuplicata.setRecibo(rec);
-				dupRepo.save(selectedDuplicata);
-				recRepo.save(rec);
-
-				duplicataTable.refresh();
-
-				Alert alert2 = new Alert(AlertType.CONFIRMATION);
-				alert2.setTitle("Recibo");
-				alert2.setHeaderText("Visualizar o recibo do pagamento?");
-				Optional<ButtonType> result2 = alert2.showAndWait();
-				if (result2.get() == ButtonType.OK) {
-					System.out.println(rec.getValor());
-
-				} else {
-					alert.close();
-				}
-			}
-
-		}
-	}
-
-	@FXML
-	public void handleCancelaPagamento() {
-		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
-		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
-		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
-		if (selectedDuplicata != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Cancelar pagamento");
-			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK) {
-				selectedDuplicata.setEstado(EstadoPagamento.PENDENTE);
-				Recibo rec = selectedDuplicata.getRecibo();
-				selectedDuplicata.setDataPagamento(null);
-				selectedDuplicata.setRecibo(null);
-				dupRepo.save(selectedDuplicata);
-				recRepo.delete(rec);
-			}
-			duplicataTable.refresh();
-		}
-	}
-*/
 	public void setMainApp(FrontApp frontApp) {
 		this.frontApp = frontApp;
 	}

@@ -1,16 +1,13 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -24,9 +21,10 @@ import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
+import com.fgwr.jpcorretora.utils.AutoCompleteBox;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -34,9 +32,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -59,8 +61,6 @@ public class NovoProprietarioController {
 	@FXML
 	private TextField rgField;
 	@FXML
-	private TextField obsField;
-	@FXML
 	private ChoiceBox<String> estadoCivilBox;
 	@FXML
 	private TextField profissaoField;
@@ -71,13 +71,13 @@ public class NovoProprietarioController {
 	@FXML
 	private TextField titularField;
 	@FXML
-	private ComboBox<String> bancoBox;
+	private TextField obsField;
+	@FXML
+	private ComboBox<Banco> bancoBox;
 	@FXML
 	private ComboBox<String> tipoContaBox;
 
 	private List<String> estadoCivilAux = new ArrayList<>();
-
-	private List<String> bancoAux = new ArrayList<>();
 
 	private List<String> tipoContaAux = new ArrayList<>();
 
@@ -87,7 +87,6 @@ public class NovoProprietarioController {
 	private boolean okClicked = false;
 
 	private EstadoCivil[] estadoCivil = EstadoCivil.values();
-	private Banco[] banco = Banco.values();
 	private TipoConta[] tipoConta = TipoConta.values();
 
 	@FXML
@@ -97,17 +96,38 @@ public class NovoProprietarioController {
 			estadoCivilAux.add(estadoCivil.getDescricao());
 		}
 
-		for (Banco banco : banco) {
-			bancoAux.add(banco.getFullCod() + " - " + banco.getDescricao());
-		}
-
 		for (TipoConta tipoConta : tipoConta) {
 			tipoContaAux.add(tipoConta.getDesc());
 
 		}
 
 		estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
-		bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
+		bancoBox.setItems(FXCollections.observableArrayList(Banco.values()));
+		
+		Callback<ListView<Banco>, ListCell<Banco>> bancoCellFactory = new Callback<ListView<Banco>, ListCell<Banco>>() {
+
+			@Override
+			public ListCell<Banco> call(ListView<Banco> l) {
+				return new ListCell<Banco>() {
+
+					@Override
+					protected void updateItem(Banco banco, boolean empty) {
+						super.updateItem(banco, empty);
+						if (banco == null || empty) {
+							setGraphic(null);
+						} else {
+							setText(banco.getFullCod() + " - " + banco.getDescricao());
+						}
+					}
+				};
+			}
+
+		};
+		bancoBox.setButtonCell(bancoCellFactory.call(null));
+		bancoBox.setCellFactory(bancoCellFactory);
+		bancoBox.setTooltip(new Tooltip());
+		
+		new AutoCompleteBox<Banco>(bancoBox);
 		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
 
 	}
@@ -124,22 +144,20 @@ public class NovoProprietarioController {
 	private void handleCancel() {
 		dialogStage.close();
 	}
-	public String fileToStylesheetString ( File stylesheetFile ) {
-	    try {
-	        return stylesheetFile.toURI().toURL().toString();
-	    } catch ( MalformedURLException e ) {
-	        return null;
-	    }
-	}
+
 	private boolean isInputValid() {
 		String errorMessage = "";
 
 		if (nomeField.getText() == null || nomeField.getText().length() == 0) {
 			errorMessage += "Nome inválido\n";
 		}
-		if (emailField.getText() == null || emailField.getText().length() == 0) {
-			errorMessage += "Email inválido\n";
+		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {
+			errorMessage += "Adicione ao menos 1 telefone\n";
+			if (telefonePrefField.getText().length() <10 || telefonePrefField.getText().length() > 11) {
+				errorMessage += "Telefone inválico\n";
+			}
 		}
+		
 		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
 			errorMessage += "CPF inválido\n";
 		}
@@ -157,14 +175,13 @@ public class NovoProprietarioController {
 
 		}
 
-		
 		if (errorMessage.length() == 0) {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);
@@ -212,8 +229,7 @@ public class NovoProprietarioController {
 				titularField.setText(proprietario.getDadosBancarios().getTitular());
 				contaField.setText(proprietario.getDadosBancarios().getConta());
 
-				bancoBox.setValue(proprietario.getDadosBancarios().getBanco().getFullCod() + " - "
-						+ proprietario.getDadosBancarios().getBanco().getDescricao());
+				bancoBox.setValue(proprietario.getDadosBancarios().getBanco());
 				tipoContaBox.setValue(proprietario.getDadosBancarios().getTipo().getDesc());
 			} else {
 				agenciaField.setText("");
@@ -286,7 +302,7 @@ public class NovoProprietarioController {
 			db.setConta(contaField.getText());
 			db.setTitular(titularField.getText());
 			 if(bancoBox.getValue() != null) {
-			db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+			db.setBanco(bancoBox.getValue());
 			 }
 			 if (tipoContaBox.getValue() != null) {
 			db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
@@ -294,10 +310,24 @@ public class NovoProprietarioController {
 			 db.setProprietario(proprietario);
 			 proprietario.setDadosBancarios(db);
 			
+			} else {
+				db.setId(null);
+				db.setAgencia(agenciaField.getText());
+				db.setConta(contaField.getText());
+				db.setTitular(titularField.getText());
+				if (bancoBox.getValue() != null) {
+					db.setBanco(bancoBox.getValue());
+				}
+				if (tipoContaBox.getValue() != null) {
+					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+				}
 			}
+			ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
+			propRepo.save(proprietario);
 			okClicked = true;
 			dialogStage.close();
 		}
-	}
+		}
+	
 
 }

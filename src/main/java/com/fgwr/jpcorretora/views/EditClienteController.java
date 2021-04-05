@@ -1,13 +1,12 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import org.jboss.weld.util.collections.Sets;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -19,9 +18,9 @@ import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -114,8 +113,6 @@ public class EditClienteController {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-
-        ObservableList<String> telefoneData = FXCollections.observableArrayList();
         nomeField.setText(cliente.getNome());
         emailField.setText(cliente.getEmail());
         
@@ -207,43 +204,42 @@ public class EditClienteController {
 
     private boolean isInputValid() {
         String errorMessage = "";
-
         if (nomeField.getText() == null || nomeField.getText().length() == 0) {
-            errorMessage += "Nome inválido\n"; 
-        }
-        if (emailField.getText() == null || emailField.getText().length() == 0) {
-            errorMessage += "Email inválido\n"; 
-        }
-        if (cpfField.getText() == null || cpfField.getText().length() == 0) {
-            errorMessage += "CPF inválido\n"; 
-        }
+			errorMessage += "Nome inválido\n";
+		}
+		if ((emailField.getText() == null || emailField.getText().length() == 0) || (emailField.getText().length() > 5 && !emailField.getText().matches("@"))) {
+			errorMessage += "Email inválido\n";
+		}
+		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "CPF inválido\n";
+		}
 
-        if (rgField.getText() == null || rgField.getText().length() == 0) {
-            errorMessage += "RG inválido\n"; 
-        }
+		if (rgField.getText() == null || rgField.getText().length() == 0  || rgField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "RG inválido\n";
+		}
 
-        if (estadoCivilBox.getValue() == null) {
-            errorMessage += "Selecione um Estado Civil\n"; 
-        }
+		if (estadoCivilBox.getValue() == null) {
+			errorMessage += "Selecione um Estado Civil\n";
+		}
 
-        if (dataNascimentoField.getValue() == null) {
-            errorMessage += "Data de Nascimento inválida\n";
-        
-        }
+		if ((dataNascimentoField.getValue() == null || dataNascimentoField.getEditor().getText().isBlank()) && dataNascimentoField.getEditor().getText().length() < 8) {
+			errorMessage += "Data de Nascimento inválida\n";
 
-        if (errorMessage.length() == 0) {
-            return true;
-        } else {
-        	Alert alert = new Alert(AlertType.ERROR);
-        	alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
-            	      alert.setTitle("Campos Inválidos");
-            	      alert.setHeaderText("Por favor, corrija os campos inválidos");
-            	      alert.setContentText(errorMessage);
-                alert.showAndWait();
-                
-            return false;
-        }
+		}
+
+		if (errorMessage.length() == 0) {
+			return true;
+		} else {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			alert.setTitle("Campos Inválidos");
+			alert.setHeaderText("Por favor, corrija os campos inválidos");
+			alert.setContentText(errorMessage);
+			alert.showAndWait();
+
+			return false;
+		}
     }
 }

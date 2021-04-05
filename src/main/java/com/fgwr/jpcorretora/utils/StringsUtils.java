@@ -6,21 +6,27 @@ import java.text.NumberFormat;
 
 public class StringsUtils {
 
-	public static String formatarCpf(String cpf) {
-		StringBuilder sb = new StringBuilder(cpf);
+	public static String formatarCpfOuCnpj(String cpfOuCnpj) {
+		StringBuilder sb = new StringBuilder(cpfOuCnpj);
+		if (cpfOuCnpj.length() == 11) {
 		sb.insert(3, ".");
 		sb.insert(7, ".");
 		sb.insert(11, "-");
+		} else if (cpfOuCnpj.length() == 14) {
+			sb.insert(2, ".");
+			sb.insert(6, ".");
+			sb.insert(9, "/");
+			sb.insert(14, "-");			
+		}
 		return sb.toString();
 	}
 
 	public static String formatarTelefone(String telefone) {
-		Integer count = telefone.length();
 		StringBuilder sb = new StringBuilder(telefone);
 		sb.insert(0, "(");
 		sb.insert(3, ")");
 		sb.insert(4, " ");
-		sb = (count == 11) ? sb.insert(10, "-") : sb.insert(9, "-");
+		sb = (telefone.length() == 11) ? sb.insert(10, "-") : sb.insert(9, "-");
 		return sb.toString();
 	}
 	
@@ -38,4 +44,10 @@ public class StringsUtils {
 	real.setMaximumFractionDigits(2);
 	return real.format(valor);
 	}
+	
+	public static String formatarCep(String cep) {
+		StringBuilder sb = new StringBuilder(cep);
+		sb.insert(5, "-");
+		return sb.toString();
+		}
 }

@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
@@ -35,6 +34,7 @@ import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.services.ImovelService;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,8 +66,6 @@ public class ImovelController {
 	ApplicationContext context = SpringContext.getAppContext();
 	
 	private ObservableList<Imovel> imovelData = FXCollections.observableArrayList();
-	
-	private ObservableList<Checklist> imovelAux = FXCollections.observableArrayList();
 	
 	private Stage stage;
 	@FXML
@@ -181,16 +179,6 @@ public class ImovelController {
 		} return imovelData;
 	}
 	
-	public ObservableList<Checklist> getImovelChecklist(Imovel imv) {
-		ApplicationContext context = SpringContext.getAppContext();
-    	ImovelService imserv = (ImovelService)context.getBean("imovelService");
-    	
-		List<Checklist> chklst = imserv.getChecklist(imv);
-		for (Checklist checklist : chklst) {
-			imovelAux.add(checklist);
-		} return imovelAux;
-	}
-	
 	@FXML
 	private void initialize() throws IOException {
 		imovelData = getImovelData();
@@ -204,7 +192,6 @@ public class ImovelController {
 					try {
 						showImovel(newValue);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				});
@@ -224,9 +211,9 @@ public class ImovelController {
 			bairroLabel.setText(imovel.getEndereco().getBairro());
 			cepLabel.setText(imovel.getEndereco().getCep());
 			dataAngariacaoLabel.setText(imovel.getDataAngariacaoString());
-		//	imovelTable.refresh();
-			imovelAux.clear();
-			imovelAux = getImovelChecklist(imovel);
+
+			obsField.setText(readObs(imovel.getId()));
+			obsField.setEditable(false);
 
 			dataLaudo.setValue(Instant.ofEpochMilli(imovel.getDataLaudo().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 			danoArCondicionadoCheck.setSelected(imovel.isDanoArCondicionado());
@@ -256,8 +243,6 @@ public class ImovelController {
 			danoTomadasCheck.setSelected(imovel.isDanoTomadas());
 			danoVasoSanitarioCheck.setSelected(imovel.isDanoVasoSanitario());
 		
-			obsField.setText(readObs(imovel.getId()));
-			obsField.setEditable(false);
 			
 			descricaoField.setText(readDescricao(imovel.getId()));
 			descricaoField.setEditable(false);
@@ -294,7 +279,7 @@ public class ImovelController {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhum Imóvel Selecionado");
 			alert.setContentText("Por favor, selecione um imóvel na tabela.");
@@ -379,14 +364,6 @@ public class ImovelController {
 			showImovel(selectedImovel);
 		}
 	}
-	
-	public String fileToStylesheetString ( File stylesheetFile ) {
-	    try {
-	        return stylesheetFile.toURI().toURL().toString();
-	    } catch ( MalformedURLException e ) {
-	        return null;
-	    }
-	}
 
 	private void saveObs(String obs, String docFolder, Integer imovelId) throws IOException {
 		BufferedWriter bf = new BufferedWriter(
@@ -405,7 +382,7 @@ public class ImovelController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			dialogPane.getStylesheets().add(FileUtils.fileToString( new File ("css/alerts.css") ));
 			alert.setTitle("Exclusão de Imóvel");
 			alert.setHeaderText("Confirmar Exclusão do Imóvel Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -481,7 +458,6 @@ public class ImovelController {
 		while (br.ready()) {
 			obsTemp = obsTemp + br.readLine() + "\n";
 		}
-		System.out.println(obsTemp);
 		br.close();
 		return obsTemp;
 		

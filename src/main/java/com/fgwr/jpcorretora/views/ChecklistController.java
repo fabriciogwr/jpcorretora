@@ -14,10 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 @Component
@@ -25,6 +28,8 @@ import javafx.stage.Stage;
 @Transactional
 public class ChecklistController {
 
+	@FXML
+	private Button okBtn;
 	@FXML
 	private CheckBox danoSalaCheck;
 	@FXML
@@ -91,11 +96,27 @@ public class ChecklistController {
 
 	@FXML
 	private void initialize() {
-
+		
 	}
 
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();
+
+		danoSalaCheck.setFocusTraversable(false);
+		
+		
+		if (code == KeyCode.ENTER) {
+			okBtn.fire();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+		
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;
+		
 	}
 
 	public boolean isOkClicked() {
@@ -104,6 +125,7 @@ public class ChecklistController {
 
 	@FXML
 	private void handleCancel() {
+		checklist.setObs("Sem Observações");
 		dialogStage.close();
 	}
 	
@@ -121,6 +143,7 @@ public class ChecklistController {
 			dataLaudoPicker.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
 			
 		}
+		
 		danoArCondicionadoCheck.setSelected(checklist.isDanoArCondicionado());
 		danoAreaServicoCheck.setSelected(checklist.isDanoAreaServico());
 		danoBanheiroCheck.setSelected(checklist.isDanoBanheiro());

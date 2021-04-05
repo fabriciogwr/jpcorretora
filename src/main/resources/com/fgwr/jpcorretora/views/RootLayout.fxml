@@ -69,12 +69,12 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" stylesheets="@../css/style.css" text="Proprietários">
+            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroProprietarios" prefHeight="60.0" stylesheets="@../css/style.css" text="Proprietários">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" stylesheets="@../css/style.css" text="Relatórios">
+            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRelatorios" prefHeight="60.0" stylesheets="@../css/style.css" text="Relatórios">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

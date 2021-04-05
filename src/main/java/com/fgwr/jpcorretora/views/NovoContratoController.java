@@ -1,16 +1,15 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -27,9 +26,11 @@ import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
+import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.DuplicataService;
-import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.services.ImovelService;
+import com.fgwr.jpcorretora.utils.FileUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.animation.PauseTransition;
@@ -53,6 +54,12 @@ import javafx.util.Duration;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class NovoContratoController {
+	
+	@Autowired
+	ClienteService cs;
+	
+	@Autowired
+	ImovelService is;
 
 	private Stage dialogStage;
 	private boolean okClicked = false;
@@ -170,13 +177,11 @@ Calendar cal = Calendar.getInstance();
 	public void correct(String vencimentos, Calendar cal, Date now) {
 		if (vencimentos.isBlank() || Integer.parseInt(vencimentos) == 0) {
 			primeiraParcelaField.setText("");
-			System.out.println("empty");
 		}else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) > 0 && Integer.parseInt(vencimentos) > cal.get(Calendar.DAY_OF_MONTH)) {
 			Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			Double diferencaDeVencimento = valorPorDia * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH));
 			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 		    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
-		    System.out.println("laço 1");
 			} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) <= cal.get(Calendar.DAY_OF_MONTH)){
 				Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);				
 				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -188,7 +193,6 @@ Calendar cal = Calendar.getInstance();
 				Double diferencaDeVencimento = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
 				primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 			    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
-			    System.out.println("laço 2");
 				
 			} else {
 				primeiraParcelaField.setText("");
@@ -215,17 +219,6 @@ Calendar cal = Calendar.getInstance();
     	
     }
     
-    public Imovel findImovel (Integer id) {
-    	ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
-    	Optional<Imovel> obj = imRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
-    }
-    
-    public Cliente findCliente (Integer id) {
-    	ClienteRepository cliRepo = (ClienteRepository)context.getBean("clienteRepository");
-    	Optional<Cliente> obj = cliRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
-    }
     
     @FXML
     private void handleOk() throws FileNotFoundException {
@@ -252,17 +245,11 @@ Calendar cal = Calendar.getInstance();
         	} else {
         		dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
         	}
-        	for (Duplicata duplicata : dups) {
-    			duplicata.setContrato(contrato);
-    		}
-        	
-
-    //    	Cliente cliente = clienteBox.getValue();
-        	Cliente cliente = findCliente(clienteBox.getValue().getId());
+        
+        	Cliente cliente = cs.find(clienteBox.getValue().getId());
         	cliente.setContrato(contrato);
-        	
-   //     	Imovel imovel = imovelBox.getValue();
-        	Imovel imovel = findImovel(imovelBox.getValue().getId());
+        
+        	Imovel imovel = is.find(imovelBox.getValue().getId());
         	imovel.setContrato(contrato);
         	
         	contrato.setCliente(cliente);
@@ -310,6 +297,22 @@ Calendar cal = Calendar.getInstance();
         if (vencimentosField.getText().length() >= 3) {
             errorMessage += "Data de vencimentos inválida\n"; 
         }
+        
+        if (testemunha1Field.getText() == null || testemunha1Field.getText().isBlank()) {
+            errorMessage += "Informe a testemunha 1\n"; 
+        }
+        
+        if (testemunha1CpfField.getText() == null || testemunha1CpfField.getText().isBlank() || testemunha1CpfField.getText().length() != 11) {
+            errorMessage += "CPF da testemunha 1 inválido\n"; 
+        }
+        
+        if (testemunha1Field.getText() == null || testemunha2Field.getText().isBlank()) {
+            errorMessage += "Informe a testemunha 2\n"; 
+        }
+        
+        if (testemunha2Field.getText() == null || testemunha2CpfField.getText().isBlank() || testemunha2CpfField.getText().length() != 11) {
+            errorMessage += "CPF da testemunha 2 inválido\n"; 
+        }
 
         
 
@@ -319,7 +322,7 @@ Calendar cal = Calendar.getInstance();
         	Alert alert = new Alert(AlertType.ERROR);
         	alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
             	      alert.setTitle("Campos Inválidos");
             	      alert.setHeaderText("Por favor, corrija os campos inválidos");
             	      alert.setContentText(errorMessage);

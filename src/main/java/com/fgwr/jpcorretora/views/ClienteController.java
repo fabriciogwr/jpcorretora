@@ -3,13 +3,9 @@ package com.fgwr.jpcorretora.views;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.filechooser.FileSystemView;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -19,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
-import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
@@ -32,9 +28,9 @@ import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.DuplicataService;
-import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.utils.FileUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
@@ -57,16 +53,11 @@ import javafx.stage.StageStyle;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Transactional
 public class ClienteController {
-	
-	String dir = System.getProperty("user.dir");
+
 	ReciboPdfGen reciboPdfGen = new ReciboPdfGen();
 	@FXML
 	private BorderPane rootLayout;
 
-
-	private ObservableList<Cliente> clienteData = FXCollections.observableArrayList();
-	private ObservableList<Duplicata> duplicataData = FXCollections.observableArrayList();
-	private ObservableList<Duplicata> duplicataAux = FXCollections.observableArrayList();
 	private ObservableList<Referencia> referenciaData = FXCollections.observableArrayList();
 
 	@FXML
@@ -160,111 +151,81 @@ public class ClienteController {
 	@FXML
 	private Button ref3Btn;
 
-	private Imovel imovel;
-	private Cliente clienteAux;
 	private DadosBancarios dadosBancarios;
-	private Integer contratoAtual;
 
 	FrontApp frontApp = new FrontApp();
 
 	ApplicationContext context = SpringContext.getAppContext();
 
-	public ObservableList<Cliente> getClienteData() {
+	public List<Cliente> getClienteData() {
 		ClienteService cliServ = (ClienteService) context.getBean("clienteService");
 		List<Cliente> allcli = cliServ.findAll();
-		for (Cliente cliente : allcli) {
-			clienteData.add(cliente);
-		}
-		return clienteData;
+		return allcli;
 	}
 
-	public ObservableList<Duplicata> getDuplicataData() {
+	public List<Duplicata> getDuplicataData(Contrato contrato) {
 		DuplicataService dupServ = (DuplicataService) context.getBean("duplicataService");
-		List<Duplicata> alldup = dupServ.findAll();
-		for (Duplicata duplicata : alldup) {
-			duplicataData.add(duplicata);
-		}
-		return duplicataData;
+		List<Duplicata> alldup = dupServ.findByContrato(contrato);
+		return alldup;
 	}
 
-	public Imovel getImovelData() {
-		ImovelService imServ = (ImovelService) context.getBean("imovelService");
-		if (clienteAux.getContrato() != null) {
-			imovel = imServ.findByContrato(clienteAux.getContrato());
-
-		} else {
-			imovel = null;
-		}
-		return imovel;
-	}
-
-	public DadosBancarios getDadosBancariosData() {
+	public DadosBancarios getDadosBancariosData(Cliente cliente) {
 		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
-		
-		dadosBancarios = dbRepo.findByCliente(clienteAux);
+
+		dadosBancarios = dbRepo.findByCliente(cliente);
 		if (dadosBancarios.getTitular().isBlank()) {
 			dadosBancarios = null;
 		}
 		return dadosBancarios;
 	}
 
-	public ObservableList<Referencia> getReferenciaData(Cliente cliente) {
+	public List<Referencia> getReferenciaData(Cliente cliente) {
 		ReferenciaRepository refRepo = (ReferenciaRepository) context.getBean("referenciaRepository");
 		List<Referencia> allRef = refRepo.findByCliente(cliente);
-		for (Referencia referencia : allRef) {
-			referenciaData.add(referencia);
-		}
-		return referenciaData;
+		return allRef;
 	}
 
 	@FXML
 	private void initialize() {
-		duplicataData = getDuplicataData();
-		clienteTable.setItems(getClienteData());
+		clienteTable.setItems(FXCollections.observableArrayList(getClienteData()));
 		nomeColumn.setCellValueFactory(cellData -> cellData.getValue().nome());
 		codColumn.setCellValueFactory(cellData -> cellData.getValue().cod());
 		showClient(null);
 		clienteTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showClient(newValue));
-		duplicataTable.setItems(duplicataAux);
+
 	}
 
 	private void showClient(Cliente cliente) {
 		if (cliente != null) {
 			nomeLabel.setText(cliente.getNome());
-			cpfLabel.setText(StringsUtils.formatarCpf(cliente.getCpfOuCnpj()));
+			cpfLabel.setText(StringsUtils.formatarCpfOuCnpj(cliente.getCpfOuCnpj()));
 			rgLabel.setText(cliente.getRg());
 			emailLabel.setText(cliente.getEmail());
 
 			telefonePrefLabel.setText(StringsUtils.formatarTelefone(cliente.getTelefonePref()));
 			if (!cliente.getTelefoneAlt().isBlank()) {
 				telefoneAltLabel.setText(StringsUtils.formatarTelefone(cliente.getTelefoneAlt()));
-				
+
 			} else {
 				telefoneAltLabel.setText("");
 			}
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
-			if (cliente.getContrato() != null) {
-				contratoAtual = cliente.getContrato().getId();
-			} else {
-				contratoAtual = null;
-			}
-			clienteAux = cliente;
-			duplicataAux.clear();
-			imovel = getImovelData();
-			dadosBancarios = getDadosBancariosData();
-			
-			if (dadosBancarios !=null) {
-			bancoLabel.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
-			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
-			agenciaLabel.setText(dadosBancarios.getAgencia());
-			numeroContaLabel.setText(dadosBancarios.getConta());
-			titularLabel.setText(dadosBancarios.getTitular());
+
+			dadosBancarios = getDadosBancariosData(cliente);
+
+			if (dadosBancarios != null) {
+				bancoLabel.setText(
+						dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
+				tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
+				agenciaLabel.setText(dadosBancarios.getAgencia());
+				numeroContaLabel.setText(dadosBancarios.getConta());
+				titularLabel.setText(dadosBancarios.getTitular());
 			}
 			referenciaData.clear();
-			referenciaData = getReferenciaData(cliente);
+			referenciaData = FXCollections.observableArrayList(getReferenciaData(cliente));
 			obsLabel.setText(cliente.getObs());
 			ref1Btn.setText("Editar");
 			if (referenciaData.size() == 0) {
@@ -296,25 +257,17 @@ public class ClienteController {
 			}
 
 			clienteTable.refresh();
-			
-			for (Duplicata duplicata : duplicataData) {
-				if (duplicata.getContrato().getId() == cliente.getContrato().getId()) {
-					duplicataAux.add(duplicata);
-					
-				}
-			
-				if (duplicata != null) {
-					contratoColumn.setCellValueFactory(cellData -> cellData.getValue().contrato());
-					parcelaColumn.setCellValueFactory(cellData -> cellData.getValue().parcela());
-					vencimentoColumn.setCellValueFactory(cellData -> cellData.getValue().vencimento());
-					valorColumn.setCellValueFactory(cellData -> cellData.getValue().valor());
-					estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
-					dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
-					duplicataTable.getSortOrder().add(parcelaColumn);
+			duplicataTable.getItems().clear();
+			duplicataTable.setItems(FXCollections.observableArrayList(getDuplicataData(cliente.getContrato())));
 
-				}
-			}
-
+			contratoColumn.setCellValueFactory(cellData -> cellData.getValue().contrato());
+			parcelaColumn.setCellValueFactory(cellData -> cellData.getValue().parcela());
+			vencimentoColumn.setCellValueFactory(cellData -> cellData.getValue().vencimento());
+			valorColumn.setCellValueFactory(cellData -> cellData.getValue().valor());
+			estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
+			dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
+			duplicataTable.getSortOrder().add(parcelaColumn);
+			
 		} else {
 			nomeLabel.setText("");
 			cpfLabel.setText("");
@@ -371,7 +324,7 @@ public class ClienteController {
 			alert.setHeaderText("Confirmar Exclusão do Cliente Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				clienteData.remove(selectedCliente);
+				clienteTable.getItems().remove(selectedCliente);
 				cliRepo.delete(selectedCliente);
 
 			}
@@ -451,7 +404,7 @@ public class ClienteController {
 			alert.showAndWait();
 		}
 		referenciaData.clear();
-		referenciaData = getReferenciaData(clienteAux);
+		referenciaData = FXCollections.observableArrayList(getReferenciaData(selectedCliente));
 	}
 
 	@FXML
@@ -485,36 +438,27 @@ public class ClienteController {
 		}
 	}
 
-	public Recibo findRecibo (Integer id) {
-		ReciboRepository recRepo = (ReciboRepository)context.getBean("reciboRepository");
-    	Optional<Recibo> obj = recRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
-    }
-	
-	public String fileToStylesheetString ( File stylesheetFile ) {
-	    try {
-	        return stylesheetFile.toURI().toURL().toString();
-	    } catch ( MalformedURLException e ) {
-	        return null;
-	    }
+	public Recibo findRecibo(Integer id) {
+		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
+		Optional<Recibo> obj = recRepo.findById(id);
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
 	}
-	
+
 	@Transactional
 	@FXML
 	private void handlePagamento() throws IOException {
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
-		
-		
+
 		if (selectedDuplicata != null && selectedDuplicata.getEstado() == EstadoPagamento.PENDENTE) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();	
-			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Confirmar pagamento");
 			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
-			
+
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
@@ -523,11 +467,11 @@ public class ClienteController {
 					showClient(selectedCliente);
 					Recibo rec = recRepo.findByDuplicata(selectedDuplicata);
 					selectedDuplicata.setRecibo(rec);
-					
+
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert2.initStyle(StageStyle.UNDECORATED);
-					DialogPane dialogPane2 = alert2.getDialogPane();			
-					dialogPane2.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+					DialogPane dialogPane2 = alert2.getDialogPane();
+					dialogPane2.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 					alert2.setTitle("Recibo");
 					alert2.setHeaderText("Visualizar o recibo do pagamento?");
 					Optional<ButtonType> result2 = alert2.showAndWait();
@@ -538,20 +482,15 @@ public class ClienteController {
 						alert.close();
 					}
 
-					
 				}
 
-				
-				
-
-				
 			}
 
 		} else {
 			Alert alert3 = new Alert(AlertType.WARNING);
 			alert3.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane3 = alert3.getDialogPane();			
-			dialogPane3.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			DialogPane dialogPane3 = alert3.getDialogPane();
+			dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert3.setTitle("Mensalidade Já Paga");
 			alert3.setHeaderText("A mensalidade selecionada já está paga.");
 		}
@@ -563,9 +502,10 @@ public class ClienteController {
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		if (selectedDuplicata != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Cancelar pagamento");
 			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -576,32 +516,26 @@ public class ClienteController {
 				selectedDuplicata.setRecibo(null);
 				dupRepo.save(selectedDuplicata);
 				recRepo.delete(rec);
-				
+
 			}
-			
+
 			duplicataTable.refresh();
 		}
-		
-		
+
 	}
-	
+
 	@FXML
 	public void visualizaRecibo() throws IOException {
 		Duplicata duplicata = duplicataTable.getSelectionModel().getSelectedItem();
-
 		Recibo recibo = duplicata.getRecibo();
-		String[] nomeArr = StringUtils.split(recibo.getCliente().getNome());
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		File file = new File(docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		File file = new File(FileUtils.pathRecibos(recibo));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
-		
+
 	}
-	
+
 	public void visualizaRecibo(Recibo rec) throws IOException {
-		String[] nomeArr = StringUtils.split(rec.getCliente().getNome());
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		File file = new File(docFolder + "\\Recibos\\" + rec.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		File file = new File(FileUtils.pathRecibos(rec));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}
@@ -610,5 +544,3 @@ public class ClienteController {
 		this.frontApp = frontApp;
 	}
 }
-
-

@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.filechooser.FileSystemView;
-
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -19,12 +17,12 @@ import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Imovel;
-import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
-import com.fgwr.jpcorretora.repositories.ReciboRepository;
-import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.services.ClienteService;
+import com.fgwr.jpcorretora.services.ImovelService;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -40,6 +38,12 @@ public class ContratoController {
 	
 	FrontApp frontApp = new FrontApp();
 	ApplicationContext context = SpringContext.getAppContext();
+	
+	@Autowired
+	ClienteService cs;
+	
+	@Autowired
+	ImovelService is;
 	
 	@FXML
     private TableView<Contrato> contratoTable;
@@ -77,21 +81,6 @@ public class ContratoController {
     	fimColumn.setCellValueFactory(cellData -> cellData.getValue().dataFim());
     	mensalidadesColumn.setCellValueFactory(cellData -> cellData.getValue().mensalidade());
     	
-		
-		
-    	
-    }
-    
-    public Cliente findCliente (Integer id) {
-    	ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
-    	Optional<Cliente> obj = cliRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
-    }
-    
-    public Imovel findImovel (Integer id) {
-    	ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
-    	Optional<Imovel> obj = imvRepo.findById(id);
-    	return obj.orElseThrow(() -> new ObjectNotFoundException("Não encontrado"));
     }
     
     @FXML
@@ -108,8 +97,8 @@ public class ContratoController {
 			alert.setHeaderText("Confirmar Rescisão do Contrato Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				Cliente cliente = findCliente(selectedContrato.getCliente().getId());
-				Imovel imv = findImovel(selectedContrato.getImovel().getId());
+				Cliente cliente = cs.find(selectedContrato.getCliente().getId());
+				Imovel imv = is.find(selectedContrato.getImovel().getId());
 				imv.setContrato(null);
 				cliente.setContrato(null);
 				cliRepo.save(cliente);
@@ -123,12 +112,8 @@ public class ContratoController {
     
     @FXML
     public void visualizaContrato() throws IOException {
-    	ContratoRepository contRepo = (ContratoRepository) context.getBean("contratoRepository");
 		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
-    	
-		String[] nomeArr = StringUtils.split(selectedContrato.getCliente().getNome());
-		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-		File file = new File(docFolder + "\\Contratos\\" + selectedContrato.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		File file = new File(FileUtils.pathContratos(selectedContrato));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}

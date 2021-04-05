@@ -130,7 +130,7 @@ public class ContratoPdfGen {
 		Text locStr = new Text("LOCATÁRIO: ").setBold();
 		p = new Paragraph();
 		p.add(locStr);
-		p.add(contrato.getCliente().getNome().toUpperCase() + ", CPF: " + StringsUtils.formatarCpf(contrato.getCliente().getCpfOuCnpj()) + ", RG: "
+		p.add(contrato.getCliente().getNome().toUpperCase() + ", CPF: " + StringsUtils.formatarCpfOuCnpj(contrato.getCliente().getCpfOuCnpj()) + ", RG: "
 				+ contrato.getCliente().getRg() + ", " + contrato.getCliente().getEstadoCivil().getDescricao().toUpperCase()
 				+ ", " + contrato.getCliente().getProfissao().toUpperCase()
 				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone Principal" + StringsUtils.formatarTelefone(contrato.getCliente().getTelefonePref()) + ".\n");
@@ -456,7 +456,7 @@ public class ContratoPdfGen {
 		
 		cell = new Cell();
 		table3.addCell(cell);
-		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + StringsUtils.formatarCpf(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
+		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
@@ -471,7 +471,7 @@ public class ContratoPdfGen {
 		table3.addCell(cell);
 		
 		cell = new Cell();
-		p = new Paragraph(test1.getNome() + "\nCPF: " + StringsUtils.formatarCpf(test1.getCpf()) + "\nTestemunha");
+		p = new Paragraph(test1.getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(test1.getCpf()) + "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
@@ -483,7 +483,7 @@ public class ContratoPdfGen {
 		table3.addCell(cell);
 		
 		cell = new Cell();
-		p = new Paragraph(test2.getNome() + "\nCPF: " + StringsUtils.formatarCpf(test2.getCpf())+ "\nTestemunha");
+		p = new Paragraph(test2.getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(test2.getCpf())+ "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
 		cell.setBorder(b2);
@@ -526,10 +526,10 @@ public class ContratoPdfGen {
             float height = getTableHeight();
             Rectangle rect = new Rectangle(coordX, coordY, width, height);
 
-            new Canvas(canvas, rect)
-                    .add(table)
-                    .close();
+            new Canvas(canvas, rect).add(table).close();
+            
         }
+        
 
         public float getTableHeight() {
             return tableHeight;

@@ -1,7 +1,6 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
@@ -29,9 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -44,8 +41,6 @@ public class RootController {
 	private BorderPane rootLayout;
 	
 	FrontApp frontApp = new FrontApp();
-	
-	private Stage primaryStage;
 	
 	String dir = System.getProperty("user.dir");
 	
@@ -75,6 +70,13 @@ public class RootController {
     }
 	
 	@FXML
+    public void showRelatorios(ActionEvent event) throws IOException {
+      AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
+        rootLayout.setCenter(showCadastroProprietarios);
+    }
+	
+	@FXML
     public void showContratos(ActionEvent event) throws IOException {
       AnchorPane showContratos = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); //BUILD
     //    AnchorPane showContratos = FXMLLoader.load(getClass().getResource("TelaContratos.fxml")); //DEV    
@@ -89,6 +91,8 @@ public class RootController {
 				loader.setController(new EventosController());
 				AnchorPane eventosOverview = (AnchorPane) loader.load();
 
+
+				
 				Stage secStage = new Stage();
 				Scene scene2 = new Scene(eventosOverview);
 				secStage.setScene(scene2);

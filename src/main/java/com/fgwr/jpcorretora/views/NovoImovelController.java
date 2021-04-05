@@ -3,13 +3,10 @@ package com.fgwr.jpcorretora.views;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -39,6 +36,7 @@ import com.fgwr.jpcorretora.repositories.EnderecoRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -87,8 +85,6 @@ public class NovoImovelController {
 	private ChoiceBox<String> estadoImovelBox;
 	@FXML
 	private TextArea descricaoField;
-	@FXML
-	private TextArea obsField;
 
 	private String obs;
 	@FXML
@@ -166,31 +162,51 @@ public class NovoImovelController {
 
 	private boolean isInputValid() {
 		String errorMessage = "";
-		/*
-		 * if (nomeField.getText() == null || nomeField.getText().length() == 0) {
-		 * errorMessage += "Nome inválido\n"; } if (emailField.getText() == null ||
-		 * emailField.getText().length() == 0) { errorMessage += "Email inválido\n"; }
-		 * if (cpfField.getText() == null || cpfField.getText().length() == 0) {
-		 * errorMessage += "CPF inválido\n"; }
-		 * 
-		 * if (rgField.getText() == null || rgField.getText().length() == 0) {
-		 * errorMessage += "RG inválido\n"; }
-		 * 
-		 * if (estadoImovelBox.getValue() == null) { errorMessage +=
-		 * "Selecione um Estado Imovel\n"; }
-		 * 
-		 * if (dataNascimentoField.getValue() == null) { errorMessage +=
-		 * "Data de Nascimento inválida\n";
-		 * 
-		 * }
-		 */
+		
+		if (logradouroField.getText() == null || logradouroField.getText().length() == 0) {
+			errorMessage += "Logradouro inválido\n";
+		}
+		if (numeroField.getText() == null || numeroField.getText().length() == 0 || numeroField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "Número Inválido\n";
+		}
+		
+		if (cepField.getText() == null || cepField.getText().length() != 8 || cepField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "CEP Inválido\n";
+		}
+		if (bairroField.getText() == null || bairroField.getText().length() == 0) {
+			errorMessage += "Bairro inválido\n";
+		}
+
+		if (descricaoField.getText() == null || descricaoField.getText().length() == 0) {
+			errorMessage += "Informe uma descrição\n";
+		}
+
+		if (estadoImovelBox.getValue() == null) {
+			errorMessage += "Selecione um Estado para o Imovel\n";
+		}
+
+		if (dataAngariacaoField.getValue() == null && dataAngariacaoField.getEditor().getText().length() == 0) {
+			errorMessage += "Data de Angariação inválida\n";
+
+		}
+		
+		if (dataLaudoField.getValue() == null && dataLaudoField.getEditor().getText().length() == 0) {
+			errorMessage += "Data do laudo de vistoria inválida\n";
+			
+		}
+		
+		if (corretorField.getText() == null || corretorField.getText().length() == 0) {
+			errorMessage += "Corretor inválido\n";
+		
+		}
+		 
 		if (errorMessage.length() == 0) {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(getClass().getResource("../css/alerts.css").toExternalForm());
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);
@@ -224,7 +240,6 @@ public class NovoImovelController {
 			complementoField.setText(endereco.getComplemento());
 			cidadeField.setText(endereco.getCidade());
 			estadoField.setText(endereco.getEstado());
-			// obsField.setText(readObs(imovel.getId()));
 			corretorField.setText(imovel.getCorretor());
 			descricaoField.setText(readDescricao(imovel.getId()));
 
@@ -367,10 +382,6 @@ public class NovoImovelController {
 			imovel.setDataLaudo(checklist.getDataLaudo());
 
 			obs = checklist.getObs();
-			
-			System.out.println(okClicked);
-			System.out.println(imovel.isDanoArCondicionado());
-
 		}
 		if (!okClicked ){
 			imovel.setDanoArCondicionado(false);
@@ -414,6 +425,37 @@ public class NovoImovelController {
 	private void handleOk() throws IOException {
 		if (isInputValid()) {
 
+			if (!okClicked ){
+				imovel.setDanoArCondicionado(false);
+				imovel.setDanoAreaServico(false);
+				imovel.setDanoBanheiro(false);
+				imovel.setDanoBox(false);
+				imovel.setDanoCercaEletrica(false);
+				imovel.setDanoChaves(false);
+				imovel.setDanoChuveiro(false);
+				imovel.setDanoControle(false);
+				imovel.setDanoCozinha(false);
+				imovel.setDanoDispensa(false);
+				imovel.setDanoFechaduras(false);
+				imovel.setDanoGaragem(false);
+				imovel.setDanoInfiltracao(false);
+				imovel.setDanoJanelas(false);
+				imovel.setDanoLampadas(false);
+				imovel.setDanoMoveisVinculados(false);
+				imovel.setDanoPia(false);
+				imovel.setDanoPinturaExterna(false);
+				imovel.setDanoPinturaInterna(false);
+				imovel.setDanoPortao(false);
+				imovel.setDanoPortaoEletro(false);
+				imovel.setDanoPortas(false);
+				imovel.setDanoQuarto(false);
+				imovel.setDanoSala(false);
+				imovel.setDanoTomadas(false);
+				imovel.setDanoVasoSanitario(false);
+				imovel.setDataLaudo(Date.from(dataLaudoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				obs = "Sem Observações";
+			}
+			
 			ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
 			EnderecoRepository endRepo = (EnderecoRepository) context.getBean("enderecoRepository");
 			proprietario = findProprietario(proprietarioBox.getValue().getId());
@@ -477,8 +519,12 @@ public class NovoImovelController {
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/obs.txt").createNewFile();
 
 			saveDescricao(descricaoField.getText(), docFolder, imovel.getId());
-			saveObs(obs, docFolder, imovel.getId());
-
+			if (!okClicked) {
+			saveObs("Sem Observações", docFolder, imovel.getId());
+			} else {
+				saveObs(obs, docFolder, imovel.getId());
+			}
+			
 			okClicked = true;
 			dialogStage.close();
 		}
@@ -520,7 +566,6 @@ public class NovoImovelController {
 		while (br.ready()) {
 			obsTemp = obsTemp + br.readLine() + "\n";
 		}
-		System.out.println(obsTemp);
 		br.close();
 		return obsTemp;
 

@@ -4,15 +4,10 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,7 +48,7 @@ public class Proprietario implements Serializable {
     private String telefonePref;
     private String  telefoneAlt;
     
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Imovel> imovel = new ArrayList<>();
     
