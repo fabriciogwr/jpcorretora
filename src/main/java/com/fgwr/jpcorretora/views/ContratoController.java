@@ -39,12 +39,6 @@ public class ContratoController {
 	FrontApp frontApp = new FrontApp();
 	ApplicationContext context = SpringContext.getAppContext();
 	
-	@Autowired
-	ClienteService cs;
-	
-	@Autowired
-	ImovelService is;
-	
 	@FXML
     private TableView<Contrato> contratoTable;
     @FXML
@@ -89,6 +83,8 @@ public class ContratoController {
     	ContratoRepository contRepo = (ContratoRepository) context.getBean("contratoRepository");
     	ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
     	ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
+    	ClienteService cs = (ClienteService) context.getBean("clienteService");
+    	ImovelService is = (ImovelService) context.getBean("imovelService");
 		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
 
 		if (selectedContrato != null) {

@@ -155,7 +155,7 @@ public class ConfiguraPagamentoController {
 			}
 
 			Date dataPgto = Date.from(dataPagamentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(),
+			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(), duplicata.getContrato().getQtdParcelas(),
 					duplicata.getDataVencimento(), dataPgto);
 			duplicata.setDataPagamento(dataPgto);
 			duplicata.setRecibo(rec);

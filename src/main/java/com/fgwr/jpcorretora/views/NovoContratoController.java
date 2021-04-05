@@ -55,11 +55,6 @@ import javafx.util.Duration;
 @Transactional
 public class NovoContratoController {
 	
-	@Autowired
-	ClienteService cs;
-	
-	@Autowired
-	ImovelService is;
 
 	private Stage dialogStage;
 	private boolean okClicked = false;
@@ -229,6 +224,8 @@ Calendar cal = Calendar.getInstance();
         	DuplicataRepository dupRepo = (DuplicataRepository)context.getBean("duplicataRepository");
         	ClienteRepository cliRepo = (ClienteRepository)context.getBean("clienteRepository");
         	ImovelRepository imRepo = (ImovelRepository)context.getBean("imovelRepository");
+        	ImovelService is = (ImovelService)context.getBean("imovelService");
+        	ClienteService cs = (ClienteService)context.getBean("clienteService");
         	Date date = new Date();
         	
         	contrato.setCliente(clienteBox.getValue());

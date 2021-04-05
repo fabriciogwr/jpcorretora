@@ -26,6 +26,7 @@ public class Recibo implements Serializable {
     private Cliente cliente;
 
     private double valor;
+    private int parcela;
     private int qtdParcelas;
 
     @Temporal(TemporalType.DATE)
@@ -41,11 +42,12 @@ public class Recibo implements Serializable {
     	
     }
 
-	public Recibo(Integer id, Cliente cliente, double valor, int qtdParcelas, Date dataVencimento, Date dataPagamento) {
+	public Recibo(Integer id, Cliente cliente, double valor,int parcela, int qtdParcelas, Date dataVencimento, Date dataPagamento) {
 		super();
 		this.id = id;
 		this.cliente = cliente;
 		this.valor = valor;
+		this.parcela = parcela;
 		this.qtdParcelas = qtdParcelas;
 		this.dataVencimento = dataVencimento;
 		this.dataPagamento = dataPagamento;
@@ -105,6 +107,14 @@ public class Recibo implements Serializable {
 
 	public void setDuplicata(Duplicata duplicata) {
 		this.duplicata = duplicata;
+	}
+
+	public int getParcela() {
+		return parcela;
+	}
+
+	public void setParcela(int parcela) {
+		this.parcela = parcela;
 	}
 
 	@Override

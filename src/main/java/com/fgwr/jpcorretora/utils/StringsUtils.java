@@ -45,6 +45,13 @@ public class StringsUtils {
 	return real.format(valor);
 	}
 	
+	public static String formatarRealCifra(Double valor) {
+		NumberFormat real = NumberFormat.getNumberInstance();
+		real.setMinimumFractionDigits(2);
+		real.setMaximumFractionDigits(2);
+		return "R$"+real.format(valor);
+		}
+	
 	public static String formatarCep(String cep) {
 		StringBuilder sb = new StringBuilder(cep);
 		sb.insert(5, "-");
