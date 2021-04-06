@@ -80,6 +80,8 @@ public class ClienteController {
 	private TableColumn<Duplicata, String> estadoColumn;
 	@FXML
 	private TableColumn<Duplicata, String> dataPgtoColumn;
+	@FXML
+	private TableColumn<Duplicata, String> meioPgtoColumn;
 
 	@FXML
 	private Accordion accordion;
@@ -269,7 +271,9 @@ public class ClienteController {
 			valorColumn.setCellValueFactory(cellData -> cellData.getValue().valor());
 			estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
 			dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
+			meioPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().meioPgto());
 			duplicataTable.getSortOrder().add(parcelaColumn);
+			duplicataTable.getSortOrder().add(contratoColumn);
 
 		} else {
 			nomeLabel.setText("");
@@ -484,13 +488,14 @@ public class ClienteController {
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
+				
 				boolean okClicked = frontApp.showConfiguraPagamento(selectedDuplicata);
 				if (okClicked) {
-					showClient(selectedCliente);
+					selectedDuplicata.setEstado(EstadoPagamento.QUITADO);
+					
 					Recibo rec = recRepo.findByDuplicata(selectedDuplicata);
 					selectedDuplicata.setRecibo(rec);
-
+					showClient(selectedCliente);
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert2.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane2 = alert2.getDialogPane();
@@ -538,6 +543,7 @@ public class ClienteController {
 				Recibo rec = selectedDuplicata.getRecibo();
 				selectedDuplicata.setDataPagamento(null);
 				selectedDuplicata.setRecibo(null);
+				selectedDuplicata.setValor(selectedDuplicata.getContrato().getValorDeCadaParcela());
 				dupRepo.save(selectedDuplicata);
 				recRepo.delete(rec);
 

@@ -16,7 +16,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
+import com.fgwr.jpcorretora.enums.MeioPagamento;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -52,13 +54,15 @@ public class Duplicata implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Recibo recibo;
 	
+	private Integer meioPagamento;
+	
 
 	public Duplicata () {
 		
 	}
 
 
-	public Duplicata(Integer id, Integer parcela, Date dataVencimento, Double valor, EstadoPagamento estado, Date dataPagamento) {
+	public Duplicata(Integer id, Integer parcela, Date dataVencimento, Double valor, EstadoPagamento estado, Date dataPagamento, MeioPagamento meioPagamento) {
 		super();
 		this.id = id;
 		this.parcela = parcela;
@@ -69,6 +73,14 @@ public class Duplicata implements Serializable {
 	}
 
 
+	public MeioPagamento getMeioPagamento() {
+        return MeioPagamento.toEnum(meioPagamento);
+    }
+
+    public void setMeioPagamento(MeioPagamento meioPagamento) {
+        this.meioPagamento = meioPagamento.getCod();
+    }
+    
 	public Integer getId() {
 		return id;
 	}
@@ -223,6 +235,17 @@ public class Duplicata implements Serializable {
 	public StringProperty estado() {
 		StringProperty estado = new SimpleStringProperty(this.getEstado().getDescricao());
 		return estado;
+	}
+	
+	public StringProperty meioPgto() {
+		StringProperty meioPgto = new SimpleStringProperty();
+		if (getMeioPagamento() != null ) {
+		meioPgto = new SimpleStringProperty(this.getMeioPagamento().getDescricao());
+		} else {
+			meioPgto = new SimpleStringProperty("");
+		}
+		return meioPgto;
+		
 	}
 	
 	public StringProperty dataPgto() {

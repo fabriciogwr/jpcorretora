@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fgwr.jpcorretora.views.ClienteController">
+<AnchorPane prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: fff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fgwr.jpcorretora.views.ClienteController">
    <children>
       <SplitPane dividerPositions="0.29797979797979796" layoutX="252.0" layoutY="175.0" prefHeight="768.0" prefWidth="1024.0" style="-fx-box-border: transparent;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
         <items>
@@ -259,6 +259,7 @@
                                                 <TableColumn fx:id="valorColumn" prefWidth="85.0" text="Valor" />
                                                 <TableColumn fx:id="estadoColumn" prefWidth="93.0" text="Estado" />
                                                 <TableColumn fx:id="dataPgtoColumn" prefWidth="75.0" text="Data Pgto" />
+                                                <TableColumn fx:id="meioPgtoColumn" prefWidth="75.0" text="Meio Pgto" />
                                             </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -167,6 +167,13 @@ public class ContratoController {
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}
+	
+	@FXML
+	public void editaContrato() {
+		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
+		File file = new File(FileUtils.pathContratos(selectedContrato));
+
+	}
 
 	public void setMainApp(FrontApp frontApp) {
 		this.frontApp = frontApp;

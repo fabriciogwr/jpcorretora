@@ -18,20 +18,27 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Recibo;
+import com.fgwr.jpcorretora.enums.MeioPagamento;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.utils.FileUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -64,9 +71,35 @@ public class ConfiguraPagamentoController {
 	private TextField valorCorrigidoField;
 	@FXML
 	private TextField totalPagoField;
+	@FXML
+	private ComboBox<MeioPagamento> meioPgtoBox;
 
 	@FXML
 	private void initialize() {
+
+		Callback<ListView<MeioPagamento>, ListCell<MeioPagamento>> meioPagamentoCellFactory = new Callback<ListView<MeioPagamento>, ListCell<MeioPagamento>>() {
+
+			@Override
+			public ListCell<MeioPagamento> call(ListView<MeioPagamento> l) {
+				return new ListCell<MeioPagamento>() {
+
+					@Override
+					protected void updateItem(MeioPagamento meioPagamento, boolean empty) {
+						super.updateItem(meioPagamento, empty);
+						if (meioPagamento == null || empty) {
+							setGraphic(null);
+						} else {
+							setText(meioPagamento.getCod() + " - " + meioPagamento.getDescricao());
+						}
+					}
+				};
+			}
+
+		};
+		meioPgtoBox.setButtonCell(meioPagamentoCellFactory.call(null));
+		meioPgtoBox.setCellFactory(meioPagamentoCellFactory);
+		meioPgtoBox.setItems(FXCollections.observableArrayList(MeioPagamento.values()));
+
 	}
 
 	public void setDialogStage(Stage dialogStage) {
@@ -84,53 +117,37 @@ public class ConfiguraPagamentoController {
 
 	public void setDuplicata(Duplicata duplicata) {
 		this.duplicata = duplicata;
-
 		String valor = "R$ " + StringsUtils.formatarReal(duplicata.getValor());
 		valorVencimentoField.setText(valor);
-		cal.setTime(duplicata.getDataVencimento());
-		Double valorPorDia = duplicata.getValor() / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-		dataPagamentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+		Calendar cal2 = Calendar.getInstance();
 
-		dataPgto = dataPagamentoField.getValue();
+		Double pc1 = ((duplicata.getValor()) / 100) * 1;
+		Double pc2 = ((duplicata.getValor()) / 100) * 2;
+
+		cal2.setTime(duplicata.getDataVencimento());
+		Double valorPorDia = pc1 / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+		dataPgto = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		dataPagamentoField.setValue(dataPgto);
+
 		vencimentoField.setText(duplicata.getDataVencimentoForm());
-		dataVcm = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
+		dataVcm = cal2.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		juros = 0.0;
+		if (dataPgto.isBefore(dataVcm) || dataPgto.isEqual(dataVcm)) {
+			juros = 0.0;
+		} else {
+			juros = (valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto))) + pc2;
+		}
+
 		valorCorrigidoCalc = duplicata.getValor() + juros;
 		valorCorrigido = valorCorrigidoCalc;
 		valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
 		valorCorrigidoField.setText(valorCorrigidoStr);
 
-		dataPgto = Instant.now().atZone(ZoneId.systemDefault()).toLocalDate();
-
-		juros = 0.0;
-		if (dataPgto.isBefore(dataVcm)) {
-			juros = 0.0;
-		} else {
-			juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
-		}
-
-		valorCorrigidoCalc = (juros == 0.0) ? duplicata.getValor() : duplicata.getValor() + juros;
-		valorCorrigido = valorCorrigidoCalc;
-		valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
-		valorCorrigidoField.setText(valorCorrigidoStr);
-
-		dataPagamentoField.valueProperty().addListener((observable, oldValue, newValue) -> {
-			dataPgto = dataPagamentoField.getValue();
-			dataVcm = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			if (dataPgto.isBefore(dataVcm)) {
-				juros = 0.0;
-			} else {
-				juros = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto));
-			}
-
-			valorCorrigidoCalc = (juros == 0.0) ? duplicata.getValor() : duplicata.getValor() + juros;
-			valorCorrigido = valorCorrigidoCalc;
-			valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
-			valorCorrigidoField.setText(valorCorrigidoStr);
-		});
-
-		abaterJurosCheck.armedProperty().addListener((observable, oldValue, newValue) -> {
+		abaterJurosCheck.selectedProperty().addListener((observable2, oldValue2, newValue2) -> {
 			if (abaterJurosCheck.isSelected()) {
 				valorCorrigido = duplicata.getValor();
 				valorCorrigidoField.setText(valor);
@@ -139,6 +156,37 @@ public class ConfiguraPagamentoController {
 				valorCorrigidoField.setText(valorCorrigidoStr);
 			}
 		});
+
+		dataPagamentoField.valueProperty().addListener((observable, oldValue, newValue) -> {
+			dataPgto = dataPagamentoField.getValue();
+			if (dataPgto.isBefore(dataVcm) || dataPgto.isEqual(dataVcm)) {
+				juros = 0.0;
+			} else {
+				juros = (valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto))) + pc2;
+			}
+
+			valorCorrigidoCalc = duplicata.getValor() + juros;
+			valorCorrigido = valorCorrigidoCalc;
+			valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
+			valorCorrigidoField.setText(valorCorrigidoStr);
+
+		});
+
+		dataPagamentoField.editorProperty().addListener((observable, oldValue, newValue) -> {
+			dataPgto = dataPagamentoField.getValue();
+			if (dataPgto.isBefore(dataVcm) || dataPgto.isEqual(dataVcm)) {
+				juros = 0.0;
+			} else {
+				juros = (valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(dataVcm, dataPgto))) + pc2;
+			}
+
+			valorCorrigidoCalc = duplicata.getValor() + juros;
+			valorCorrigido = valorCorrigidoCalc;
+			valorCorrigidoStr = "R$ " + StringsUtils.formatarReal(valorCorrigidoCalc);
+			valorCorrigidoField.setText(valorCorrigidoStr);
+
+		});
+
 	}
 
 	@FXML
@@ -155,10 +203,12 @@ public class ConfiguraPagamentoController {
 			}
 
 			Date dataPgto = Date.from(dataPagamentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(), duplicata.getContrato().getQtdParcelas(),
-					duplicata.getDataVencimento(), dataPgto);
+			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(),
+					duplicata.getContrato().getQtdParcelas(), duplicata.getDataVencimento(), dataPgto);
 			duplicata.setDataPagamento(dataPgto);
 			duplicata.setRecibo(rec);
+			duplicata.setMeioPagamento(meioPgtoBox.getValue());
+			duplicata.setValor(valorPago);
 			rec.setDuplicata(duplicata);
 			duplicata = dupRepo.save(duplicata);
 			reciboPdfGen.geraRecibo(duplicata.getRecibo());
@@ -171,8 +221,12 @@ public class ConfiguraPagamentoController {
 	private boolean isInputValid() {
 		String errorMessage = "";
 
-		if (dataPagamentoField.getValue() == null || dataPagamentoField.getEditor().getText().length() == 0) {
+		if (dataPagamentoField.getValue() == null) {
 			errorMessage += "Selecione uma data de pagamento\n";
+		}
+
+		if (meioPgtoBox.getValue() == null) {
+			errorMessage += "Selecione um meio de pagamento\n";
 		}
 
 		if (errorMessage.length() == 0) {
