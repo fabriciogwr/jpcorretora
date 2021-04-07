@@ -1,5 +1,7 @@
 package com.fgwr.jpcorretora.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +22,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	@Query(value = "DELETE FROM telefone_cli WHERE cliente_id = :id", nativeQuery = true)
 	void deleteByCliente_Id(@Param("id") Integer id);
 	
-	
+	List<Cliente> findByActive(Boolean active);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
 
@@ -30,5 +31,7 @@ public interface DuplicataRepository extends JpaRepository<Duplicata, Integer>{
 	List<Duplicata> findByDataVencimento(Date data);
 	
 	List<Duplicata> findByContrato(Contrato contrato);
+
+	public List<Duplicata> findByCliente(Cliente cliente);
 	
 }

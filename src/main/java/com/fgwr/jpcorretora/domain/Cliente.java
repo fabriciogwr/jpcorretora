@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoCliente;
@@ -48,17 +50,24 @@ public class Cliente implements Serializable {
     private String profissao;
     private String telefonePref;
     private String  telefoneAlt;
+    private Boolean active;
     
     
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Endereco> enderecos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST)
+	private List<Duplicata> duplicatas = new ArrayList<>();
+    
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Referencia> referencia = new ArrayList<>();
     
     @OneToOne(mappedBy = "cliente", cascade = {CascadeType.ALL})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DadosBancarios dadosBancarios;
 
     private String obs;
@@ -220,6 +229,22 @@ public class Cliente implements Serializable {
 
 	public void setDadosBancarios(DadosBancarios dadosBancarios) {
 		this.dadosBancarios = dadosBancarios;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public List<Duplicata> getDuplicatas() {
+		return duplicatas;
+	}
+
+	public void setDuplicatas(List<Duplicata> duplicatas) {
+		this.duplicatas = duplicatas;
 	}
 
 	@Override

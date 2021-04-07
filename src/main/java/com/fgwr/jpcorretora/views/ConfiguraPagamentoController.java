@@ -179,7 +179,7 @@ public class ConfiguraPagamentoController {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");

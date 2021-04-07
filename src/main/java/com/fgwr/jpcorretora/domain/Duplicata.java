@@ -33,6 +33,10 @@ public class Duplicata implements Serializable {
 	@JoinColumn(name="contrato_id")
 	private Contrato contrato;
 	
+	@ManyToOne
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
+	
 	private Integer parcela;
 	
 	@Temporal(TemporalType.DATE)
@@ -148,6 +152,16 @@ public class Duplicata implements Serializable {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		String vencimento = (df.format(dataVencimento));
 		return vencimento;
+	}
+
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 

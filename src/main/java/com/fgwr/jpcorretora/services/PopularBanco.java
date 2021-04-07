@@ -87,8 +87,8 @@ public class PopularBanco {
 		ref1.setCliente(cli1);
 		ref2.setCliente(cli2);
 
-		DadosBancarios db1 = new DadosBancarios(null, Banco.CAIXAECONOMICAFEDERAL, "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA");
-		DadosBancarios db2 = new DadosBancarios(null, Banco.BANCOINTERSA, "000001", "12345678", TipoConta.POUPANCAPF, "FABIO PIOVESAN");
+		DadosBancarios db1 = new DadosBancarios(null, Banco.CAIXAECONOMICAFEDERAL, "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA", "fabricio.gwr@gmail.com");
+		DadosBancarios db2 = new DadosBancarios(null, Banco.BANCOINTERSA, "000001", "12345678", TipoConta.POUPANCAPF, "FABIO PIOVESAN", "");
 		
 		db1.setCliente(cli1);
 		db2.setCliente(cli2);

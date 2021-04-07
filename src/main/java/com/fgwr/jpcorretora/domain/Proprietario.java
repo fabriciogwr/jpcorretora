@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoCliente;
@@ -47,6 +49,7 @@ public class Proprietario implements Serializable {
     private String profissao;
     private String telefonePref;
     private String  telefoneAlt;
+    private Boolean active;
     
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -54,9 +57,11 @@ public class Proprietario implements Serializable {
     
 
     @OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Endereco> enderecos = new ArrayList<>();
 
     @OneToOne(mappedBy = "proprietario", cascade = CascadeType.ALL)
+    
     private DadosBancarios dadosBancarios;
 
     private String obs;
@@ -206,6 +211,14 @@ public class Proprietario implements Serializable {
 
 	public void setTelefoneAlt(String telefoneAlt) {
 		this.telefoneAlt = telefoneAlt;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	@Override

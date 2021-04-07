@@ -33,7 +33,6 @@ import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.collections.FXCollections;
@@ -169,19 +168,17 @@ public class ImovelController {
 
 	
 	
-	public ObservableList<Imovel> getImovelData() {
+	public List<Imovel> getImovelData() {
 		ApplicationContext context = SpringContext.getAppContext();
-    	ImovelService imserv = (ImovelService)context.getBean("imovelService");
+    	ImovelRepository imserv = (ImovelRepository)context.getBean("imovelRepository");
 		
-		List<Imovel> allimv = imserv.findAll();
-		for (Imovel imovel : allimv) {
-			imovelData.add(imovel);
-		} return imovelData;
+		List<Imovel> allimv = imserv.findByActive(Boolean.TRUE);
+		return allimv;
 	}
 	
 	@FXML
 	private void initialize() throws IOException {
-		imovelData = getImovelData();
+		imovelData = FXCollections.observableArrayList(getImovelData());
 		imovelTable.setItems(imovelData);
 		proprietarioColumn.setCellValueFactory(cellData -> cellData.getValue().proprietario());
 		codColumn.setCellValueFactory(cellData -> cellData.getValue().cod());
@@ -277,7 +274,7 @@ public class ImovelController {
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();			
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");
@@ -380,20 +377,40 @@ public class ImovelController {
 
 		if (selectedImovel != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(FileUtils.fileToString( new File ("css/alerts.css") ));
+			alert.initStyle(StageStyle.UNIFIED);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Exclusão de Imóvel");
 			alert.setHeaderText("Confirmar Exclusão do Imóvel Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				imovelData.remove(selectedImovel);
-				imvRepo.delete(selectedImovel);
+
+					if (selectedImovel.getContrato() == null) {
+						selectedImovel.setActive(false);
+						imvRepo.save(selectedImovel);
+						imovelData.remove(selectedImovel);
+					}
+					else {
+						Alert alert3 = new Alert(AlertType.ERROR);
+						DialogPane dialogPane3 = alert3.getDialogPane();
+						dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+						alert3.initStyle(StageStyle.UNIFIED);
+						alert3.setTitle("Falha ao Excluir Imóvel");
+						alert3.setHeaderText("O imóvel selecionado ainda está em um contrato ativo. Encerre o contrato para continuar.");
+						alert3.showAndWait();
+						
+					}
+				}
+				
+				
+				
+				
 
 			}
 			imovelTable.refresh();
 		}
-	}
+	
+
 	
 	@FXML
 	private void handleProprietario() {

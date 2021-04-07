@@ -28,6 +28,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -45,7 +47,7 @@ import javafx.util.Callback;
 public class NovoProprietarioController {
 
 	ApplicationContext context = SpringContext.getAppContext();
-	
+
 	@FXML
 	private TextField nomeField;
 	@FXML
@@ -72,6 +74,8 @@ public class NovoProprietarioController {
 	private TextField titularField;
 	@FXML
 	private TextField obsField;
+	@FXML
+	private TextField pixField;
 	@FXML
 	private ComboBox<Banco> bancoBox;
 	@FXML
@@ -103,7 +107,7 @@ public class NovoProprietarioController {
 
 		estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
 		bancoBox.setItems(FXCollections.observableArrayList(Banco.values()));
-		
+
 		Callback<ListView<Banco>, ListCell<Banco>> bancoCellFactory = new Callback<ListView<Banco>, ListCell<Banco>>() {
 
 			@Override
@@ -126,7 +130,7 @@ public class NovoProprietarioController {
 		bancoBox.setButtonCell(bancoCellFactory.call(null));
 		bancoBox.setCellFactory(bancoCellFactory);
 		bancoBox.setTooltip(new Tooltip());
-		
+
 		new AutoCompleteBox<Banco>(bancoBox);
 		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
 
@@ -153,11 +157,11 @@ public class NovoProprietarioController {
 		}
 		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {
 			errorMessage += "Adicione ao menos 1 telefone\n";
-			if (telefonePrefField.getText().length() <10 || telefonePrefField.getText().length() > 11) {
+			if (telefonePrefField.getText().length() < 10 || telefonePrefField.getText().length() > 11) {
 				errorMessage += "Telefone inválico\n";
 			}
 		}
-		
+
 		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
 			errorMessage += "CPF inválido\n";
 		}
@@ -179,7 +183,7 @@ public class NovoProprietarioController {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
@@ -196,16 +200,16 @@ public class NovoProprietarioController {
 		this.db = db;
 
 		if (proprietario.getId() != null) {
-			
+
 			nomeField.setText(proprietario.getNome());
 			emailField.setText(proprietario.getEmail());
 
 			telefonePrefField.setText(proprietario.getTelefonePref());
 			if (proprietario.getTelefoneAlt().isBlank()) {
-				telefoneAltField.setText("");		
+				telefoneAltField.setText("");
 			} else {
 				telefoneAltField.setText(proprietario.getTelefoneAlt());
-				
+
 			}
 			if (proprietario.getDataNascimento() != null) {
 				dataNascimentoField.setValue(Instant.ofEpochMilli(proprietario.getDataNascimento().getTime())
@@ -224,20 +228,26 @@ public class NovoProprietarioController {
 			profissaoField.setText(proprietario.getProfissao());
 			obsField.setText(proprietario.getObs());
 
-			if (proprietario.getDadosBancarios() != null) {
-				agenciaField.setText(proprietario.getDadosBancarios().getAgencia());
-				titularField.setText(proprietario.getDadosBancarios().getTitular());
-				contaField.setText(proprietario.getDadosBancarios().getConta());
-
-				bancoBox.setValue(proprietario.getDadosBancarios().getBanco());
-				tipoContaBox.setValue(proprietario.getDadosBancarios().getTipo().getDesc());
-			} else {
+			if (proprietario.getDadosBancarios() == null) {
 				agenciaField.setText("");
 				titularField.setText("");
 				contaField.setText("");
+				pixField.setText("");
 				bancoBox.setValue(null);
 				tipoContaBox.setValue(null);
 			}
+
+			agenciaField.setText(proprietario.getDadosBancarios().getAgencia());
+			titularField.setText(proprietario.getDadosBancarios().getTitular());
+			contaField.setText(proprietario.getDadosBancarios().getConta());
+			if (proprietario.getDadosBancarios().getBanco() != null) {
+			}
+			bancoBox.setValue(proprietario.getDadosBancarios().getBanco());
+			if (proprietario.getDadosBancarios().getTipo() != null) {
+				tipoContaBox.setValue(proprietario.getDadosBancarios().getTipo().getDesc());
+			}
+			pixField.setText(proprietario.getDadosBancarios().getPix());
+
 		} else {
 			nomeField.setText("");
 			emailField.setText("");
@@ -268,6 +278,7 @@ public class NovoProprietarioController {
 			if (proprietario == null) {
 				proprietario = new Proprietario();
 			}
+			proprietario.setActive(true);
 			proprietario.setNome(nomeField.getText());
 			proprietario.setEmail(emailField.getText());
 
@@ -285,33 +296,35 @@ public class NovoProprietarioController {
 			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
-		            proprietario.setDataNascimento(date);
-		        } catch (ParseException e) {
-		            e.printStackTrace();
-		        }
+					Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+					proprietario.setDataNascimento(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 			proprietario.setCpfOuCnpj(cpfField.getText());
 			proprietario.setRg(rgField.getText());
 			proprietario.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
 			proprietario.setProfissao(profissaoField.getText());
 			proprietario.setObs(obsField.getText());
-			
-			if(!titularField.getText().isBlank()) {
-			db.setAgencia(agenciaField.getText());
-			db.setConta(contaField.getText());
-			db.setTitular(titularField.getText());
-			 if(bancoBox.getValue() != null) {
-			db.setBanco(bancoBox.getValue());
-			 }
-			 if (tipoContaBox.getValue() != null) {
-			db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
-			 }
-			 db.setProprietario(proprietario);
-			 proprietario.setDadosBancarios(db);
-			
+
+			if (!pixField.getText().isBlank() || !titularField.getText().isBlank()) {
+				db.setAgencia(agenciaField.getText());
+				db.setConta(contaField.getText());
+				db.setPix(pixField.getText());
+				db.setTitular(titularField.getText());
+				if (bancoBox.getValue() != null) {
+					db.setBanco(bancoBox.getValue());
+				}
+				if (tipoContaBox.getValue() != null) {
+					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+				}
+				db.setProprietario(proprietario);
+				proprietario.setDadosBancarios(db);
+
 			} else {
 				db.setId(null);
+				db.setPix(pixField.getText());
 				db.setAgencia(agenciaField.getText());
 				db.setConta(contaField.getText());
 				db.setTitular(titularField.getText());
@@ -321,13 +334,27 @@ public class NovoProprietarioController {
 				if (tipoContaBox.getValue() != null) {
 					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
 				}
+				db.setProprietario(proprietario);
+				proprietario.setDadosBancarios(db);
+				
 			}
 			ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
 			propRepo.save(proprietario);
 			okClicked = true;
 			dialogStage.close();
 		}
+	}
+
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();
+
+		if (code == KeyCode.ENTER) {
+			handleOk();
 		}
-	
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
 
 }

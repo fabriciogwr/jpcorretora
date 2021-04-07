@@ -30,18 +30,21 @@ public class DadosBancarios implements Serializable {
     private String conta;
     private Integer tipo;
     private String titular;
+    private String pix;
     
     public DadosBancarios() {
     	
     }
 
-    public DadosBancarios(Integer id, Banco banco, String agencia, String conta, TipoConta tipo, String titular) {
+    public DadosBancarios(Integer id, Banco banco, String agencia, String conta, TipoConta tipo, String titular, String pix) {
         this.id = id;
         this.banco = banco.getCod();
         this.agencia = agencia;
         this.conta = conta;
         this.tipo = tipo.getCod();
         this.titular = titular;
+        this.pix = pix;
+        
     }
 
     public Integer getId() {
@@ -107,6 +110,14 @@ public class DadosBancarios implements Serializable {
 
 	public void setProprietario(Proprietario proprietario) {
 		this.proprietario = proprietario;
+	}
+
+	public String getPix() {
+		return pix;
+	}
+
+	public void setPix(String pix) {
+		this.pix = pix;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.fgwr.jpcorretora.services;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -14,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
@@ -26,7 +25,7 @@ public class DuplicataService {
 	@Autowired
 	DuplicataRepository repo;
 
-	public List<Duplicata> preencherDuplicata(Contrato contrato) {
+	public List<Duplicata> preencherDuplicata(Contrato contrato, Cliente cliente) {
 
 		List<Duplicata> vencimentos = new ArrayList<>();
 		int qtdParcelas = contrato.getQtdParcelas();
@@ -34,10 +33,10 @@ public class DuplicataService {
 		Calendar cal = Calendar.getInstance();
 		Date now = new Date();
 
-		for (int i = 1; i <= qtdParcelas ; i++) {			
+		for (int i = 1; i <= qtdParcelas; i++) {
 			Duplicata duplicata = new Duplicata();
 			cal.setTime(now);
-			cal.add(Calendar.MONTH, i-1);
+			cal.add(Calendar.MONTH, i - 1);
 			duplicata.setId(null);
 			duplicata.setDataVencimento(cal.getTime());
 			duplicata.setEstado(EstadoPagamento.PENDENTE);
@@ -45,72 +44,100 @@ public class DuplicataService {
 			duplicata.setValor(contrato.getValorDeCadaParcela());
 			duplicata.setParcela(i);
 			vencimentos.add(duplicata);
+			duplicata.setCliente(cliente);
 		}
 		return vencimentos;
 	}
-	
-	public List<Duplicata> preencherDuplicata(Contrato contrato, Integer primeiraParcela) {
+
+	public List<Duplicata> preencherDuplicata(Contrato contrato, Integer primeiraParcela, Cliente cliente) {
 
 		List<Duplicata> vencimentos = new ArrayList<>();
 		int qtdParcelas = contrato.getQtdParcelas();
-
 		Calendar cal = Calendar.getInstance();
-		
-		Date now = new Date();
 
-		for (int i = 1; i <= qtdParcelas ; i++) {			
+		for (int i = 1; i <= qtdParcelas; i++) {
+			cal = Calendar.getInstance();
+			System.out.println("Execução" + i);
 			Duplicata duplicata = new Duplicata();
-			cal.setTime(now);
-			
-			Integer today = cal.get(Calendar.DAY_OF_MONTH);
-			cal.add(Calendar.MONTH, i-1);
-			if (primeiraParcela < today) {
-				cal.add(Calendar.MONTH, 1);
-			}
-			cal.set(Calendar.DAY_OF_MONTH, primeiraParcela);
-			
-			duplicata.setId(null);
-			duplicata.setDataVencimento(cal.getTime());
-			duplicata.setEstado(EstadoPagamento.PENDENTE);
-			duplicata.setContrato(contrato);
-			 if (i==1) {
-				cal.setTime(now);
-				Double valorPorDia = contrato.getValorDeCadaParcela()/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-				DecimalFormatSymbols separador = new DecimalFormatSymbols();
-				separador.setDecimalSeparator('.');				
-				DecimalFormat df = new DecimalFormat("0.00", separador);
-				String valorPorDiaString = df.format(valorPorDia);
-				
-				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				
-				if (primeiraParcela < today) {
-				cal.add(Calendar.MONTH, 1);
+			if (i == 1) {
+				if (primeiraParcela > cal.get(Calendar.DAY_OF_MONTH)) {
+
+					Double pc1 = (contrato.getValorDeCadaParcela() / 100) * 1;
+					Double pc2 = (contrato.getValorDeCadaParcela() / 100) * 2;
+
+					Double valorPorDia = pc1 / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+					Double diferencaDeVencimento = pc2
+							+ (valorPorDia * (primeiraParcela - cal.get(Calendar.DAY_OF_MONTH)));
+					Double valorPrimeiraParcela = contrato.getValorDeCadaParcela() + diferencaDeVencimento;
+					duplicata.setValor(valorPrimeiraParcela);
+					cal.set(Calendar.DAY_OF_MONTH, primeiraParcela);
+					duplicata.setDataVencimento(cal.getTime());
+
+					duplicata.setEstado(EstadoPagamento.PENDENTE);
+					duplicata.setContrato(contrato);
+					duplicata.setCliente(contrato.getCliente());
+					duplicata.setParcela(i);
+					vencimentos.add(duplicata);
+					cal = Calendar.getInstance();
+					cal.add(Calendar.MONTH, i - 1);
+
+				} else if (primeiraParcela < cal.get(Calendar.DAY_OF_MONTH)) {
+					System.out.println("i = 1 < /" + cal.getTime());
+					Double pc1 = (contrato.getValorDeCadaParcela() / 100) * 1;
+					Double pc2 = (contrato.getValorDeCadaParcela() / 100) * 2;
+
+					Double valorPorDia = pc1 / cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+					LocalDate date = Calendar.getInstance().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+					cal.add(Calendar.MONTH, 1);
+					cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), primeiraParcela);
+					LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+					Double diferencaDeVencimento = pc2
+							+ (valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(date, date2)));
+
+					Double valorPrimeiraParcela = contrato.getValorDeCadaParcela() + diferencaDeVencimento;
+					duplicata.setValor(valorPrimeiraParcela);
+					duplicata.setDataVencimento(cal.getTime());
+					duplicata.setEstado(EstadoPagamento.PENDENTE);
+					duplicata.setContrato(contrato);
+					duplicata.setCliente(contrato.getCliente());
+					duplicata.setParcela(i);
+					vencimentos.add(duplicata);
+					cal = Calendar.getInstance();
+					cal.add(Calendar.MONTH, i - 1);
+
 				}
-				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), (primeiraParcela));
-				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
 				
-				Double diferençaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
-				duplicata.setValor(contrato.getValorDeCadaParcela() + diferençaDeVencimento);
-			} else {
-			duplicata.setValor(contrato.getValorDeCadaParcela()); }
-			duplicata.setParcela(i);
-			vencimentos.add(duplicata);
+
+			}
+			if (i > 1) {
+				cal.add(Calendar.MONTH, i - 1);
+				duplicata.setValor(contrato.getValorDeCadaParcela());
+				duplicata.setDataVencimento(cal.getTime());
+				duplicata.setEstado(EstadoPagamento.PENDENTE);
+				duplicata.setContrato(contrato);
+				duplicata.setParcela(i);
+				duplicata.setCliente(cliente);
+				vencimentos.add(duplicata);
+				
+			}
 		}
 
 		return vencimentos;
 	}
-	
-	public List<Duplicata> insert(Contrato ctr) {
-		List<Duplicata> vs = preencherDuplicata(ctr);
+
+	public List<Duplicata> insert(Contrato ctr, Cliente cli) {
+		List<Duplicata> vs = preencherDuplicata(ctr, cli);
 		repo.saveAll(vs);
 		return vs;
 	}
-	
+
 	public Duplicata find(Integer id) {
 
 		Optional<Duplicata> dup = repo.findById(id);
-		return dup.orElseThrow(() -> new ObjectNotFoundException("Duplicata não encontrada!")); 
-		
+		return dup.orElseThrow(() -> new ObjectNotFoundException("Duplicata não encontrada!"));
 
 	}
 
@@ -119,36 +146,34 @@ public class DuplicataService {
 	}
 
 	public List<Duplicata> findByContrato(Contrato contrato) {
-		
+
 		List<Duplicata> dup = repo.findByContrato(contrato);
 		if (dup == null) {
 			throw new ObjectNotFoundException("Duplicatas não encontradas!");
 		}
 		return dup;
 	}
-	
-	public List<Duplicata> findEstado(Integer cod){
+
+	public List<Duplicata> findEstado(Integer cod) {
 		List<Duplicata> dup = repo.findByEstado(cod);
 		return dup;
 	}
-	
-/*public List<Duplicata> findCpfOuCnpj(String cpfOuCnpj) {
-		
-		List<Duplicata> dup = repo.findCpfOuCnpj(cpfOuCnpj);
+
+	/*
+	 * public List<Duplicata> findCpfOuCnpj(String cpfOuCnpj) {
+	 * 
+	 * List<Duplicata> dup = repo.findCpfOuCnpj(cpfOuCnpj); if (dup == null) { throw
+	 * new ObjectNotFoundException("Duplicatas não encontradas!"); } return dup; }
+	 */
+
+	public List<Duplicata> findVencimento(Date dataVencimento) {
+
+		List<Duplicata> dup = repo.findByDataVencimento(dataVencimento);
 		if (dup == null) {
 			throw new ObjectNotFoundException("Duplicatas não encontradas!");
 		}
 		return dup;
-	}*/
-
-public List<Duplicata> findVencimento(Date dataVencimento) {
-	
-	List<Duplicata> dup = repo.findByDataVencimento(dataVencimento);
-	if (dup == null) {
-		throw new ObjectNotFoundException("Duplicatas não encontradas!");
 	}
-	return dup;
-}
 
 	public Duplicata atualizarEstadoPgto(Duplicata dup) {
 		Duplicata newDup = find(dup.getId());

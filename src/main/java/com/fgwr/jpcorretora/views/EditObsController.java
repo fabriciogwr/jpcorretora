@@ -13,6 +13,8 @@ import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 @Component
@@ -32,6 +34,19 @@ public class EditObsController {
 	private void initialize() {
 
 	}
+	
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+    
 	
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;

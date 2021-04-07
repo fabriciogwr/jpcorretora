@@ -42,6 +42,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -319,7 +321,7 @@ public class NovoImovelController {
 			checklist.setDataLaudo(imovel.getDataLaudo());
 
 		}
-		if (okClicked) {
+		if (this.okClicked) {
 			checklist.setDanoArCondicionado(imovel.isDanoArCondicionado());
 			checklist.setDanoAreaServico(imovel.isDanoAreaServico());
 			checklist.setDanoBanheiro(imovel.isDanoBanheiro());
@@ -346,7 +348,7 @@ public class NovoImovelController {
 			checklist.setDanoSala(imovel.isDanoSala());
 			checklist.setDanoTomadas(imovel.isDanoTomadas());
 			checklist.setDanoVasoSanitario(imovel.isDanoVasoSanitario());
-			checklist.setObs(readObs(imovel.getId()));
+			checklist.setObs(obs);
 			checklist.setDataLaudo(imovel.getDataLaudo());
 
 		}
@@ -382,36 +384,7 @@ public class NovoImovelController {
 			imovel.setDataLaudo(checklist.getDataLaudo());
 
 			obs = checklist.getObs();
-		}
-		if (!okClicked ){
-			imovel.setDanoArCondicionado(false);
-			imovel.setDanoAreaServico(false);
-			imovel.setDanoBanheiro(false);
-			imovel.setDanoBox(false);
-			imovel.setDanoCercaEletrica(false);
-			imovel.setDanoChaves(false);
-			imovel.setDanoChuveiro(false);
-			imovel.setDanoControle(false);
-			imovel.setDanoCozinha(false);
-			imovel.setDanoDispensa(false);
-			imovel.setDanoFechaduras(false);
-			imovel.setDanoGaragem(false);
-			imovel.setDanoInfiltracao(false);
-			imovel.setDanoJanelas(false);
-			imovel.setDanoLampadas(false);
-			imovel.setDanoMoveisVinculados(false);
-			imovel.setDanoPia(false);
-			imovel.setDanoPinturaExterna(false);
-			imovel.setDanoPinturaInterna(false);
-			imovel.setDanoPortao(false);
-			imovel.setDanoPortaoEletro(false);
-			imovel.setDanoPortas(false);
-			imovel.setDanoQuarto(false);
-			imovel.setDanoSala(false);
-			imovel.setDanoTomadas(false);
-			imovel.setDanoVasoSanitario(false);
-			imovel.setDataLaudo(Date.from(dataLaudoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			obs = "Sem Observações";
+			this.okClicked = true;
 		}
 	}
 
@@ -485,7 +458,7 @@ public class NovoImovelController {
 				}
 			}
 
-			
+			imovel.setActive(true);
 			
 			imovel.setCorretor(corretorField.getText());
 			imovel.setDescricao(descricaoField.getText());
@@ -570,4 +543,17 @@ public class NovoImovelController {
 		return obsTemp;
 
 	}
+	
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) throws IOException {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+    
 }

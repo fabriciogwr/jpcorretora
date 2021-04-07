@@ -14,6 +14,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fgwr.jpcorretora.enums.EstadoImovel;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +34,7 @@ public class Imovel implements Serializable {
     private Date dataAngariacao;
     
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Proprietario proprietario;
     
     @OneToOne
@@ -41,6 +45,7 @@ public class Imovel implements Serializable {
     
     private Integer estadoImovel;
     private String descricao;
+    private Boolean active;
     
     private Boolean danoSala;
     private Boolean danoCozinha;
@@ -410,6 +415,14 @@ public class Imovel implements Serializable {
 		this.corretor = corretor;
 	}
 
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -457,7 +470,7 @@ public class Imovel implements Serializable {
 		Boolean locado = (this.getContrato() == null) ? false : true;
 		StringProperty locadoStr;
 		if(locado) {
-		locadoStr = new SimpleStringProperty("Já alugado");
+		locadoStr = new SimpleStringProperty(this.getContrato().getCliente().getNome());
 		} else {
 			locadoStr = new SimpleStringProperty("Disponível");
 		}return locadoStr;

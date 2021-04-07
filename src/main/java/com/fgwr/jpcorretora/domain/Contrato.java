@@ -41,8 +41,10 @@ public class Contrato implements Serializable {
     private Integer qtdParcelas;
     private Double valorDeCadaParcela;
     
-    @OneToMany(mappedBy ="contrato", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="contrato", cascade = CascadeType.PERSIST)
     private List<Duplicata> duplicatas;
+    
+    private Boolean active;
     
     public Contrato () {
     	
@@ -110,6 +112,14 @@ public class Contrato implements Serializable {
 
 	public void setDuplicatas(List<Duplicata> duplicatas) {
 		this.duplicatas = duplicatas;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	@Override

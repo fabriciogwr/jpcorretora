@@ -17,6 +17,8 @@ import com.fgwr.jpcorretora.utils.FileUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -46,6 +48,18 @@ public class EditRefController {
 
 	}
 
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+    
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;
 	}

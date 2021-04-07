@@ -15,7 +15,6 @@ import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
-import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
@@ -23,7 +22,6 @@ import com.fgwr.jpcorretora.utils.FileUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -43,8 +41,6 @@ public class ProprietarioController {
 
 	@FXML
 	private BorderPane rootLayout;
-
-	private ObservableList<Referencia> referenciaData = FXCollections.observableArrayList();
 
 	@FXML
 	private TableView<Proprietario> proprietarioTable;
@@ -93,7 +89,9 @@ public class ProprietarioController {
 	private Label numeroContaLabel;
 	@FXML
 	private Label titularLabel;
-
+	@FXML
+	private Label pixLabel;
+	
 	@FXML
 	private Label logradouroLabel;
 	@FXML
@@ -129,15 +127,13 @@ public class ProprietarioController {
 	@FXML
 	private Button ref3Btn;
 
-	private DadosBancarios dadosBancarios;
-
 	FrontApp frontApp = new FrontApp();
 
 	ApplicationContext context = SpringContext.getAppContext();
 
 	public List<Proprietario> getProprietarioData() {
 		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
-		List<Proprietario> allProp = propRepo.findAll();
+		List<Proprietario> allProp = propRepo.findByActive(Boolean.TRUE);
 		return allProp;
 	}
 
@@ -145,16 +141,6 @@ public class ProprietarioController {
 		ImovelRepository imServ = (ImovelRepository) context.getBean("imovelRepository");
 		List<Imovel> imoveis = imServ.findByProprietario(p);
 		return imoveis;
-	}
-
-	public DadosBancarios getDadosBancariosData(Proprietario p) {
-		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
-
-		dadosBancarios = dbRepo.findByProprietario(p);
-		if (dadosBancarios == null || dadosBancarios.getTitular().isBlank()) {
-			dadosBancarios = null;
-		}
-		return dadosBancarios;
 	}
 
 	@FXML
@@ -175,6 +161,7 @@ public class ProprietarioController {
 			cpfLabel.setText(StringsUtils.formatarCpfOuCnpj(proprietario.getCpfOuCnpj()));
 			rgLabel.setText(proprietario.getRg());
 			emailLabel.setText(proprietario.getEmail());
+			
 			telefonePrefLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefonePref()));
 			if (!proprietario.getTelefoneAlt().isBlank()) {
 				telefoneAltLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefoneAlt()));
@@ -186,46 +173,21 @@ public class ProprietarioController {
 			estadoCivilLabel.setText(proprietario.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(proprietario.getProfissao());
 
-			dadosBancarios = getDadosBancariosData(proprietario);
-			if (dadosBancarios != null) {
+
+			if (proprietario.getDadosBancarios().getBanco() != null) {
 				bancoLabel.setText(
-						dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
-				tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
-				agenciaLabel.setText(dadosBancarios.getAgencia());
-				numeroContaLabel.setText(dadosBancarios.getConta());
-				titularLabel.setText(dadosBancarios.getTitular());
+						proprietario.getDadosBancarios().getBanco().getFullCod() + " - " + proprietario.getDadosBancarios().getBanco().getDescricao());
 			}
-			referenciaData.clear();
+			if (proprietario.getDadosBancarios().getTipo() != null) {
+				tipoContaLabel.setText(proprietario.getDadosBancarios().getTipo().getDesc());
+			}
+				agenciaLabel.setText(proprietario.getDadosBancarios().getAgencia());
+				numeroContaLabel.setText(proprietario.getDadosBancarios().getConta());
+				titularLabel.setText(proprietario.getDadosBancarios().getTitular());
+				pixLabel.setText(proprietario.getDadosBancarios().getPix());
+			
 
 			obsLabel.setText(proprietario.getObs());
-			ref1Btn.setText("Editar");
-			if (referenciaData.size() == 0) {
-				ref1Btn.setText("Cadastrar");
-				ref2Btn.setText("Cadastrar");
-				ref3Btn.setText("Cadastrar");
-			}
-			if (referenciaData.size() == 1) {
-				ref1Label.setText(referenciaData.get(0).getNome());
-				ref1FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(0).getTelefone()));
-			}
-			if (referenciaData.size() >= 2) {
-				ref2Btn.setText("Editar");
-				ref2Label.setText(referenciaData.get(1).getNome());
-				ref2FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(1).getTelefone()));
-			} else {
-				ref2Btn.setText("Cadastrar");
-				ref2Label.setText("");
-				ref2FoneLabel.setText("");
-			}
-			if (referenciaData.size() == 3) {
-				ref3Btn.setText("Editar");
-				ref3Label.setText(referenciaData.get(2).getNome());
-				ref3FoneLabel.setText(StringsUtils.formatarTelefone(referenciaData.get(2).getTelefone()));
-			} else {
-				ref3Btn.setText("Cadastrar");
-				ref3Label.setText("");
-				ref3FoneLabel.setText("");
-			}
 
 			proprietarioTable.refresh();
 
@@ -274,7 +236,7 @@ public class ProprietarioController {
 
 			} else {
 				Alert alert = new Alert(AlertType.WARNING);
-				alert.initStyle(StageStyle.UNDECORATED);
+				alert.initStyle(StageStyle.UNIFIED);
 				DialogPane dialogPane = alert.getDialogPane();
 				dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 				alert.setTitle("Nenhuma seleção");
@@ -290,22 +252,54 @@ public class ProprietarioController {
 
 		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
 		Proprietario selectedProprietario = proprietarioTable.getSelectionModel().getSelectedItem();
+		ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
+		List<Imovel> allImv = imvRepo.findByProprietario(selectedProprietario);
 
 		if (selectedProprietario != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			alert.initStyle(StageStyle.UNIFIED);
 			alert.setTitle("Exclusão de Proprietario");
 			alert.setHeaderText("Confirmar Exclusão do Proprietario Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 
-				propRepo.delete(selectedProprietario);
-				proprietarioTable.getItems().remove(selectedProprietario);
+				Integer lock = 0;
+
+				for (Imovel imovel : allImv) {
+					if (imovel.getContrato() != null) {
+						lock++;
+					}
+
+				}
+				System.out.println(lock);
+				if (lock == 0) {
+					
+					for (Imovel imovel : allImv) {
+						imovel.setActive(false);
+					}
+					imvRepo.saveAll(allImv);
+					selectedProprietario.setActive(false);
+
+					propRepo.save(selectedProprietario);
+					proprietarioTable.getItems().remove(selectedProprietario);
+					proprietarioTable.refresh();
+				}  {
+					Alert alert3 = new Alert(AlertType.ERROR);
+					alert3.initStyle(StageStyle.UNIFIED);
+					DialogPane dialogPane3 = alert3.getDialogPane();
+					dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					alert3.setTitle("Falha ao Excluir Proprietário");
+					alert3.setHeaderText(
+							"O imóvel do proprietário ainda está em um contrato ativo. Encerre o contrato para continuar.");
+					alert3.showAndWait();
+
+				}
 
 			}
-			proprietarioTable.refresh();
+			
+
 		}
 	}
 
@@ -320,7 +314,7 @@ public class ProprietarioController {
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");

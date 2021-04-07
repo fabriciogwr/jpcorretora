@@ -15,5 +15,7 @@ public interface ImovelRepository extends JpaRepository <Imovel, Integer>{
 	Imovel findByContrato(Contrato contrato);
 
 	List<Imovel> findByProprietario(Proprietario p);
+	
+	List<Imovel> findByActive(Boolean active);
 
 }

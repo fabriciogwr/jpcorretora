@@ -3,6 +3,8 @@ package com.fgwr.jpcorretora.utils;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StringsUtils {
 
@@ -57,4 +59,10 @@ public class StringsUtils {
 		sb.insert(5, "-");
 		return sb.toString();
 		}
+	
+	public static String formatarData(Date data) {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    	String dataString = df.format(data);
+		return dataString;
+	}
 }

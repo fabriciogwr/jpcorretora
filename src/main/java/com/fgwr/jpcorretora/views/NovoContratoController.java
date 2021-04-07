@@ -39,6 +39,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -173,19 +175,26 @@ Calendar cal = Calendar.getInstance();
 		if (vencimentos.isBlank() || Integer.parseInt(vencimentos) == 0) {
 			primeiraParcelaField.setText("");
 		}else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) > 0 && Integer.parseInt(vencimentos) > cal.get(Calendar.DAY_OF_MONTH)) {
-			Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-			Double diferencaDeVencimento = valorPorDia * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH));
+			Double pc1 = (Double.parseDouble(valorField.getText()) / 100) * 1;
+			Double pc2 = (Double.parseDouble(valorField.getText()) / 100) * 2;
+			
+			Double valorPorDia = pc1/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+			Double diferencaDeVencimento = pc2 + (valorPorDia * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH)));
 			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 		    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
-			} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) <= cal.get(Calendar.DAY_OF_MONTH)){
-				Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);				
+			
+		} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) <= cal.get(Calendar.DAY_OF_MONTH)){
+			Double pc1 = (Double.parseDouble(valorField.getText()) / 100) * 1;
+			Double pc2 = (Double.parseDouble(valorField.getText()) / 100) * 2;
+				Double valorPorDia = pc1/cal.getActualMaximum(Calendar.DAY_OF_MONTH);				
 				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				
 				cal.add(Calendar.MONTH, 1);
 				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.parseInt(vencimentos));
 				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				
-				Double diferencaDeVencimento = valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+				Double diferencaDeVencimento = pc2 + (valorPorDia * Math.toIntExact(ChronoUnit.DAYS.between(date, date2)));
+				
 				primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 			    primeiraParcelaField.setText("R$ " + StringsUtils.formatarDecimals(primeiraParcela));
 				
@@ -201,6 +210,18 @@ Calendar cal = Calendar.getInstance();
     public boolean isOkClicked() {
         return okClicked;
     }
+    
+    @FXML
+	public void handleOnKeyPressed(KeyEvent e) throws FileNotFoundException {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
     
     @FXML
     private void handleCancel() {
@@ -237,10 +258,10 @@ Calendar cal = Calendar.getInstance();
         	
         	List<Duplicata> dups; 
         	if(vencimentosField.getText().isBlank() ) {
-        		dups = ds.preencherDuplicata(contrato);
+        		dups = ds.preencherDuplicata(contrato, clienteBox.getValue());
         		
         	} else {
-        		dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
+        		dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()), clienteBox.getValue());
         	}
         
         	Cliente cliente = cs.find(clienteBox.getValue().getId());
@@ -249,6 +270,7 @@ Calendar cal = Calendar.getInstance();
         	Imovel imovel = is.find(imovelBox.getValue().getId());
         	imovel.setContrato(contrato);
         	
+        	contrato.setActive(true);
         	contrato.setCliente(cliente);
         	contrato.setImovel(imovel);
         	contrato.setDuplicatas(dups);
@@ -317,7 +339,7 @@ Calendar cal = Calendar.getInstance();
             return true;
         } else {
         	Alert alert = new Alert(AlertType.ERROR);
-        	alert.initStyle(StageStyle.UNDECORATED);
+        	alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();			
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
             	      alert.setTitle("Campos Inválidos");

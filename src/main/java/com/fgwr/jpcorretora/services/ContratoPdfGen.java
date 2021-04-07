@@ -96,7 +96,7 @@ public class ContratoPdfGen {
 		
 		Table table2 = new Table(1).useAllAvailableWidth();
 
-		Text loc = new Text("LOCATÁRIO").setBold();
+		Text loc = new Text("LOCATÁRIO(A)").setBold();
 		Text adm = new Text("ADMINISTRADOR").setBold();
 		Text space = new Text("\s ");
 		cell = new Cell();
@@ -127,13 +127,13 @@ public class ContratoPdfGen {
 		table2.addCell(cell);
 
 		cell = new Cell();
-		Text locStr = new Text("LOCATÁRIO: ").setBold();
+		Text locStr = new Text("LOCATÁRIO(A): ").setBold();
 		p = new Paragraph();
 		p.add(locStr);
 		p.add(contrato.getCliente().getNome().toUpperCase() + ", CPF: " + StringsUtils.formatarCpfOuCnpj(contrato.getCliente().getCpfOuCnpj()) + ", RG: "
 				+ contrato.getCliente().getRg() + ", " + contrato.getCliente().getEstadoCivil().getDescricao().toUpperCase()
 				+ ", " + contrato.getCliente().getProfissao().toUpperCase()
-				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone Principal" + StringsUtils.formatarTelefone(contrato.getCliente().getTelefonePref()) + ".\n");
+				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone Principal " + StringsUtils.formatarTelefone(contrato.getCliente().getTelefonePref()) + ".\n");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
 		cell.setBorder(b2);
@@ -151,7 +151,7 @@ public class ContratoPdfGen {
 				+ contrato.getImovel().getEndereco().getCidade() + "-" + contrato.getImovel().getEndereco().getEstado() + ". ");
 		
 		Text bodyA = new Text(
-				"Fica atribuída ao LOCATÁRIO a responsabilidade de zelar pela conservação e limpeza do imóvel, efetuando as reformas necessárias para sua manutenção, sendo que os gastos e pagamentos decorrentes de tais manutenções correrão por conta do LOCATÁRIO. O LOCATÁRIO está obrigado a devolver o imóvel em perfeitas condições de conservação, limpeza e pintura, quando finda ou rescindida esta avença, conforme constatado no LAUDO DE VISTORIA. O LOCATÁRIO não poderá realizar obras que alterem ou modifiquem a estrutura do imóvel locado sem prévia autorização por escrito do ADMINISTRADOR. Caso este consinta na realização das obras, estas ficarão desde logo, incorporadas ao imóvel, sem que assista ao LOCATÁRIO qualquer indenização pelas obras ou retenção por benfeitorias. As benfeitorias removíveis poderão ser retiradas, desde que não desfigurem o imóvel locado.\n").setBold();
+				"Fica atribuída ao LOCATÁRIO(A) a responsabilidade de zelar pela conservação e limpeza do imóvel, efetuando as reformas necessárias para sua manutenção, sendo que os gastos e pagamentos decorrentes de tais manutenções correrão por conta do LOCATÁRIO(A). O LOCATÁRIO(A) está obrigado a devolver o imóvel em perfeitas condições de conservação, limpeza e pintura, quando finda ou rescindida esta avença, conforme constatado no LAUDO DE VISTORIA. O LOCATÁRIO(A) não poderá realizar obras que alterem ou modifiquem a estrutura do imóvel locado sem prévia autorização por escrito do ADMINISTRADOR. Caso este consinta na realização das obras, estas ficarão desde logo, incorporadas ao imóvel, sem que assista ao LOCATÁRIO(A) qualquer indenização pelas obras ou retenção por benfeitorias. As benfeitorias removíveis poderão ser retiradas, desde que não desfigurem o imóvel locado.\n").setBold();
 		p.add(bodyA);
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);

@@ -26,7 +26,6 @@ import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
-import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
@@ -115,6 +114,8 @@ public class ClienteController {
 	private Label numeroContaLabel;
 	@FXML
 	private Label titularLabel;
+	@FXML
+	private Label pixLabel;
 
 	@FXML
 	private Label logradouroLabel;
@@ -151,28 +152,26 @@ public class ClienteController {
 	@FXML
 	private Button ref3Btn;
 
-	private DadosBancarios dadosBancarios;
-
 	FrontApp frontApp = new FrontApp();
 
 	ApplicationContext context = SpringContext.getAppContext();
 
 	public List<Cliente> getClienteData() {
-		ClienteService cliServ = (ClienteService) context.getBean("clienteService");
-		List<Cliente> allcli = cliServ.findAll();
+		ClienteRepository cliServ = (ClienteRepository) context.getBean("clienteRepository");
+		List<Cliente> allcli = cliServ.findByActive(Boolean.TRUE);
 		return allcli;
 	}
 
-	public List<Duplicata> getDuplicataData(Contrato contrato) {
-		DuplicataService dupServ = (DuplicataService) context.getBean("duplicataService");
-		List<Duplicata> alldup = dupServ.findByContrato(contrato);
+	public List<Duplicata> getDuplicataData(Cliente cliente) {
+		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
+		List<Duplicata> alldup = dupRepo.findByCliente(cliente);
 		return alldup;
 	}
 
 	public DadosBancarios getDadosBancariosData(Cliente cliente) {
 		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
 
-		dadosBancarios = dbRepo.findByCliente(cliente);
+		DadosBancarios dadosBancarios = dbRepo.findByCliente(cliente);
 		if (dadosBancarios.getTitular().isBlank()) {
 			dadosBancarios = null;
 		}
@@ -214,16 +213,20 @@ public class ClienteController {
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
 
-			dadosBancarios = getDadosBancariosData(cliente);
-
-			if (dadosBancarios != null) {
+			
+			if (cliente.getDadosBancarios().getBanco() != null ) {
 				bancoLabel.setText(
-						dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
-				tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
-				agenciaLabel.setText(dadosBancarios.getAgencia());
-				numeroContaLabel.setText(dadosBancarios.getConta());
-				titularLabel.setText(dadosBancarios.getTitular());
+						cliente.getDadosBancarios().getBanco().getFullCod() + " - " + cliente.getDadosBancarios().getBanco().getDescricao());
 			}
+			if (cliente.getDadosBancarios().getTipo() != null ) {
+				tipoContaLabel.setText(cliente.getDadosBancarios().getTipo().getDesc());
+			}
+				agenciaLabel.setText(cliente.getDadosBancarios().getAgencia());
+				numeroContaLabel.setText(cliente.getDadosBancarios().getConta());
+				titularLabel.setText(cliente.getDadosBancarios().getTitular());
+				pixLabel.setText(cliente.getDadosBancarios().getPix());
+				System.out.println(cliente.getDadosBancarios().getPix());
+			
 			referenciaData.clear();
 			referenciaData = FXCollections.observableArrayList(getReferenciaData(cliente));
 			obsLabel.setText(cliente.getObs());
@@ -258,7 +261,7 @@ public class ClienteController {
 
 			clienteTable.refresh();
 			duplicataTable.getItems().clear();
-			duplicataTable.setItems(FXCollections.observableArrayList(getDuplicataData(cliente.getContrato())));
+			duplicataTable.setItems(FXCollections.observableArrayList(getDuplicataData(cliente)));
 
 			contratoColumn.setCellValueFactory(cellData -> cellData.getValue().contrato());
 			parcelaColumn.setCellValueFactory(cellData -> cellData.getValue().parcela());
@@ -267,7 +270,7 @@ public class ClienteController {
 			estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
 			dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
 			duplicataTable.getSortOrder().add(parcelaColumn);
-			
+
 		} else {
 			nomeLabel.setText("");
 			cpfLabel.setText("");
@@ -283,6 +286,7 @@ public class ClienteController {
 			agenciaLabel.setText("");
 			numeroContaLabel.setText("");
 			titularLabel.setText("");
+			pixLabel.setText("");
 			ref1Label.setText("");
 			ref2Label.setText("");
 			ref3Label.setText("");
@@ -317,18 +321,37 @@ public class ClienteController {
 
 		ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
 		Cliente selectedCliente = clienteTable.getSelectionModel().getSelectedItem();
-
+		
 		if (selectedCliente != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Exclusão de Cliente");
 			alert.setHeaderText("Confirmar Exclusão do Cliente Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				clienteTable.getItems().remove(selectedCliente);
-				cliRepo.delete(selectedCliente);
 
+				if (selectedCliente.getContrato() == null) {
+					
+					selectedCliente.setActive(false);
+					cliRepo.save(selectedCliente);
+					clienteTable.getItems().remove(selectedCliente);
+					clienteTable.refresh();
+					
+				}
+
+				else {
+					Alert alert3 = new Alert(AlertType.ERROR);		
+					DialogPane dialogPane3 = alert3.getDialogPane();
+					dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					alert3.initStyle(StageStyle.UNIFIED);
+					alert3.setTitle("Falha ao Excluir Cliente");
+					alert3.setHeaderText(
+							"O cliente ainda está em um contrato ativo. Encerre o contrato para continuar.");
+					alert3.showAndWait();
+
+				}
 			}
-			clienteTable.refresh();
 		}
 	}
 
@@ -453,7 +476,7 @@ public class ClienteController {
 
 		if (selectedDuplicata != null && selectedDuplicata.getEstado() == EstadoPagamento.PENDENTE) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Confirmar pagamento");
@@ -469,7 +492,7 @@ public class ClienteController {
 					selectedDuplicata.setRecibo(rec);
 
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
-					alert2.initStyle(StageStyle.UNDECORATED);
+					alert2.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane2 = alert2.getDialogPane();
 					dialogPane2.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 					alert2.setTitle("Recibo");
@@ -488,11 +511,12 @@ public class ClienteController {
 
 		} else {
 			Alert alert3 = new Alert(AlertType.WARNING);
-			alert3.initStyle(StageStyle.UNDECORATED);
+			alert3.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane3 = alert3.getDialogPane();
 			dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert3.setTitle("Mensalidade Já Paga");
 			alert3.setHeaderText("A mensalidade selecionada já está paga.");
+			alert3.showAndWait();
 		}
 	}
 
@@ -503,7 +527,7 @@ public class ClienteController {
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Cancelar pagamento");

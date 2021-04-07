@@ -25,6 +25,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -66,6 +68,8 @@ public class NovoClienteController {
 	@FXML
 	private TextField titularField;
 	@FXML
+	private TextField pixField;
+	@FXML
 	private TextField obsField;
 	@FXML
 	private ComboBox<Banco> bancoBox;
@@ -87,6 +91,18 @@ public class NovoClienteController {
 	private Banco[] banco = Banco.values();
 	private TipoConta[] tipoConta = TipoConta.values();
 
+	@FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+    
 	@FXML
 	private void initialize() {
 
@@ -150,10 +166,10 @@ public class NovoClienteController {
 	private boolean isInputValid() {
 		String errorMessage = "";
 
-		if (nomeField.getText() == null || nomeField.getText().length() == 0) {
+		if (nomeField.getText() == null || nomeField.getText().length() == 0 || nomeField.getText().matches("[0-9]")) {
 			errorMessage += "Nome inválido\n";
 		}
-		if ((emailField.getText() == null || emailField.getText().length() == 0) || (emailField.getText().length() > 5 && !emailField.getText().matches("@"))) {
+		if ((emailField.getText() == null || emailField.getText().length() == 0) || !emailField.getText().matches("[@]")) {
 			errorMessage += "Email inválido\n";
 		}
 		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
@@ -184,7 +200,7 @@ public class NovoClienteController {
 			return true;
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.initStyle(StageStyle.UNDECORATED);
+			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
@@ -207,6 +223,7 @@ public class NovoClienteController {
 		telefoneAltField.setText("");
 		cpfField.setText("");
 		rgField.setText("");
+		pixField.setText("");
 
 		estadoCivilBox.setValue(null);
 
@@ -225,6 +242,7 @@ public class NovoClienteController {
 	private void handleOk() {
 		if (isInputValid()) {
 
+			cliente.setActive(true);
 			cliente.setNome(nomeField.getText());
 			cliente.setEmail(emailField.getText());
 			cliente.setTelefonePref(telefonePrefField.getText());
@@ -256,6 +274,7 @@ public class NovoClienteController {
 
 
 				db.setId(null);
+				db.setPix(pixField.getText());
 				db.setAgencia(agenciaField.getText());
 				db.setConta(contaField.getText());
 				db.setTitular(titularField.getText());

@@ -74,7 +74,7 @@ public class RootController {
     public void showRelatorios(ActionEvent event) throws IOException {
       AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
 	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
-        rootLayout.setCenter(showCadastroProprietarios);
+     //   rootLayout.setCenter(showCadastroProprietarios);
     }
 	
 	@FXML

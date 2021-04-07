@@ -24,6 +24,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -66,6 +68,8 @@ public class EditClienteController {
     private ComboBox<String> bancoBox;
     @FXML
     private ComboBox<String> tipoContaBox;
+    @FXML
+    private TextField pixField;
 
     private List<String> estadoCivilAux = new ArrayList<>();
     
@@ -82,7 +86,18 @@ public class EditClienteController {
     private TipoConta[] tipoConta = TipoConta.values();
     
     
-	
+    @FXML
+	public void handleOnKeyPressed(KeyEvent e) {
+		KeyCode code = e.getCode();		
+		
+		if (code == KeyCode.ENTER) {
+			handleOk();
+		}
+		if (code == KeyCode.ESCAPE) {
+			handleCancel();
+		}
+	}
+    
     @FXML
     private void initialize() {
     	
@@ -144,6 +159,7 @@ public class EditClienteController {
         agenciaField.setText(cliente.getDadosBancarios().getAgencia());
         titularField.setText(cliente.getDadosBancarios().getTitular());
         contaField.setText(cliente.getDadosBancarios().getConta());
+        pixField.setText(cliente.getDadosBancarios().getPix());
         obsField.setText(cliente.getObs());
 		
         
