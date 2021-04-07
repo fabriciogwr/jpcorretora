@@ -169,9 +169,7 @@ public class NovoClienteController {
 		if (nomeField.getText() == null || nomeField.getText().length() == 0 || nomeField.getText().matches("[0-9]")) {
 			errorMessage += "Nome inválido\n";
 		}
-		if ((emailField.getText() == null || emailField.getText().length() == 0) || !emailField.getText().matches("[@]")) {
-			errorMessage += "Email inválido\n";
-		}
+		
 		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido\n";
 		}

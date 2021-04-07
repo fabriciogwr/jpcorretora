@@ -107,25 +107,8 @@ public class ProprietarioController {
 	@FXML
 	private Label dataLocacaoLabel;
 	@FXML
-	private Label ref1Label;
-	@FXML
-	private Label ref2Label;
-	@FXML
-	private Label ref3Label;
-	@FXML
-	private Label ref1FoneLabel;
-	@FXML
-	private Label ref2FoneLabel;
-	@FXML
-	private Label ref3FoneLabel;
-	@FXML
 	private Label obsLabel;
-	@FXML
-	private Button ref1Btn;
-	@FXML
-	private Button ref2Btn;
-	@FXML
-	private Button ref3Btn;
+	
 
 	FrontApp frontApp = new FrontApp();
 
@@ -214,12 +197,6 @@ public class ProprietarioController {
 			agenciaLabel.setText("");
 			numeroContaLabel.setText("");
 			titularLabel.setText("");
-			ref1Label.setText("");
-			ref2Label.setText("");
-			ref3Label.setText("");
-			ref1FoneLabel.setText("");
-			ref2FoneLabel.setText("");
-			ref3FoneLabel.setText("");
 			obsLabel.setText("");
 		}
 

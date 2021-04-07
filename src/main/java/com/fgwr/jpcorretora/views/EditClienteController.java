@@ -223,9 +223,7 @@ public class EditClienteController {
         if (nomeField.getText() == null || nomeField.getText().length() == 0) {
 			errorMessage += "Nome inválido\n";
 		}
-		if ((emailField.getText() == null || emailField.getText().length() == 0) || (emailField.getText().length() > 5 && !emailField.getText().matches("@"))) {
-			errorMessage += "Email inválido\n";
-		}
+		
 		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido\n";
 		}

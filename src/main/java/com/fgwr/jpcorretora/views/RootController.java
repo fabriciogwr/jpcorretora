@@ -1,5 +1,6 @@
 package com.fgwr.jpcorretora.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -20,11 +21,13 @@ import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
+import com.fgwr.jpcorretora.utils.FileUtils;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -36,11 +39,24 @@ public class RootController {
 
 	@FXML
 	private MenuBar menuBar;
+	@FXML
+	private Button clientesBtn;
+	@FXML
+	private Button contratosBtn;
+	@FXML
+	private Button imoveisBtn;
+	@FXML
+	private Button proprietariosBtn;
+	@FXML
+	private Button eventosBtn;
+	@FXML
+	private Button relatoriosBtn;
 	
 	private Stage secStage;
 	
 	@FXML
 	private BorderPane rootLayout;
+	
 	
 	FrontApp frontApp = new FrontApp();
 	String dir = System.getProperty("user.dir");
@@ -51,6 +67,19 @@ public class RootController {
 	
 	@FXML
     public void showCadastroClientes(ActionEvent event) throws IOException {
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
       AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
     //    AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaClientes.fxml")); //DEV    
         rootLayout.setCenter(showCadastroClientes);
@@ -58,6 +87,19 @@ public class RootController {
 	
 	@FXML
     public void showCadastroImoveis(ActionEvent event) throws IOException {
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
       AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
 	//	AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV 
         rootLayout.setCenter(showCadastroImoveis);
@@ -65,6 +107,20 @@ public class RootController {
 	
 	@FXML
     public void showCadastroProprietarios(ActionEvent event) throws IOException {
+		
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
       AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
 	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
         rootLayout.setCenter(showCadastroProprietarios);
@@ -72,6 +128,20 @@ public class RootController {
 	
 	@FXML
     public void showRelatorios(ActionEvent event) throws IOException {
+		
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
       AnchorPane showCadastroProprietarios = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
 	//	AnchorPane showCadastroProprietarios = FXMLLoader.load(getClass().getResource("TelaProprietarios.fxml")); //DEV  
      //   rootLayout.setCenter(showCadastroProprietarios);
@@ -79,6 +149,20 @@ public class RootController {
 	
 	@FXML
     public void showContratos(ActionEvent event) throws IOException {
+		
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
       AnchorPane showContratos = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); //BUILD
     //    AnchorPane showContratos = FXMLLoader.load(getClass().getResource("TelaContratos.fxml")); //DEV    
         rootLayout.setCenter(showContratos);
@@ -86,6 +170,17 @@ public class RootController {
 	
 	@FXML
     public void showEventos(ActionEvent event) throws IOException {
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		contratosBtn.getStylesheets().clear();
+		contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+		
 		try {
 			//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
 				FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
@@ -118,6 +213,19 @@ public class RootController {
 	        repoDb.save(db);
 	        
 	        
+	        clientesBtn.getStylesheets().clear();
+			clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+			imoveisBtn.getStylesheets().clear();
+			imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			proprietariosBtn.getStylesheets().clear();
+			proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			relatoriosBtn.getStylesheets().clear();
+			relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			contratosBtn.getStylesheets().clear();
+			contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			eventosBtn.getStylesheets().clear();
+			eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			
 	      AnchorPane showCadastroClientes = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaClientes.fxml").toUri()).toUri().toURL()); //BUILD
 	   //     AnchorPane showCadastroClientes = FXMLLoader.load(getClass().getResource("TelaCLientes.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroClientes);
@@ -131,6 +239,20 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoContrato(contrato);
 	    if (okClicked) {
+	    	
+	    		clientesBtn.getStylesheets().clear();
+				clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+				imoveisBtn.getStylesheets().clear();
+				imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+				proprietariosBtn.getStylesheets().clear();
+				proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+				relatoriosBtn.getStylesheets().clear();
+				relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+				contratosBtn.getStylesheets().clear();
+				contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+				eventosBtn.getStylesheets().clear();
+				eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			
 	    	AnchorPane showContratos = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); //BUILD
 	   // 	AnchorPane showContratos = FXMLLoader.load(getClass().getResource("TelaContratos.fxml")); //DEV    
 	        rootLayout.setCenter(showContratos);
@@ -144,6 +266,20 @@ public class RootController {
 	    
 	    boolean okClicked = frontApp.showNovoImovel(imovel, endereco);
 	    if (okClicked) {
+	    	
+	    	clientesBtn.getStylesheets().clear();
+			clientesBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			imoveisBtn.getStylesheets().clear();
+			imoveisBtn.getStylesheets().add(FileUtils.fileToString(new File("css/selected.css")));
+			proprietariosBtn.getStylesheets().clear();
+			proprietariosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			relatoriosBtn.getStylesheets().clear();
+			relatoriosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			contratosBtn.getStylesheets().clear();
+			contratosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			eventosBtn.getStylesheets().clear();
+			eventosBtn.getStylesheets().add(FileUtils.fileToString(new File("css/style.css")));
+			
 	      AnchorPane showCadastroImoveis = FXMLLoader.load(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
 	    //    AnchorPane showCadastroImoveis = FXMLLoader.load(getClass().getResource("TelaImoveis.fxml")); //DEV
 	        rootLayout.setCenter(showCadastroImoveis);

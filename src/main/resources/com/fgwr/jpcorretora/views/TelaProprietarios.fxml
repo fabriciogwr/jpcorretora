@@ -259,99 +259,20 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label text="Referência" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Telefone" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Telefone" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Referência" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Referência" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Telefone" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
-                                             <GridPane.margin>
-                                                <Insets />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label fx:id="ref2FoneLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="ref2Label" text="Label" GridPane.rowIndex="4">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="ref1Label" text="Label" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="ref1FoneLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="ref3FoneLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Referências">
+                                          <Label text="OBSERVAÇÕES">
                                              <font>
                                                 <Font name="BebasNeue" size="28.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="ref3Label" text="Label" GridPane.rowIndex="6">
+                                          <Label fx:id="obsLabel" text="Label" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="ref1Btn" mnemonicParsing="false" prefWidth="70.0" stylesheets="@../css/minorbuttons.css" text="Editar" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                                          <Button fx:id="ref2Btn" mnemonicParsing="false" prefWidth="70.0" stylesheets="@../css/minorbuttons.css" text="Editar" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                          <Button fx:id="ref3Btn" mnemonicParsing="false" prefWidth="70.0" stylesheets="@../css/minorbuttons.css" text="Editar" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                          <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                                          <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-                                          <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
-                                          <Label text="OBSERVAÇÕES" GridPane.rowIndex="8">
-                                             <font>
-                                                <Font name="BebasNeue" size="28.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="obsLabel" text="Label" GridPane.columnSpan="2" GridPane.rowIndex="9" GridPane.rowSpan="3" GridPane.valignment="TOP">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="11" GridPane.valignment="BOTTOM" />
-                                          <Button mnemonicParsing="false" onAction="#handleEditObs" prefWidth="70.0" stylesheets="@../css/minorbuttons.css" text="Editar" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                                          <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                                          <Button mnemonicParsing="false" onAction="#handleEditObs" prefWidth="70.0" stylesheets="@../css/minorbuttons.css" text="Editar" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                        </children>
                                     </GridPane>
                                  </children></AnchorPane>
