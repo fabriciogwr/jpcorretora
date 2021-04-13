@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
-import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Recibo;
@@ -26,7 +25,6 @@ import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
-import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 import com.fgwr.jpcorretora.utils.FileUtils;
@@ -166,7 +164,7 @@ public class ClienteController {
 
 	public List<Duplicata> getDuplicataData(Cliente cliente) {
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
-		List<Duplicata> alldup = dupRepo.findByCliente(cliente);
+		List<Duplicata> alldup = dupRepo.findByClienteAndEstadoNot(cliente, EstadoPagamento.CANCELADO.getCod());
 		return alldup;
 	}
 
@@ -538,16 +536,22 @@ public class ClienteController {
 			alert.setTitle("Cancelar pagamento");
 			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
 			Optional<ButtonType> result = alert.showAndWait();
+			Duplicata temp = new Duplicata();
 			if (result.get() == ButtonType.OK) {
-				selectedDuplicata.setEstado(EstadoPagamento.PENDENTE);
-				Recibo rec = selectedDuplicata.getRecibo();
-				selectedDuplicata.setDataPagamento(null);
-				selectedDuplicata.setRecibo(null);
-				selectedDuplicata.setValor(selectedDuplicata.getContrato().getValorDeCadaParcela());
-				dupRepo.save(selectedDuplicata);
-				recRepo.delete(rec);
+				
+				temp.setId(selectedDuplicata.getId());
+				temp.setEstado(EstadoPagamento.PENDENTE);
+				temp.setValor(selectedDuplicata.getValor());
+				temp.setParcela(selectedDuplicata.getParcela());
+				temp.setDataVencimento(selectedDuplicata.getDataVencimento());
+				temp.setCliente(selectedDuplicata.getCliente());
+				temp.setContrato(selectedDuplicata.getContrato());
+				temp = dupRepo.save(temp);
+				recRepo.delete(selectedDuplicata.getRecibo());
 
 			}
+			duplicataTable.getItems().remove(selectedDuplicata);
+			duplicataTable.getItems().add(temp);
 
 			duplicataTable.refresh();
 		}

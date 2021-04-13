@@ -3,11 +3,11 @@ package com.fgwr.jpcorretora.views;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +28,6 @@ import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.utils.FileUtils;
-import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -84,6 +83,7 @@ public class ContratoController {
 
 	}
 
+	@Transactional
 	@FXML
 	private void handleCancelaContrato() {
 
@@ -105,20 +105,17 @@ public class ContratoController {
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				List<Duplicata> dups = dupRepo.findByContrato(selectedContrato);
-				List<Duplicata> dupsToDel = new ArrayList<>();
 				Integer pendencias = 0;
 
 				for (Duplicata duplicata : dups) {
 					boolean mark = false;
 
-					if (duplicata.getEstado().equals(EstadoPagamento.QUITADO)) {
-						mark = false;
-					}
-
 					if (duplicata.getDataVencimento().after(cal.getTime())
 							&& duplicata.getEstado().equals(EstadoPagamento.PENDENTE)) {
 						mark = true;
 					}
+					
+					System.out.println(mark);
 					if (duplicata.getDataVencimento().before(cal.getTime())
 							&& duplicata.getEstado().equals(EstadoPagamento.PENDENTE)) {
 						mark = false;
@@ -126,14 +123,14 @@ public class ContratoController {
 					}
 
 					if (mark) {
-						dupsToDel.add(duplicata);
+						duplicata.setEstado(EstadoPagamento.CANCELADO);
 					}
 
-				}
+					
 
-				if (dupsToDel.size() > 0) {
-					dupRepo.deleteAll(dupsToDel);
 				}
+				
+				dupRepo.saveAll(dups);
 
 				if (pendencias > 0) {
 					Alert alert2 = new Alert(AlertType.WARNING);
@@ -142,6 +139,7 @@ public class ContratoController {
 					alert2.setTitle("Rescisão de Contrato");
 					alert2.setHeaderText(
 							"O Contrato foi rescindido, no entando, há mensalidades em atraso do cliente. Regularize a situação.");
+					alert2.showAndWait();
 
 				}
 
@@ -166,13 +164,6 @@ public class ContratoController {
 		File file = new File(FileUtils.pathContratos(selectedContrato));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
-	}
-	
-	@FXML
-	public void editaContrato() {
-		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
-		File file = new File(FileUtils.pathContratos(selectedContrato));
-
 	}
 
 	public void setMainApp(FrontApp frontApp) {

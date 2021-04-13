@@ -74,12 +74,12 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button fx:id="relatoriosBtn" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRelatorios" prefHeight="60.0" stylesheets="@../css/style.css" text="Relatórios">
+            <Button fx:id="eventosBtn" layoutX="10.0" layoutY="401.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showEventos" prefHeight="60.0" stylesheets="@../css/style.css" text="Eventos">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button fx:id="eventosBtn" layoutX="10.0" layoutY="401.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showEventos" prefHeight="60.0" stylesheets="@../css/style.css" text="Eventos">
+            <Button fx:id="relatoriosBtn" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRelatorios" prefHeight="60.0" stylesheets="@../css/style.css" text="Relatórios" visible="false">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

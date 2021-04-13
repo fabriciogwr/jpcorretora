@@ -18,6 +18,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -42,6 +45,7 @@ public class Contrato implements Serializable {
     private Double valorDeCadaParcela;
     
     @OneToMany(mappedBy ="contrato", cascade = CascadeType.PERSIST)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Duplicata> duplicatas;
     
     private Boolean active;

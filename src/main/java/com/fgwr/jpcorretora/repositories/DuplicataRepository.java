@@ -33,5 +33,7 @@ public interface DuplicataRepository extends JpaRepository<Duplicata, Integer>{
 	List<Duplicata> findByContrato(Contrato contrato);
 
 	public List<Duplicata> findByCliente(Cliente cliente);
+
+	public List<Duplicata> findByClienteAndEstadoNot(Cliente cliente, Integer estado);
 	
 }

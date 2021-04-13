@@ -16,7 +16,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.MeioPagamento;
 
@@ -48,6 +47,8 @@ public class Duplicata implements Serializable {
 	private Date dataPagamento;
 	
 	private Double valor;
+	
+	private Double valorPago;
 	
 	private Integer estado;
 	
@@ -259,5 +260,15 @@ public class Duplicata implements Serializable {
 	}
 		
 		return dataPgto;
+	}
+
+
+	public Double getValorPago() {
+		return valorPago;
+	}
+
+
+	public void setValorPago(Double valorPago) {
+		this.valorPago = valorPago;
 	}
 }
