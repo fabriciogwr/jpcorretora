@@ -170,8 +170,10 @@ public class NovoClienteController {
 			errorMessage += "Nome inválido\n";
 		}
 		
-		if (cpfField.getText() == null || cpfField.getText().length() == 0  || cpfField.getText().matches("[a-zA-Z_]+")) {
-			errorMessage += "CPF inválido\n";
+		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
+			errorMessage += "Digite um CPF\n";
+		} else if (cpfField.getText().length() != 11 || cpfField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "CPF inválido, digite somente números\n";
 		}
 		
 		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {

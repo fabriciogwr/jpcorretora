@@ -163,7 +163,9 @@ public class NovoProprietarioController {
 		}
 
 		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
-			errorMessage += "CPF inválido\n";
+			errorMessage += "Digite um CPF\n";
+		} else if (cpfField.getText().length() != 11 || cpfField.getText().matches("[a-zA-Z_]+")) {
+			errorMessage += "CPF inválido, digite somente números\n";
 		}
 
 		if (rgField.getText() == null || rgField.getText().length() == 0) {

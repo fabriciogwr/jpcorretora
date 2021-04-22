@@ -193,7 +193,7 @@ public enum Banco {
 	NOVOBANCOCONTINENTAL(753, "Novo Banco Continental S.A. - Banco Múltiplo"),
 	SISTEMA(754, "Banco Sistema S.A."),
 	MERRILLLYNCH(755, "Bank of America Merrill Lynch Banco Múltiplo S.A."),
-	BANCOOB(756, "Banco Cooperativo do Brasil S/A - Bancoob"),
+	BANCOOB(756, "Banco Cooperativo do Brasil S/A - Bancoob-Sicoob"),
 	KEBHANA(757, "Banco Keb Hana do Brasil S. A.");
 	
 	private Integer cod;

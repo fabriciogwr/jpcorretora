@@ -33,4 +33,35 @@ public class FileUtils {
 		String path = (docFolder + "\\Contratos\\" + c.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
 		return path;
 	}
+	
+	public static String pathContratos(Contrato c, boolean edit) {
+		String[] nomeArr = StringUtils.split(c.getCliente().getNome());
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		String path = (docFolder + "\\Contratos\\" + c.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
+		if (edit) {
+			File tmp = new File(path);
+			if (tmp.exists()) {
+				Integer lengthNome = nomeArr[0].length() + nomeArr[1].length() + 1;
+				Integer pathNoExt = path.length() - 4;
+				StringBuilder sb = new StringBuilder(path);
+				sb.insert(path.length() - 4, " - a");
+				path = sb.toString();
+				tmp = new File(path);
+				if (tmp.exists()) {
+					sb.replace(path.length() -5, path.length() -5, "b");
+					path = sb.toString();
+					tmp = new File(path);
+					if (tmp.exists()) {
+						sb.replace(path.length() -5, path.length() -5, "c");
+						path = sb.toString();
+						tmp = new File(path);
+					}
+				}
+				
+				
+			}
+		}
+		
+		return path;
+	}
 }

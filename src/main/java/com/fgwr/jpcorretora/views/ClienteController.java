@@ -270,8 +270,8 @@ public class ClienteController {
 			estadoColumn.setCellValueFactory(cellData -> cellData.getValue().estado());
 			dataPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().dataPgto());
 			meioPgtoColumn.setCellValueFactory(cellData -> cellData.getValue().meioPgto());
-			duplicataTable.getSortOrder().add(parcelaColumn);
 			duplicataTable.getSortOrder().add(contratoColumn);
+			duplicataTable.getSortOrder().add(parcelaColumn);
 
 		} else {
 			nomeLabel.setText("");

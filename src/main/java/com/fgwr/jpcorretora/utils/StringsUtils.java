@@ -65,4 +65,10 @@ public class StringsUtils {
     	String dataString = df.format(data);
 		return dataString;
 	}
+	
+	public static String formatarDataBackup(Date data) {
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy_HH.mm");
+    	String dataString = df.format(data);
+		return dataString;
+	}
 }

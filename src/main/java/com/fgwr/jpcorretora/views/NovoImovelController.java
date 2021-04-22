@@ -179,10 +179,6 @@ public class NovoImovelController {
 			errorMessage += "Bairro inválido\n";
 		}
 
-		if (descricaoField.getText() == null || descricaoField.getText().length() == 0) {
-			errorMessage += "Informe uma descrição\n";
-		}
-
 		if (estadoImovelBox.getValue() == null) {
 			errorMessage += "Selecione um Estado para o Imovel\n";
 		}
@@ -490,6 +486,12 @@ public class NovoImovelController {
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/descricao.txt").createNewFile();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/obs.txt").delete();
 			new File(docFolder + "/Imoveis/" + imovel.getId() + "/obs.txt").createNewFile();
+			
+			if (descricaoField.getText() == null || descricaoField.getText().length() == 0) {
+				saveDescricao("Sem Descrição", docFolder, imovel.getId());
+			} else {
+				saveDescricao(descricaoField.getText(), docFolder, imovel.getId());
+			}
 
 			saveDescricao(descricaoField.getText(), docFolder, imovel.getId());
 			if (!okClicked) {

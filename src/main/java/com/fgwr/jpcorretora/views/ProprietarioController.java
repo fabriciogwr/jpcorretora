@@ -89,7 +89,7 @@ public class ProprietarioController {
 	private Label titularLabel;
 	@FXML
 	private Label pixLabel;
-	
+
 	@FXML
 	private Label logradouroLabel;
 	@FXML
@@ -106,7 +106,6 @@ public class ProprietarioController {
 	private Label dataLocacaoLabel;
 	@FXML
 	private Label obsLabel;
-	
 
 	FrontApp frontApp = new FrontApp();
 
@@ -142,7 +141,7 @@ public class ProprietarioController {
 			cpfLabel.setText(StringsUtils.formatarCpfOuCnpj(proprietario.getCpfOuCnpj()));
 			rgLabel.setText(proprietario.getRg());
 			emailLabel.setText(proprietario.getEmail());
-			
+
 			telefonePrefLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefonePref()));
 			if (!proprietario.getTelefoneAlt().isBlank()) {
 				telefoneAltLabel.setText(StringsUtils.formatarTelefone(proprietario.getTelefoneAlt()));
@@ -154,19 +153,17 @@ public class ProprietarioController {
 			estadoCivilLabel.setText(proprietario.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(proprietario.getProfissao());
 
-
 			if (proprietario.getDadosBancarios().getBanco() != null) {
-				bancoLabel.setText(
-						proprietario.getDadosBancarios().getBanco().getFullCod() + " - " + proprietario.getDadosBancarios().getBanco().getDescricao());
+				bancoLabel.setText(proprietario.getDadosBancarios().getBanco().getFullCod() + " - "
+						+ proprietario.getDadosBancarios().getBanco().getDescricao());
 			}
 			if (proprietario.getDadosBancarios().getTipo() != null) {
 				tipoContaLabel.setText(proprietario.getDadosBancarios().getTipo().getDesc());
 			}
-				agenciaLabel.setText(proprietario.getDadosBancarios().getAgencia());
-				numeroContaLabel.setText(proprietario.getDadosBancarios().getConta());
-				titularLabel.setText(proprietario.getDadosBancarios().getTitular());
-				pixLabel.setText(proprietario.getDadosBancarios().getPix());
-			
+			agenciaLabel.setText(proprietario.getDadosBancarios().getAgencia());
+			numeroContaLabel.setText(proprietario.getDadosBancarios().getConta());
+			titularLabel.setText(proprietario.getDadosBancarios().getTitular());
+			pixLabel.setText(proprietario.getDadosBancarios().getPix());
 
 			obsLabel.setText(proprietario.getObs());
 
@@ -195,6 +192,7 @@ public class ProprietarioController {
 			agenciaLabel.setText("");
 			numeroContaLabel.setText("");
 			titularLabel.setText("");
+			pixLabel.setText("");
 			obsLabel.setText("");
 		}
 
@@ -250,7 +248,7 @@ public class ProprietarioController {
 				}
 				System.out.println(lock);
 				if (lock == 0) {
-					
+
 					for (Imovel imovel : allImv) {
 						imovel.setActive(false);
 					}
@@ -260,7 +258,8 @@ public class ProprietarioController {
 					propRepo.save(selectedProprietario);
 					proprietarioTable.getItems().remove(selectedProprietario);
 					proprietarioTable.refresh();
-				}  {
+				}
+				{
 					Alert alert3 = new Alert(AlertType.ERROR);
 					alert3.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane3 = alert3.getDialogPane();
@@ -273,7 +272,6 @@ public class ProprietarioController {
 				}
 
 			}
-			
 
 		}
 	}
@@ -281,13 +279,7 @@ public class ProprietarioController {
 	@FXML
 	private void handleEditObs() {
 		Proprietario selectedProprietario = proprietarioTable.getSelectionModel().getSelectedItem();
-		if (selectedProprietario != null) {
-			boolean okClicked = frontApp.showEditObs(selectedProprietario);
-			if (okClicked) {
-				showProprietario(selectedProprietario);
-			}
-
-		} else {
+		if (selectedProprietario == null) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
@@ -296,6 +288,14 @@ public class ProprietarioController {
 			alert.setHeaderText("Nenhuma Pessoa Selecionada");
 			alert.setContentText("Por favor, selecione uma pessoa na tabela.");
 			alert.showAndWait();
+
+		} else {
+
+			boolean okClicked = frontApp.showEditObs(selectedProprietario);
+			if (okClicked) {
+				showProprietario(selectedProprietario);
+			}
+
 		}
 	}
 
