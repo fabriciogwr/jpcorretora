@@ -252,7 +252,7 @@ public class NovoProprietarioController {
 			proprietario.setNome(nomeField.getText());
 			proprietario.setEmail(emailField.getText());
 
-			if (telefoneAltField.getText() != "") {
+			if (!telefoneAltField.getText().isBlank()) {
 				proprietario.getTelefones()
 						.addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
 			} else {
@@ -266,7 +266,7 @@ public class NovoProprietarioController {
 			proprietario.setProfissao(profissaoField.getText());
 			proprietario.setObs(obsField.getText());
 			
-			if(titularField.getText() != "") {
+			if(!titularField.getText().isBlank()) {
 			db.setAgencia(agenciaField.getText());
 			db.setConta(contaField.getText());
 			db.setTitular(titularField.getText());

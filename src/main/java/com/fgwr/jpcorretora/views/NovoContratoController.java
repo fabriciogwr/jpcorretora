@@ -29,9 +29,9 @@ import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.DuplicataService;
-import com.fgwr.jpcorretora.services.TableHeader;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -46,6 +46,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -155,41 +156,49 @@ Calendar cal = Calendar.getInstance();
 	
 	Date now = new Date();
 	
-	
+	PauseTransition pause = new PauseTransition(Duration.seconds(1));
 	vencimentosField.textProperty().addListener((observable, oldValue, newValue) -> {
 		cal.setTime(now);
-		if (valorField.getText() != "" && vencimentosField.getText() != "" && Integer.parseInt(vencimentosField.getText()) > cal.get(Calendar.DAY_OF_MONTH)) {
-		Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		DecimalFormatSymbols separador = new DecimalFormatSymbols();
-		separador.setDecimalSeparator('.');				
-		DecimalFormat df = new DecimalFormat("0.00", separador);
-		String valorPorDiaString = df.format(valorPorDia);
-		Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * (Integer.parseInt(vencimentosField.getText()) - cal.get(Calendar.DAY_OF_MONTH));
-		primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
-	    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
-		} else if (valorField.getText() != "" && vencimentosField.getText() != "" && Integer.parseInt(vencimentosField.getText()) <= cal.get(Calendar.DAY_OF_MONTH)){
+		 pause.setOnFinished(event -> correct(newValue, cal, now));
+	        pause.playFromStart();
+		
+	});
+	
+}
+	
+	public void correct(String vencimentos, Calendar cal, Date now) {
+		if (vencimentos.isBlank() || Integer.parseInt(vencimentos) == 0) {
+			primeiraParcelaField.setText("");
+		}else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) > 0 && Integer.parseInt(vencimentos) > cal.get(Calendar.DAY_OF_MONTH)) {
 			Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			DecimalFormatSymbols separador = new DecimalFormatSymbols();
 			separador.setDecimalSeparator('.');				
 			DecimalFormat df = new DecimalFormat("0.00", separador);
 			String valorPorDiaString = df.format(valorPorDia);
-			
-			LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			
-			cal.add(Calendar.MONTH, 1);
-			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.parseInt(vencimentosField.getText()));
-			LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			
-			Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+			Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * (Integer.parseInt(vencimentos) - cal.get(Calendar.DAY_OF_MONTH));
 			primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
 		    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
-			
-		} else {
-			primeiraParcelaField.setText("");
-		}
-	});
-	
-}
+			} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) <= cal.get(Calendar.DAY_OF_MONTH)){
+				Double valorPorDia = Double.parseDouble(valorField.getText())/cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				DecimalFormatSymbols separador = new DecimalFormatSymbols();
+				separador.setDecimalSeparator('.');				
+				DecimalFormat df = new DecimalFormat("0.00", separador);
+				String valorPorDiaString = df.format(valorPorDia);
+				
+				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				
+				cal.add(Calendar.MONTH, 1);
+				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.parseInt(vencimentos));
+				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				
+				Double diferencaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+				primeiraParcela = Double.parseDouble(valorField.getText()) + diferencaDeVencimento;
+			    primeiraParcelaField.setText("R$ " + primeiraParcela.toString());
+				
+			} else {
+				primeiraParcelaField.setText("");
+			}
+	}
 	
 	public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
@@ -242,10 +251,11 @@ Calendar cal = Calendar.getInstance();
         	contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));
         	
         	List<Duplicata> dups; 
-        	if(vencimentosField.getText() != "" ) {
-        	dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
-        	} else {
+        	if(vencimentosField.getText().isBlank() ) {
         		dups = ds.preencherDuplicata(contrato);
+        		
+        	} else {
+        		dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()));
         	}
         	for (Duplicata duplicata : dups) {
     			duplicata.setContrato(contrato);
@@ -268,7 +278,6 @@ Calendar cal = Calendar.getInstance();
         	cliRepo.save(cliente);     	
         	dupRepo.saveAll(dups);        	
         	imRepo.save(imovel);
-        	System.out.println(contrato.getQtdParcelas());
         	
         	Testemunha t1 = new Testemunha(testemunha1Field.getText(), testemunha1CpfField.getText());
         	Testemunha t2 = new Testemunha(testemunha2Field.getText(), testemunha2CpfField.getText());
@@ -276,10 +285,11 @@ Calendar cal = Calendar.getInstance();
 				pdfGen.geraContrato(contrato, t1, t2);
 				//new TableHeader().manipulatePdf(path);
 			} catch (Exception e) {
-				System.out.println("Falha ao gerar contrato");
+				System.out.println("Falha ao iniciar comando gerar contrato");
 				e.printStackTrace();
 			}
         	okClicked = true;
+        	
         	dialogStage.close();
         	
         }
@@ -294,11 +304,11 @@ Calendar cal = Calendar.getInstance();
         if (imovelBox.getValue() == null) {
             errorMessage += "Selecione um Imovel\n"; 
         }
-        if (tempoLocacaoField.getText() == "") {
+        if (tempoLocacaoField.getText().isBlank()) {
             errorMessage += "Informe um tempo de locação\n"; 
         }
 
-        if (valorField.getText() == "") {
+        if (valorField.getText().isBlank()) {
             errorMessage += "Informe o valor da mensalidade\n"; 
         }
 

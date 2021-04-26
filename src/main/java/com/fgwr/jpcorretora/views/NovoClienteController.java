@@ -36,203 +36,201 @@ import javafx.stage.StageStyle;
 public class NovoClienteController {
 
 	@FXML
-    private TextField nomeField;
-    @FXML
-    private TextField emailField;
-    @FXML
-    private TextField telefonePrefField;
-    @FXML
-    private TextField telefoneAltField;
-    @FXML
-    private DatePicker dataNascimentoField;
-    @FXML
-    private TextField cpfField;
-    @FXML
-    private TextField rgField;
-    @FXML
-    private ChoiceBox<String> estadoCivilBox;
-    @FXML
-    private TextField profissaoField;
-    @FXML
-    private TextField agenciaField;
-    @FXML
-    private TextField contaField;
-    @FXML
-    private TextField titularField;
-    @FXML
-    private TextField obsField;
-    @FXML
-    private ComboBox<String> bancoBox;
-    @FXML
-    private ComboBox<String> tipoContaBox;
-    
-private List<String> estadoCivilAux = new ArrayList<>();
-    
-    private List<String> bancoAux = new ArrayList<>();
-    
-    private List<String> tipoContaAux = new ArrayList<>();
+	private TextField nomeField;
+	@FXML
+	private TextField emailField;
+	@FXML
+	private TextField telefonePrefField;
+	@FXML
+	private TextField telefoneAltField;
+	@FXML
+	private DatePicker dataNascimentoField;
+	@FXML
+	private TextField cpfField;
+	@FXML
+	private TextField rgField;
+	@FXML
+	private ChoiceBox<String> estadoCivilBox;
+	@FXML
+	private TextField profissaoField;
+	@FXML
+	private TextField agenciaField;
+	@FXML
+	private TextField contaField;
+	@FXML
+	private TextField titularField;
+	@FXML
+	private TextField obsField;
+	@FXML
+	private ComboBox<String> bancoBox;
+	@FXML
+	private ComboBox<String> tipoContaBox;
 
-    private Stage dialogStage;
-    private Cliente cliente;
-    private DadosBancarios db;
-    private boolean okClicked = false;
-    
-    private EstadoCivil[] estadoCivil = EstadoCivil.values();
-    private Banco[] banco = Banco.values();
-    private TipoConta[] tipoConta = TipoConta.values();
-    
+	private List<String> estadoCivilAux = new ArrayList<>();
 
-    @FXML
-    private void initialize() {
-    	
-    	for (EstadoCivil estadoCivil : estadoCivil) {
+	private List<String> bancoAux = new ArrayList<>();
+
+	private List<String> tipoContaAux = new ArrayList<>();
+
+	private Stage dialogStage;
+	private Cliente cliente;
+	private DadosBancarios db;
+	private boolean okClicked = false;
+
+	private EstadoCivil[] estadoCivil = EstadoCivil.values();
+	private Banco[] banco = Banco.values();
+	private TipoConta[] tipoConta = TipoConta.values();
+
+	@FXML
+	private void initialize() {
+
+		for (EstadoCivil estadoCivil : estadoCivil) {
 			estadoCivilAux.add(estadoCivil.getDescricao());
 		}
-    	
-    	for (Banco banco : banco) {
-    		bancoAux.add(banco.getFullCod() + " - " + banco.getDescricao());	
-    	}
-    	
-    	for (TipoConta tipoConta : tipoConta) {
-    		tipoContaAux.add(tipoConta.getDesc());
-    		
-    	}
-    	
-    	estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
-    	bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
-    	tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
-    	
-    	
-    	    	
-    }
-    
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
-    
-    public boolean isOkClicked() {
-        return okClicked;
-    }
-    
-    @FXML
-    private void handleCancel() {
-        dialogStage.close();
-    }
-    
-    public String fileToStylesheetString ( File stylesheetFile ) {
-	    try {
-	        return stylesheetFile.toURI().toURL().toString();
-	    } catch ( MalformedURLException e ) {
-	        return null;
-	    }
+
+		for (Banco banco : banco) {
+			bancoAux.add(banco.getFullCod() + " - " + banco.getDescricao());
+		}
+
+		for (TipoConta tipoConta : tipoConta) {
+			tipoContaAux.add(tipoConta.getDesc());
+
+		}
+
+		estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
+		bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
+		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
+
 	}
-    
-    private boolean isInputValid() {
-        String errorMessage = "";
 
-        if (nomeField.getText() == null || nomeField.getText().length() == 0) {
-            errorMessage += "Nome inválido\n"; 
-        }
-        if (emailField.getText() == null || emailField.getText().length() == 0) {
-            errorMessage += "Email inválido\n"; 
-        }
-        if (cpfField.getText() == null || cpfField.getText().length() == 0) {
-            errorMessage += "CPF inválido\n"; 
-        }
+	public void setDialogStage(Stage dialogStage) {
+		this.dialogStage = dialogStage;
+	}
 
-        if (rgField.getText() == null || rgField.getText().length() == 0) {
-            errorMessage += "RG inválido\n"; 
-        }
+	public boolean isOkClicked() {
+		return okClicked;
+	}
 
-        if (estadoCivilBox.getValue() == null) {
-            errorMessage += "Selecione um Estado Civil\n"; 
-        }
+	@FXML
+	private void handleCancel() {
+		dialogStage.close();
+	}
 
-        if (dataNascimentoField.getValue() == null) {
-            errorMessage += "Data de Nascimento inválida\n";
-        
-        }
+	public String fileToStylesheetString(File stylesheetFile) {
+		try {
+			return stylesheetFile.toURI().toURL().toString();
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
 
-        if (errorMessage.length() == 0) {
-            return true;
-        } else {
-        	Alert alert = new Alert(AlertType.ERROR);
-        	alert.initStyle(StageStyle.UNDECORATED);
-			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(fileToStylesheetString( new File ("css/alerts.css") ));
-            	      alert.setTitle("Campos Inválidos");
-            	      alert.setHeaderText("Por favor, corrija os campos inválidos");
-            	      alert.setContentText(errorMessage);
-                alert.showAndWait();
-                
-            return false;
-        }
-    }
+	private boolean isInputValid() {
+		String errorMessage = "";
+
+		if (nomeField.getText() == null || nomeField.getText().length() == 0) {
+			errorMessage += "Nome inválido\n";
+		}
+		if (emailField.getText() == null || emailField.getText().length() == 0) {
+			errorMessage += "Email inválido\n";
+		}
+		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
+			errorMessage += "CPF inválido\n";
+		}
+
+		if (rgField.getText() == null || rgField.getText().length() == 0) {
+			errorMessage += "RG inválido\n";
+		}
+
+		if (estadoCivilBox.getValue() == null) {
+			errorMessage += "Selecione um Estado Civil\n";
+		}
+
+		if (dataNascimentoField.getValue() == null) {
+			errorMessage += "Data de Nascimento inválida\n";
+
+		}
+
+		if (errorMessage.length() == 0) {
+			return true;
+		} else {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.initStyle(StageStyle.UNDECORATED);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(fileToStylesheetString(new File("css/alerts.css")));
+			alert.setTitle("Campos Inválidos");
+			alert.setHeaderText("Por favor, corrija os campos inválidos");
+			alert.setContentText(errorMessage);
+			alert.showAndWait();
+
+			return false;
+		}
+	}
 
 	public void setCliente(Cliente cliente, DadosBancarios db) {
 		this.cliente = cliente;
 		this.db = db;
 
-        nomeField.setText("");
-        emailField.setText("");
-        dataNascimentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
-        telefonePrefField.setText("");
-        telefoneAltField.setText("");
-        cpfField.setText("");
-        rgField.setText("");
-        
-        estadoCivilBox.setValue(null);
-        
-        profissaoField.setText("");
-        
-        agenciaField.setText("");
-        titularField.setText("");
-        contaField.setText("");
-		
-        
-        bancoBox.setValue(null);
-        tipoContaBox.setValue(null);
-        
-		
+		nomeField.setText("");
+		emailField.setText("");
+		dataNascimentoField.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+		telefonePrefField.setText("");
+		telefoneAltField.setText("");
+		cpfField.setText("");
+		rgField.setText("");
+
+		estadoCivilBox.setValue(null);
+
+		profissaoField.setText("");
+
+		agenciaField.setText("");
+		titularField.setText("");
+		contaField.setText("");
+
+		bancoBox.setValue(null);
+		tipoContaBox.setValue(null);
+
 	}
-	
-	 @FXML
-	    private void handleOk() {
-	        if (isInputValid()) {
-	        	
-	        	
-	            cliente.setNome(nomeField.getText());
-	            cliente.setEmail(emailField.getText());
-	            
-	            if (telefoneAltField.getText() != "") {
-	            	cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
-	            } else {
-	            	cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText()));
-	            }
-	            cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-	            cliente.setCpfOuCnpj(cpfField.getText());
-	            cliente.setRg(rgField.getText());
-	            cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
-	            cliente.setProfissao(profissaoField.getText());
-	            cliente.setObs(obsField.getText());
-	            
-	            if(titularField.getText() != "") {
-	            db.setAgencia(agenciaField.getText());
-	            db.setConta(contaField.getText());
-	            db.setTitular(titularField.getText());
-	            if(bancoBox.getValue() != null) {
-	            db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
-	            }
-	            if (tipoContaBox.getValue() != null) {
-	            db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
-	            }
-	            db.setCliente(cliente);
-	            cliente.setDadosBancarios(db);
-	            
-	            }
-	            okClicked = true;
-	            dialogStage.close();
-	        }
-	    }
-    
+
+	@FXML
+	private void handleOk() {
+		if (isInputValid()) {
+
+			cliente.setNome(nomeField.getText());
+			cliente.setEmail(emailField.getText());
+
+			if (!telefoneAltField.getText().isBlank()) {
+				cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText(), telefoneAltField.getText()));
+			} else {
+				cliente.getTelefones().addAll(Arrays.asList(telefonePrefField.getText()));
+			}
+			cliente.setDataNascimento(
+					Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			cliente.setCpfOuCnpj(cpfField.getText());
+			cliente.setRg(rgField.getText());
+			cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
+			cliente.setProfissao(profissaoField.getText());
+			cliente.setObs(obsField.getText());
+
+
+				db.setId(null);
+				db.setAgencia(agenciaField.getText());
+				db.setConta(contaField.getText());
+				db.setTitular(titularField.getText());
+				if (bancoBox.getValue() != null) {
+					db.setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
+				}
+				if (tipoContaBox.getValue() != null) {
+					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+				}
+				
+
+			
+			db.setCliente(cliente);
+			cliente.setDadosBancarios(db);
+			
+			okClicked = true;
+			dialogStage.close();
+		}
+	}
+
 }

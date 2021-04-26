@@ -63,14 +63,14 @@ public class EditRefController {
 	private void handleOk() {
 		if (isInputValid()) {
 			
-			if (refNomeField.getText() != "") {
+			if (!refNomeField.getText().isBlank()) {
 				referencia.setNome(refNomeField.getText());
 				referencia.setTelefone(refFoneField.getText());
 				cliente.getReferencia().add(referencia);
 				referencia.setCliente(cliente);
 				cliRepo.save(cliente);
 				refRepo.save(referencia);
-			} else if (refNomeField.getText() == ""){
+			} else if (refNomeField.getText().isBlank()){
 				
 				refRepo.delete(referencia);
 				

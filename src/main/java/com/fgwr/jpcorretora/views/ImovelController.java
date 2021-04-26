@@ -253,7 +253,11 @@ public class ImovelController {
 			
 			
 			fotoGridPane = new GridPane();
-			AnchorPane.setTopAnchor(fotoGridPane, 15d);
+			AnchorPane.setTopAnchor(fotoGridPane, 10d);
+			AnchorPane.setLeftAnchor(fotoGridPane, 10d);
+			AnchorPane.setRightAnchor(fotoGridPane, 10d);
+			
+			
 		}else {
 			logradouroLabel.setText("");
 			numeroLabel.setText("");
@@ -403,8 +407,6 @@ public class ImovelController {
 	private void handleProprietario() {
 	    Proprietario proprietario = imovelTable.getSelectionModel().getSelectedItem().getProprietario();
 	    DadosBancarios db = proprietario.getDadosBancarios();
-	   System.out.println(proprietario.getNome());
-	   System.out.println(db.getAgencia());
 	        boolean okClicked = frontApp.showNovoProprietario(proprietario, db);
 	        if (okClicked) {
 	        	ProprietarioRepository propRepo = (ProprietarioRepository)context.getBean("proprietarioRepository");

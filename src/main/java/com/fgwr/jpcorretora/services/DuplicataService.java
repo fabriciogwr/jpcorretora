@@ -2,6 +2,9 @@ package com.fgwr.jpcorretora.services;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,9 +61,15 @@ public class DuplicataService {
 		for (int i = 1; i <= qtdParcelas ; i++) {			
 			Duplicata duplicata = new Duplicata();
 			cal.setTime(now);
+			
+			Integer today = cal.get(Calendar.DAY_OF_MONTH);
 			cal.add(Calendar.MONTH, i-1);
-			duplicata.setId(null);
+			if (primeiraParcela < today) {
+				cal.add(Calendar.MONTH, 1);
+			}
 			cal.set(Calendar.DAY_OF_MONTH, primeiraParcela);
+			
+			duplicata.setId(null);
 			duplicata.setDataVencimento(cal.getTime());
 			duplicata.setEstado(EstadoPagamento.PENDENTE);
 			duplicata.setContrato(contrato);
@@ -71,7 +80,18 @@ public class DuplicataService {
 				separador.setDecimalSeparator('.');				
 				DecimalFormat df = new DecimalFormat("0.00", separador);
 				String valorPorDiaString = df.format(valorPorDia);
-				Double diferençaDeVencimento = Double.parseDouble(valorPorDiaString) * (primeiraParcela - cal.get(Calendar.DAY_OF_MONTH));
+				
+				LocalDate date = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				
+				if (primeiraParcela < today) {
+				cal.add(Calendar.MONTH, 1);
+				}
+				cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), (primeiraParcela));
+				LocalDate date2 = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				
+				Double diferençaDeVencimento = Double.parseDouble(valorPorDiaString) * Math.toIntExact(ChronoUnit.DAYS.between(date, date2));
+				System.out.println(contrato.getValorDeCadaParcela());
+				System.out.println(diferençaDeVencimento);
 				duplicata.setValor(contrato.getValorDeCadaParcela() + diferençaDeVencimento);
 			} else {
 			duplicata.setValor(contrato.getValorDeCadaParcela()); }

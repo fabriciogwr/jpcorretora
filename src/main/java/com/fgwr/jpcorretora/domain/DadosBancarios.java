@@ -44,7 +44,15 @@ public class DadosBancarios implements Serializable {
         this.titular = titular;
     }
 
-    public Banco getBanco() {
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Banco getBanco() {
         return Banco.toEnum(banco);
     }
 

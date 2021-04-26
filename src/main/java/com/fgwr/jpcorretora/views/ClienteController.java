@@ -201,7 +201,11 @@ public class ClienteController {
 
 	public DadosBancarios getDadosBancariosData() {
 		DadosBancariosRepository dbRepo = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
+		
 		dadosBancarios = dbRepo.findByCliente(clienteAux);
+		if (dadosBancarios.getTitular().isBlank()) {
+			dadosBancarios = null;
+		}
 		return dadosBancarios;
 	}
 
@@ -257,7 +261,7 @@ public class ClienteController {
 			imovel = getImovelData();
 			dadosBancarios = getDadosBancariosData();
 			
-			if (dadosBancarios.getBanco() !=null) {
+			if (dadosBancarios !=null) {
 			bancoLabel.setText(dadosBancarios.getBanco().getFullCod() + " - " + dadosBancarios.getBanco().getDescricao());
 			tipoContaLabel.setText(dadosBancarios.getTipo().getDesc());
 			agenciaLabel.setText(dadosBancarios.getAgencia());
@@ -297,11 +301,13 @@ public class ClienteController {
 			}
 
 			clienteTable.refresh();
+			
 			for (Duplicata duplicata : duplicataData) {
-				if (duplicata.getContrato().getId() == contratoAtual) {
+				if (duplicata.getContrato().getId() == cliente.getContrato().getId()) {
 					duplicataAux.add(duplicata);
+					
 				}
-
+			
 				if (duplicata != null) {
 					contratoColumn.setCellValueFactory(cellData -> cellData.getValue().contrato());
 					parcelaColumn.setCellValueFactory(cellData -> cellData.getValue().parcela());
@@ -598,7 +604,6 @@ public class ClienteController {
 		String[] nomeArr = StringUtils.split(recibo.getCliente().getNome());
 		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 		File file = new File(docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
-		System.out.println(docFolder + "\\Recibos\\" + recibo.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 		
@@ -608,7 +613,6 @@ public class ClienteController {
 		String[] nomeArr = StringUtils.split(rec.getCliente().getNome());
 		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 		File file = new File(docFolder + "\\Recibos\\" + rec.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
-		System.out.println(docFolder + "\\Recibos\\" + rec.getId().toString() + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}

@@ -25,9 +25,11 @@ import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.views.ChecklistController;
 import com.fgwr.jpcorretora.views.ClienteController;
 import com.fgwr.jpcorretora.views.ConfiguraPagamentoController;
+import com.fgwr.jpcorretora.views.ContratoController;
 import com.fgwr.jpcorretora.views.EditClienteController;
 import com.fgwr.jpcorretora.views.EditObsController;
 import com.fgwr.jpcorretora.views.EditRefController;
+import com.fgwr.jpcorretora.views.EventosController;
 import com.fgwr.jpcorretora.views.ImovelController;
 import com.fgwr.jpcorretora.views.NovoClienteController;
 import com.fgwr.jpcorretora.views.NovoContratoController;
@@ -69,6 +71,7 @@ public class FrontApp extends Application {
 	ClienteRepository repo;
 
 	private Stage primaryStage;
+	private Stage secStage;
 	private BorderPane rootLayout;
 
 	@Autowired
@@ -109,10 +112,14 @@ public class FrontApp extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("JPCorretora");
+		this.secStage = new Stage();
+		this.secStage.setTitle("Eventos");
 
 		initRootLayout();
 
 		showTelaClientes();
+		
+		showEventos();
 	}
 
 	public void initRootLayout() {
@@ -146,10 +153,28 @@ public class FrontApp extends Application {
 		}
 	}
 	
+	public void showEventos() {
+		try {
+		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaClientes.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\Eventos.fxml").toUri()).toUri().toURL()); //BUILD
+			loader.setController(new EventosController());
+			AnchorPane eventosOverview = (AnchorPane) loader.load();
+
+			
+			Scene scene2 = new Scene(eventosOverview);
+			secStage.setScene(scene2);
+			secStage.show();
+			
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void showTelaImoveis() {
 		try {
-			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaImoveis.fxml")); //DEV
-		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
+		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaImoveis.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaImoveis.fxml").toUri()).toUri().toURL()); //BUILD
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
@@ -164,14 +189,31 @@ public class FrontApp extends Application {
 	
 	public void showTelaProprietarios() {
 		try {
-			FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaProprietarios.fxml")); //DEV
-		//	FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
+		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaProprietarios.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaProprietarios.fxml").toUri()).toUri().toURL()); //BUILD
 			loader.setController(new ProprietarioController());
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(imovelOverview);
 			
 			ProprietarioController controller = loader.getController();
+			controller.setMainApp(this);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showContratos() {
+		try {
+		//	FXMLLoader loader = new FXMLLoader(FrontApp.class.getResource("views/TelaContratos.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(Paths.get(Paths.get(dir+"\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); //BUILD
+			loader.setController(new ContratoController());
+			AnchorPane imovelOverview = (AnchorPane) loader.load();
+
+			rootLayout.setCenter(imovelOverview);
+			
+			ContratoController controller = loader.getController();
 			controller.setMainApp(this);
 			
 		} catch (IOException e) {
@@ -189,7 +231,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Cliente");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -218,7 +260,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Novo Cliente");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -247,7 +289,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Dados do Proprietario");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -276,7 +318,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Dados do Novo Imóvel");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -305,7 +347,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Novo Contrato");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -334,7 +376,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Observação");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -363,7 +405,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Observação");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -392,7 +434,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Configurar Pagamento");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -421,7 +463,7 @@ public class FrontApp extends Application {
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Editar Referência");
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
@@ -452,7 +494,7 @@ public class FrontApp extends Application {
 	        dialogStage.setTitle("Checklist");
 	        
 	        dialogStage.setResizable(false);
-	        dialogStage.initStyle(StageStyle.UNDECORATED);
+	        dialogStage.initStyle(StageStyle.UNIFIED);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);

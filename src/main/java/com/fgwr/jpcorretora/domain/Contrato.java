@@ -1,7 +1,13 @@
 package com.fgwr.jpcorretora.domain;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,6 +20,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 @Entity
 public class Contrato implements Serializable {
@@ -32,7 +41,7 @@ public class Contrato implements Serializable {
     @OneToOne
     private Imovel imovel;
 
-    private int qtdParcelas;
+    private Integer qtdParcelas;
     private Double valorDeCadaParcela;
     
     @OneToMany(mappedBy ="contrato", cascade = CascadeType.ALL)
@@ -128,4 +137,56 @@ public class Contrato implements Serializable {
 		return true;
 	}    
 
+	
+	
+	public StringProperty cliente() {
+		StringProperty cliente = new SimpleStringProperty(this.cliente.getNome());
+		return cliente;
+	}
+	
+	public StringProperty proprietario() {
+		StringProperty proprietario = new SimpleStringProperty(this.getImovel().getProprietario().getNome());
+		return proprietario;
+	}
+	
+	public StringProperty num() {
+		StringProperty num = new SimpleStringProperty(this.id.toString());
+		return num;
+	}
+	
+	public StringProperty imovel() {
+		StringProperty imovel = new SimpleStringProperty(this.imovel.getId().toString());
+		return imovel;
+	
+	}
+	
+	public StringProperty vigencia() {
+		StringProperty vigencia = new SimpleStringProperty(this.qtdParcelas.toString());
+		return vigencia;
+	
+	}
+	
+	public StringProperty mensalidade() {
+		NumberFormat real = NumberFormat.getNumberInstance();
+		real.setMinimumFractionDigits(2);
+		real.setMaximumFractionDigits(2);
+		StringProperty mensalidade = new SimpleStringProperty("R$ " + real.format(this.valorDeCadaParcela));
+		return mensalidade;
+	}
+	
+	public StringProperty dataInicio() {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		StringProperty data = new SimpleStringProperty(df.format(this.data));
+		return data;
+	}
+	
+	public StringProperty dataFim() {
+		Calendar gCal = new GregorianCalendar();
+		gCal.setTime(this.data);
+		gCal.add(Calendar.MONTH, qtdParcelas-1);
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		StringProperty data = new SimpleStringProperty(df.format(gCal.getTime()));
+		return data;
+	}
 }

@@ -1,6 +1,7 @@
 package com.fgwr.jpcorretora.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -176,6 +177,11 @@ public class Duplicata implements Serializable {
 		return true;
 	}
 	
+	public StringProperty cliente() {
+		StringProperty cliente = new SimpleStringProperty(this.contrato.getCliente().getNome());
+		return cliente;
+	}
+	
 	public StringProperty contrato() {
 		StringProperty contrato = new SimpleStringProperty(this.contrato.getId().toString());
 		return contrato;
@@ -193,7 +199,10 @@ public class Duplicata implements Serializable {
 	}
 	
 	public StringProperty valor() {
-		StringProperty valor = new SimpleStringProperty("R$ "+ this.valor.toString());
+		NumberFormat real = NumberFormat.getNumberInstance();
+		real.setMinimumFractionDigits(2);
+		real.setMaximumFractionDigits(2);
+		StringProperty valor = new SimpleStringProperty("R$ " + real.format(this.valor));
 		return valor;
 	}
 	

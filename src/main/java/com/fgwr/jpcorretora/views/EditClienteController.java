@@ -173,7 +173,7 @@ public class EditClienteController {
         	cliente.setNome(nomeField.getText());
             cliente.setEmail(emailField.getText());
             
-            if (telefoneAltField.getText() != "" ) {
+            if (!telefoneAltField.getText().isBlank() ) {
             	Set<String> telefones = Sets.newHashSet(telefoneAltField.getText());
             	telefones.add(telefonePrefField.getText());
             	cliente.setTelefones(telefones);

@@ -28,5 +28,4 @@ public interface DuplicataRepository extends JpaRepository<Duplicata, Integer>{
 	
 	List<Duplicata> findByDataVencimento(Date data);
 	
-
 }

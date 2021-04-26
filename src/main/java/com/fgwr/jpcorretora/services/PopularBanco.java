@@ -107,8 +107,8 @@ public class PopularBanco {
 		Proprietario p2 = new Proprietario(null, "Qualquer", cal.getTime(), "jefferson@hotmail.com", "12345678910", "123456789", "OK", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Dev");
 		
 		
-		Imovel i1 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabio");
-		Imovel i2 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, "A verificar rachaduras banheiro", cal.getTime(), "Fabricio");
+		Imovel i1 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, cal.getTime(), "Fabio");
+		Imovel i2 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, cal.getTime(), "Fabricio");
 		
 		p1.getImovel().addAll(Arrays.asList(i1));
 		p2.getImovel().addAll(Arrays.asList(i2));

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fgwr.jpcorretora.views.ContratoController">
+   <children>
+      <TableView fx:id="contratoTable" prefHeight="711.0" prefWidth="302.0" stylesheets="@../css/table.css" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <columns>
+          <TableColumn fx:id="numColumn" prefWidth="50.0" text="Número" />
+            <TableColumn fx:id="periodoColumn" text="Período" />
+          <TableColumn fx:id="clienteColumn" text="Cliente" />
+            <TableColumn fx:id="proprietarioColumn" prefWidth="75.0" text="Proprietário" />
+            <TableColumn fx:id="inicioColumn" prefWidth="75.0" text="Data de início" />
+            <TableColumn fx:id="fimColumn" prefWidth="75.0" text="Data de fim" />
+            <TableColumn fx:id="mensalidadesColumn" prefWidth="75.0" text="Mensalidades" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <HBox layoutX="20.0" layoutY="701.0" spacing="50.0" AnchorPane.bottomAnchor="150.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleCancelaContrato" stylesheets="@../css/minorbuttons.css" text="Encerrar Contrato" />
+            <Button mnemonicParsing="false" onAction="#visualizaContrato" stylesheets="@../css/minorbuttons.css" text="Visualizar Contrato" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
