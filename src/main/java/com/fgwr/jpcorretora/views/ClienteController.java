@@ -27,7 +27,7 @@ import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
@@ -103,6 +103,8 @@ public class ClienteController {
 	private Label estadoCivilLabel;
 	@FXML
 	private Label profissaoLabel;
+	@FXML
+	private Label corretorLabel;
 
 	@FXML
 	private Label bancoLabel;
@@ -212,6 +214,11 @@ public class ClienteController {
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
+			if (cliente.getCorretor() != null) {
+			corretorLabel.setText(cliente.getCorretor().getNome());
+			} else {
+				corretorLabel.setText("");
+			}
 
 			
 			if (cliente.getDadosBancarios().getBanco() != null ) {
@@ -283,6 +290,7 @@ public class ClienteController {
 			emailLabel.setText("");
 			estadoCivilLabel.setText("");
 			profissaoLabel.setText("");
+			corretorLabel.setText("");
 			bancoLabel.setText("");
 			tipoContaLabel.setText("");
 			agenciaLabel.setText("");
@@ -327,7 +335,7 @@ public class ClienteController {
 		if (selectedCliente != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Exclusão de Cliente");
 			alert.setHeaderText("Confirmar Exclusão do Cliente Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -345,7 +353,7 @@ public class ClienteController {
 				else {
 					Alert alert3 = new Alert(AlertType.ERROR);		
 					DialogPane dialogPane3 = alert3.getDialogPane();
-					dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					dialogPane3.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 					alert3.initStyle(StageStyle.UNIFIED);
 					alert3.setTitle("Falha ao Excluir Cliente");
 					alert3.setHeaderText(
@@ -480,7 +488,7 @@ public class ClienteController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Confirmar pagamento");
 			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
 
@@ -497,7 +505,7 @@ public class ClienteController {
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert2.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane2 = alert2.getDialogPane();
-					dialogPane2.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					dialogPane2.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 					alert2.setTitle("Recibo");
 					alert2.setHeaderText("Visualizar o recibo do pagamento?");
 					Optional<ButtonType> result2 = alert2.showAndWait();
@@ -516,7 +524,7 @@ public class ClienteController {
 			Alert alert3 = new Alert(AlertType.WARNING);
 			alert3.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane3 = alert3.getDialogPane();
-			dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane3.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert3.setTitle("Mensalidade Já Paga");
 			alert3.setHeaderText("A mensalidade selecionada já está paga.");
 			alert3.showAndWait();
@@ -532,7 +540,7 @@ public class ClienteController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Cancelar pagamento");
 			alert.setHeaderText("Cancelar pagamento da mensalidade selecionada?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -562,14 +570,14 @@ public class ClienteController {
 	public void visualizaRecibo() throws IOException {
 		Duplicata duplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		Recibo recibo = duplicata.getRecibo();
-		File file = new File(FileUtils.pathRecibos(recibo));
+		File file = new File(FilesUtils.pathRecibos(recibo));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 
 	}
 
 	public void visualizaRecibo(Recibo rec) throws IOException {
-		File file = new File(FileUtils.pathRecibos(rec));
+		File file = new File(FilesUtils.pathRecibos(rec));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}

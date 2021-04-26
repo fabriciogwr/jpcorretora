@@ -29,7 +29,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @Entity
-public class Cliente implements Serializable {
+public class Corretor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -43,9 +43,7 @@ public class Cliente implements Serializable {
 	private String email;
 	private String cpfOuCnpj;
 	private String rg;
-	private Integer tipo;
 	private Integer estadoCivil;
-	private String profissao;
 	private String telefonePref;
 	private String telefoneAlt;
 	private Boolean active;
@@ -54,32 +52,18 @@ public class Cliente implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Endereco> enderecos = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST)
-	private List<Duplicata> duplicatas = new ArrayList<>();
-
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.REMOVE)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@NotFound(action = NotFoundAction.IGNORE)
-	private List<Referencia> referencia = new ArrayList<>();
-
 	@OneToOne(mappedBy = "cliente", cascade = { CascadeType.ALL })
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private DadosBancarios dadosBancarios;
 
 	private String obs;
-	
-	private Corretor corretor;
 
-	@OneToOne(cascade = CascadeType.REMOVE)
-	private Contrato contrato;
-
-	public Cliente() {
+	public Corretor() {
 
 	}
 
-	public Cliente(Integer id, String nome, Date dataNascimento, String email, String cpfOuCnpj, String rg,
-			String telefonePref, String telefoneAlt, String obs, TipoCliente tipo, EstadoCivil estadoCivil,
-			String profissao) {
+	public Corretor(Integer id, String nome, Date dataNascimento, String email, String cpfOuCnpj, String rg,
+			String telefonePref, String telefoneAlt, String obs, EstadoCivil estadoCivil) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -88,9 +72,7 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.rg = rg;
 		this.obs = obs;
-		this.tipo = tipo.getCod();
 		this.estadoCivil = estadoCivil.getCod();
-		this.profissao = profissao;
 		this.telefonePref = telefonePref;
 		this.telefoneAlt = telefoneAlt;
 	}
@@ -157,14 +139,6 @@ public class Cliente implements Serializable {
 		this.enderecos = enderecos;
 	}
 
-	public List<Referencia> getReferencia() {
-		return referencia;
-	}
-
-	public void setReferencia(List<Referencia> referencia) {
-		this.referencia = referencia;
-	}
-
 	public String getObs() {
 		return obs;
 	}
@@ -173,36 +147,12 @@ public class Cliente implements Serializable {
 		this.obs = obs;
 	}
 
-	public TipoCliente getTipo() {
-		return TipoCliente.toEnum(tipo);
-	}
-
-	public void setTipo(TipoCliente tipo) {
-		this.tipo = tipo.getCod();
-	}
-
 	public EstadoCivil getEstadoCivil() {
 		return EstadoCivil.toEnum(estadoCivil);
 	}
 
 	public void setEstadoCivil(EstadoCivil estadoCivil) {
 		this.estadoCivil = estadoCivil.getCod();
-	}
-
-	public String getProfissao() {
-		return profissao;
-	}
-
-	public void setProfissao(String profissao) {
-		this.profissao = profissao;
-	}
-
-	public Contrato getContrato() {
-		return contrato;
-	}
-
-	public void setContrato(Contrato contrato) {
-		this.contrato = contrato;
 	}
 
 	public DadosBancarios getDadosBancarios() {
@@ -237,22 +187,6 @@ public class Cliente implements Serializable {
 		this.active = active;
 	}
 
-	public List<Duplicata> getDuplicatas() {
-		return duplicatas;
-	}
-
-	public void setDuplicatas(List<Duplicata> duplicatas) {
-		this.duplicatas = duplicatas;
-	}
-
-	public Corretor getCorretor() {
-		return corretor;
-	}
-
-	public void setCorretor(Corretor corretor) {
-		this.corretor = corretor;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -269,7 +203,7 @@ public class Cliente implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cliente other = (Cliente) obj;
+		Corretor other = (Corretor) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

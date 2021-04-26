@@ -27,7 +27,7 @@ import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -99,7 +99,7 @@ public class ContratoController {
 		if (selectedContrato != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Rescisão de Contrato");
 			alert.setHeaderText("Confirmar Rescisão do Contrato Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -135,7 +135,7 @@ public class ContratoController {
 				if (pendencias > 0) {
 					Alert alert2 = new Alert(AlertType.WARNING);
 					DialogPane dialogPane2 = alert2.getDialogPane();
-					dialogPane2.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					dialogPane2.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 					alert2.setTitle("Rescisão de Contrato");
 					alert2.setHeaderText(
 							"O Contrato foi rescindido, no entando, há mensalidades em atraso do cliente. Regularize a situação.");
@@ -161,7 +161,7 @@ public class ContratoController {
 	@FXML
 	public void visualizaContrato() throws IOException {
 		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
-		File file = new File(FileUtils.pathContratos(selectedContrato));
+		File file = new File(FilesUtils.pathContratos(selectedContrato));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}

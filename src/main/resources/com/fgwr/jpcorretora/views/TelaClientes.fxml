@@ -233,6 +233,16 @@
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
+                                          <Label text="Corretor" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="corretorLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </GridPane>
                                     <HBox layoutX="579.0" layoutY="596.0" spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0">

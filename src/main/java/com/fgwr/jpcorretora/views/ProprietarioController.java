@@ -17,7 +17,7 @@ import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
@@ -211,7 +211,7 @@ public class ProprietarioController {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.initStyle(StageStyle.UNIFIED);
 				DialogPane dialogPane = alert.getDialogPane();
-				dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+				dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 				alert.setTitle("Nenhuma seleção");
 				alert.setHeaderText("Nenhum Proprietário Selecionado");
 				alert.setContentText("Por favor, selecione um proprietário na tabela.");
@@ -231,7 +231,7 @@ public class ProprietarioController {
 		if (selectedProprietario != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.initStyle(StageStyle.UNIFIED);
 			alert.setTitle("Exclusão de Proprietario");
 			alert.setHeaderText("Confirmar Exclusão do Proprietario Selecionado?");
@@ -263,7 +263,7 @@ public class ProprietarioController {
 					Alert alert3 = new Alert(AlertType.ERROR);
 					alert3.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane3 = alert3.getDialogPane();
-					dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					dialogPane3.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 					alert3.setTitle("Falha ao Excluir Proprietário");
 					alert3.setHeaderText(
 							"O imóvel do proprietário ainda está em um contrato ativo. Encerre o contrato para continuar.");
@@ -283,7 +283,7 @@ public class ProprietarioController {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhuma Pessoa Selecionada");
 			alert.setContentText("Por favor, selecione uma pessoa na tabela.");

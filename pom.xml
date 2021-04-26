@@ -231,7 +231,6 @@
 							<outputDirectory>
 								${project.build.directory}/libs
 							</outputDirectory>
-							<excludeTransitive>false</excludeTransitive>
 						</configuration>
 					</execution>
 				</executions>

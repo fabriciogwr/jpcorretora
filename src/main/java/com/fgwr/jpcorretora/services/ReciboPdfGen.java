@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import com.fgwr.jpcorretora.domain.Recibo;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageData;
@@ -44,7 +44,7 @@ public class ReciboPdfGen {
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(recibo.getDataPagamento());
-		PdfWriter writer = new PdfWriter(FileUtils.pathRecibos(recibo));
+		PdfWriter writer = new PdfWriter(FilesUtils.pathRecibos(recibo));
 		PdfDocument pdfDoc = new PdfDocument(writer);
 		Document document = new Document(pdfDoc);
 

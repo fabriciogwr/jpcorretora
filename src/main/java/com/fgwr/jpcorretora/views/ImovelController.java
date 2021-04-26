@@ -33,7 +33,7 @@ import com.fgwr.jpcorretora.domain.Proprietario;
 import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -270,13 +270,14 @@ public class ImovelController {
 			boolean okClicked = frontApp.showNovoImovel(selectedImovel, selectedEndereco);
 			if (okClicked) {
 				showImovel(selectedImovel);
+				imovelTable.refresh();
 			}
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Nenhuma seleção");
 			alert.setHeaderText("Nenhum Imóvel Selecionado");
 			alert.setContentText("Por favor, selecione um imóvel na tabela.");
@@ -379,7 +380,7 @@ public class ImovelController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Exclusão de Imóvel");
 			alert.setHeaderText("Confirmar Exclusão do Imóvel Selecionado?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -393,7 +394,7 @@ public class ImovelController {
 					else {
 						Alert alert3 = new Alert(AlertType.ERROR);
 						DialogPane dialogPane3 = alert3.getDialogPane();
-						dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+						dialogPane3.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 						alert3.initStyle(StageStyle.UNIFIED);
 						alert3.setTitle("Falha ao Excluir Imóvel");
 						alert3.setHeaderText("O imóvel selecionado ainda está em um contrato ativo. Encerre o contrato para continuar.");

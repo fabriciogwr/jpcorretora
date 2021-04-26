@@ -12,7 +12,7 @@ import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -117,7 +117,7 @@ public class EditRefController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

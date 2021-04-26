@@ -28,7 +28,7 @@ import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -160,7 +160,7 @@ public class EventosController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Confirmar pagamento");
 			alert.setHeaderText("Confirmar pagamento da mensalidade selecionada?");
 
@@ -176,7 +176,7 @@ public class EventosController {
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert2.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane2 = alert2.getDialogPane();
-					dialogPane2.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+					dialogPane2.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 					alert2.setTitle("Recibo");
 					alert2.setHeaderText("Visualizar o recibo do pagamento?");
 					Optional<ButtonType> result2 = alert2.showAndWait();
@@ -195,7 +195,7 @@ public class EventosController {
 			Alert alert3 = new Alert(AlertType.WARNING);
 			alert3.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane3 = alert3.getDialogPane();
-			dialogPane3.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane3.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert3.setTitle("Mensalidade Já Paga");
 			alert3.setHeaderText("A mensalidade selecionada já está paga.");
 			alert3.showAndWait();
@@ -203,7 +203,7 @@ public class EventosController {
 	}
 	
 	public void visualizaRecibo(Recibo rec) throws IOException {
-		File file = new File(FileUtils.pathRecibos(rec));
+		File file = new File(FilesUtils.pathRecibos(rec));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
 	}

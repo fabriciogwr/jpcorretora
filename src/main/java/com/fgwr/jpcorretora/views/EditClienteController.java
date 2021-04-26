@@ -14,25 +14,30 @@ import org.springframework.stereotype.Component;
 
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.Corretor;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.repositories.CorretorRepository;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -69,6 +74,8 @@ public class EditClienteController {
     @FXML
     private ComboBox<String> tipoContaBox;
     @FXML
+    private ComboBox<Corretor> corretorBox;
+    @FXML
     private TextField pixField;
 
     private List<String> estadoCivilAux = new ArrayList<>();
@@ -77,6 +84,7 @@ public class EditClienteController {
     
     private List<String> tipoContaAux = new ArrayList<>();
 
+    ApplicationContext context = SpringContext.getAppContext();
     private Stage dialogStage;
     private Cliente cliente;
     private boolean okClicked = false;
@@ -98,6 +106,14 @@ public class EditClienteController {
 		}
 	}
     
+    private List<Corretor> getCorretorData() {
+    	CorretorRepository crrRepo = (CorretorRepository)context.getBean("corretorRepository");
+		List<Corretor> allCrr = crrRepo.findAll();
+    	return allCrr;
+    	
+    }
+    
+    
     @FXML
     private void initialize() {
     	
@@ -117,6 +133,30 @@ public class EditClienteController {
     	estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
     	bancoBox.setItems(FXCollections.observableArrayList(bancoAux));
     	tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
+    	
+    	corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
+    	
+    	Callback<ListView<Corretor>, ListCell<Corretor>> corretorCellFactory = new Callback<ListView<Corretor>, ListCell<Corretor>>() {
+
+    	    @Override
+    	    public ListCell<Corretor> call(ListView<Corretor> l) {
+    	        return new ListCell<Corretor>() {
+
+    	            @Override
+    	            protected void updateItem(Corretor corretor, boolean empty) {
+    	                super.updateItem(corretor, empty);
+    	                if (corretor == null || empty) {
+    	                    setGraphic(null);
+    	                } else {
+    	                    setText(corretor.getNome());
+    	                }
+    	            }
+    	        }; 
+    	    }
+    	};
+
+    	corretorBox.setButtonCell(corretorCellFactory.call(null));
+    	corretorBox.setCellFactory(corretorCellFactory);
     	
     	
     	    	
@@ -249,7 +289,7 @@ public class EditClienteController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNDECORATED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

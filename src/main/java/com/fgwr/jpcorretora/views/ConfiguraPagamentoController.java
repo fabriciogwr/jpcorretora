@@ -21,7 +21,7 @@ import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.MeioPagamento;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
@@ -235,7 +235,7 @@ public class ConfiguraPagamentoController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);

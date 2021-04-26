@@ -29,7 +29,7 @@ import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.DuplicataService;
 import com.fgwr.jpcorretora.services.ImovelService;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.animation.PauseTransition;
@@ -340,7 +340,7 @@ Calendar cal = Calendar.getInstance();
         	Alert alert = new Alert(AlertType.ERROR);
         	alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();			
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
             	      alert.setTitle("Campos Inválidos");
             	      alert.setHeaderText("Por favor, corrija os campos inválidos");
             	      alert.setContentText(errorMessage);

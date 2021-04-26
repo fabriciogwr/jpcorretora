@@ -223,9 +223,9 @@ public class FrontApp extends Application {
 	public void showContratos() {
 		try {
 			// FXMLLoader loader = new
-			// FXMLLoader(FrontApp.class.getResource("views/TelaContratos.fxml")); //DEV
+			// FXMLLoader(FrontApp.class.getResource("views/TelaContratosL.fxml")); //DEV
 			FXMLLoader loader = new FXMLLoader(
-					Paths.get(Paths.get(dir + "\\fxml\\TelaContratos.fxml").toUri()).toUri().toURL()); // BUILD
+					Paths.get(Paths.get(dir + "\\fxml\\TelaContratosL.fxml").toUri()).toUri().toURL()); // BUILD
 			loader.setController(new ContratoController());
 			AnchorPane imovelOverview = (AnchorPane) loader.load();
 

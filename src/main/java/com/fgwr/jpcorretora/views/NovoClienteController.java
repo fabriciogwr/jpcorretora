@@ -10,16 +10,20 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
+import com.fgwr.jpcorretora.domain.Corretor;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
+import com.fgwr.jpcorretora.repositories.CorretorRepository;
 import com.fgwr.jpcorretora.utils.AutoCompleteBox;
-import com.fgwr.jpcorretora.utils.FileUtils;
+import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -60,6 +64,8 @@ public class NovoClienteController {
 	@FXML
 	private ChoiceBox<String> estadoCivilBox;
 	@FXML
+	private ComboBox<Corretor> corretorBox;
+	@FXML
 	private TextField profissaoField;
 	@FXML
 	private TextField agenciaField;
@@ -82,6 +88,7 @@ public class NovoClienteController {
 
 	private List<String> tipoContaAux = new ArrayList<>();
 
+	ApplicationContext context = SpringContext.getAppContext();
 	private Stage dialogStage;
 	private Cliente cliente;
 	private DadosBancarios db;
@@ -103,6 +110,13 @@ public class NovoClienteController {
 		}
 	}
     
+	private List<Corretor> getCorretorData() {
+    	CorretorRepository crrRepo = (CorretorRepository)context.getBean("corretorRepository");
+		List<Corretor> allCrr = crrRepo.findAll();
+    	return allCrr;
+    	
+    }
+	
 	@FXML
 	private void initialize() {
 
@@ -147,6 +161,30 @@ public class NovoClienteController {
 		
 		new AutoCompleteBox<Banco>(bancoBox);
 		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
+		
+corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
+    	
+    	Callback<ListView<Corretor>, ListCell<Corretor>> corretorCellFactory = new Callback<ListView<Corretor>, ListCell<Corretor>>() {
+
+    	    @Override
+    	    public ListCell<Corretor> call(ListView<Corretor> l) {
+    	        return new ListCell<Corretor>() {
+
+    	            @Override
+    	            protected void updateItem(Corretor corretor, boolean empty) {
+    	                super.updateItem(corretor, empty);
+    	                if (corretor == null || empty) {
+    	                    setGraphic(null);
+    	                } else {
+    	                    setText(corretor.getNome());
+    	                }
+    	            }
+    	        }; 
+    	    }
+    	};
+
+    	corretorBox.setButtonCell(corretorCellFactory.call(null));
+    	corretorBox.setCellFactory(corretorCellFactory);
 
 	}
 
@@ -202,7 +240,7 @@ public class NovoClienteController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initStyle(StageStyle.UNIFIED);
 			DialogPane dialogPane = alert.getDialogPane();
-			dialogPane.getStylesheets().add(FileUtils.fileToString(new File("css/alerts.css")));
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
 			alert.setTitle("Campos Inválidos");
 			alert.setHeaderText("Por favor, corrija os campos inválidos");
 			alert.setContentText(errorMessage);
