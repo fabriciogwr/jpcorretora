@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Recibo;
 
-public class FileUtils {
+public class FilesUtils {
 
 	public static String fileToString(File file) {
 		try {
