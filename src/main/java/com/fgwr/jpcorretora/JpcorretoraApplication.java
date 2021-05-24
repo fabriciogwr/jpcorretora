@@ -37,7 +37,7 @@ public class JpcorretoraApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		//pb.popularBanco();
+		pb.popularBanco();
 	}
 
 

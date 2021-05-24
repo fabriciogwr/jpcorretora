@@ -2,6 +2,8 @@ package com.fgwr.jpcorretora.utils;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Recibo;
+import com.fgwr.jpcorretora.domain.ReciboAvulso;
 
 public class FilesUtils {
 
@@ -62,6 +65,14 @@ public class FilesUtils {
 			}
 		}
 		
+		return path;
+	}
+
+	public static String pathRecibosAvulso(ReciboAvulso rec) {
+		String dataHora = StringsUtils.formatarDataArquivo(rec.getDataPgto());
+		String[] nomeArr = StringUtils.split(rec.getRecebedor());
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		String path = (docFolder + "\\Recibos\\" + dataHora + " - " + nomeArr[0] + " " + nomeArr[1] + ".pdf");
 		return path;
 	}
 }

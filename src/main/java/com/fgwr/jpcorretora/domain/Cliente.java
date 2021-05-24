@@ -41,6 +41,7 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 	private String email;
+	
 	private String cpfOuCnpj;
 	private String rg;
 	private Integer tipo;
@@ -279,12 +280,12 @@ public class Cliente implements Serializable {
 	}
 
 	public StringProperty nome() {
-		StringProperty nome = new SimpleStringProperty((String) this.nome);
+		StringProperty nome = new SimpleStringProperty(this.nome);
 		return nome;
 	}
 
 	public StringProperty cod() {
-		StringProperty cod = new SimpleStringProperty((String) this.id.toString());
+		StringProperty cod = new SimpleStringProperty(this.id.toString());
 		return cod;
 	}
 

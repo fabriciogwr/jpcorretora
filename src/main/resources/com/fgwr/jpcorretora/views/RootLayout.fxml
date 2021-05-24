@@ -49,15 +49,13 @@
                   <Insets left="25.0" right="25.0" top="10.0" />
                </VBox.margin>
             </ImageView>
-            <Button maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" style="-fx-background-color: ffcf33;">
-               <font>
-                  <Font name="Futura Bold Condensed BT" size="28.0" />
-               </font>
-            </Button>
             <Button fx:id="eventosBtn" layoutX="10.0" layoutY="401.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showEventos" prefHeight="60.0" stylesheets="@../css/style.css" text="Eventos">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
             </Button>
             <Button fx:id="clientesBtn" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroClientes" prefHeight="60.0" stylesheets="@../css/style.css" text="Clientes">
                <font>
@@ -80,6 +78,16 @@
                </font>
             </Button>
             <Button fx:id="contratosVBtn" layoutX="10.0" layoutY="221.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showContratos" prefHeight="60.0" stylesheets="@../css/style.css" text="Contratos - Vendas">
+               <font>
+                  <Font name="Futura Bold Condensed BT" size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="despesasBtn" layoutX="10.0" layoutY="515.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showDespesas" prefHeight="60.0" stylesheets="@../css/style.css" text="Despesas">
+               <font>
+                  <Font name="Futura Bold Condensed BT" size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="receitasBtn" layoutX="10.0" layoutY="481.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showReceitas" prefHeight="60.0" stylesheets="@../css/style.css" text="Receitas">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

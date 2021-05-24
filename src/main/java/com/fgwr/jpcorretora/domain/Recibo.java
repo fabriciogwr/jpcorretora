@@ -37,6 +37,9 @@ public class Recibo implements Serializable {
     
     @OneToOne
     private Duplicata duplicata;
+    
+    @OneToOne
+    private Despesa despesa;
 
     public Recibo() {
     	
@@ -115,6 +118,14 @@ public class Recibo implements Serializable {
 
 	public void setParcela(int parcela) {
 		this.parcela = parcela;
+	}
+
+	public Despesa getDespesa() {
+		return despesa;
+	}
+
+	public void setDespesa(Despesa despesa) {
+		this.despesa = despesa;
 	}
 
 	@Override

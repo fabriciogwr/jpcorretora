@@ -71,4 +71,10 @@ public class StringsUtils {
     	String dataString = df.format(data);
 		return dataString;
 	}
+	
+	public static String formatarDataArquivo(Date data) {
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+    	String dataString = df.format(data);
+		return dataString;
+	}
 }

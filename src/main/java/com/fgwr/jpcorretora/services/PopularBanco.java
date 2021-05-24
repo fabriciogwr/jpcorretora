@@ -1,48 +1,23 @@
 package com.fgwr.jpcorretora.services;
 
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fgwr.jpcorretora.domain.Cliente;
-import com.fgwr.jpcorretora.domain.DadosBancarios;
-import com.fgwr.jpcorretora.domain.Endereco;
-import com.fgwr.jpcorretora.domain.Imovel;
-import com.fgwr.jpcorretora.domain.Proprietario;
-import com.fgwr.jpcorretora.domain.Referencia;
-import com.fgwr.jpcorretora.enums.Banco;
-import com.fgwr.jpcorretora.enums.EstadoCivil;
-import com.fgwr.jpcorretora.enums.EstadoImovel;
-import com.fgwr.jpcorretora.enums.TipoCliente;
-import com.fgwr.jpcorretora.enums.TipoConta;
-import com.fgwr.jpcorretora.enums.TipoEndereco;
-import com.fgwr.jpcorretora.repositories.ClienteRepository;
+import com.fgwr.jpcorretora.domain.Categoria;
+import com.fgwr.jpcorretora.enums.TipoMovimento;
+import com.fgwr.jpcorretora.repositories.CategoriaRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
-import com.fgwr.jpcorretora.repositories.EnderecoRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
-import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
-import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 
 @Service
 public class PopularBanco {
-	
-	@Autowired
-	private ClienteRepository clienteRepository;
-	
-	@Autowired
-	private ProprietarioRepository proprietarioRepository;
-
-	@Autowired
-	private ReferenciaRepository referenciaRepository;
-
-	@Autowired
-	private EnderecoRepository enderecoRepository;
 
 	@Autowired
 	ImovelRepository imovelRepository;
@@ -60,156 +35,72 @@ public class PopularBanco {
 	ReciboRepository reciboRepository;
 
 	@Autowired
+	CategoriaRepository cr;
+
+	@Autowired
 	ClienteService cs;
-	
+
 	@Autowired
 	DuplicataService ds;
-	
+
 	@Autowired
 	ImovelService is;
-	
+
 	@Transactional
 	public void popularBanco() {
 
-		Calendar cal = Calendar.getInstance();
-		
-		cal.set(1994, 7, 1);
-		Cliente cli1 = new Cliente(null, "Fabrício", cal.getTime(), "fabricio.gwr@gmail.com", "01284257258", "1161177", "cliente ok", "69993557900", "", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Desenvolvedor de Sistemas");
-		cal.set(1980, 1, 21);
-		Cliente cli2 = new Cliente(null, "Fábio", cal.getTime(), "fabio@gmail.com", "01234567891", "12345678", "cliente ok", "123456789", "", TipoCliente.PESSOAJURIDICA, EstadoCivil.CASADO, "Corretor de Imóveis");
+		List<Categoria> cats = cr.findAll();
+		List<Categoria> catsCreate = new ArrayList<>();
+		int createCL = 1;
+		int createCV = 1;
+		int createVI = 1;
+		int createCC = 1;
+		int createAV = 1;
 
-		Referencia ref1 = new Referencia(null, "Fábia", "84014444");
-		Referencia ref2 = new Referencia(null, "Mell", "12345678");
+		Categoria categoria1 = new Categoria(1, TipoMovimento.RECEITA, "Comissão Locação",
+				"Comissão de mensalidade de contrato de locação");
+		Categoria categoria2 = new Categoria(2, TipoMovimento.RECEITA, "Comissão Venda", "Comissão de venda de imóvel");
+		Categoria categoria3 = new Categoria(3, TipoMovimento.RECEITA, "Vistoria de Imóvel",
+				"Serviço de Vistoria em Imóvel");
+		Categoria categoria4 = new Categoria(4, TipoMovimento.RECEITA, "Avaliação de Imóvel",
+				"Serviço de Avaliação de imóvel");
+		Categoria categoria5 = new Categoria(5, TipoMovimento.RECEITA, "Confecção de Contrato",
+				"Serviço de Confecção de Contratos Avulsos");
 
-		cli1.getReferencia().addAll(Arrays.asList(ref1));
-		cli2.getReferencia().addAll(Arrays.asList(ref2));
-
-		ref1.setCliente(cli1);
-		ref2.setCliente(cli2);
-
-		DadosBancarios db1 = new DadosBancarios(null, Banco.CAIXAECONOMICAFEDERAL, "1824", "12345-6", TipoConta.CORRENTEPF, "FABRICIO GUSTAVO W ROCHA", "fabricio.gwr@gmail.com");
-		DadosBancarios db2 = new DadosBancarios(null, Banco.BANCOINTERSA, "000001", "12345678", TipoConta.POUPANCAPF, "FABIO PIOVESAN", "");
-		
-		db1.setCliente(cli1);
-		db2.setCliente(cli2);
-
-		cli1.setDadosBancarios(db1);
-		cli2.setDadosBancarios(db2);
-		Endereco e1 = new Endereco(null, "Av Erivaldo Venceslau da Silva", "2356", null, "Bodanese", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
-		Endereco e2 = new Endereco(null, "Rua 8215", "2773", null, "Barão 3", "76981-068", "Vilhena", "RO", TipoEndereco.ENDERECORESIDENCIAL );
-		
-		cal.set(2000, 8, 1);
-		Proprietario p1 = new Proprietario(null, "Jefferson", cal.getTime(), "jefferson@hotmail.com", "12345678910", "123456789", "OK", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Dev");
-		cal.set(1994, 8, 1);
-		Proprietario p2 = new Proprietario(null, "Qualquer", cal.getTime(), "jefferson@hotmail.com", "12345678910", "123456789", "OK", TipoCliente.PESSOAFISICA, EstadoCivil.SOLTEIRO, "Dev");
-		
-		
-		Imovel i1 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, cal.getTime(), "Fabio");
-		Imovel i2 = new Imovel(null, cal.getTime(), EstadoImovel.USADO, "Imovel bom", true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, cal.getTime(), "Fabricio");
-		
-		p1.getImovel().addAll(Arrays.asList(i1));
-		p2.getImovel().addAll(Arrays.asList(i2));
-		
-		i1.setProprietario(p1);
-		i2.setProprietario(p2);
-		
-		
-	//	Contrato ctr1 = new Contrato(null, cal.getTime(), 6, 650.00);
-	//	Contrato ctr2 = new Contrato(null, cal.getTime(), 5, 500.00);
-		
-	//	i1.setContrato(ctr1);
-	//	i2.setContrato(ctr2);
-		
-		i1.setEndereco(e1);
-		i2.setEndereco(e2);
-		
-	//	ctr1.setImovel(i1);
-	//	ctr2.setImovel(i2);
-		
-	//	cli1.setContrato(ctr1);
-	//	cli2.setContrato(ctr2);
-		
-	//	ctr1.setCliente(cli1);
-	//	ctr2.setCliente(cli2);
-		
-		
-
-	//	List<Duplicata> vs1 = ds.preencherDuplicata(ctr1, 10);
-	//	List<Duplicata> vs2 = ds.preencherDuplicata(ctr2);
-
-	//	Recibo rec1 = new Recibo(null, cli1, ctr1.getValorDeCadaParcela(), ctr1.getQtdParcelas(), vs1.get(0).getDataVencimento(), cal.getTime());
-		
-	//	rec1.setDuplicata(vs1.get(0));
-		
-	//	vs1.get(0).setRecibo(rec1);
-
-
-
-		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
-		referenciaRepository.saveAll(Arrays.asList(ref1, ref2));
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
-		proprietarioRepository.saveAll(Arrays.asList(p1, p2));
-		imovelRepository.saveAll(Arrays.asList(i1, i2));
-		dadosBancariosRepository.saveAll(Arrays.asList(db1));
-	//	contratoRepository.saveAll(Arrays.asList(ctr1, ctr2));
-	//	duplicataRepository.saveAll(vs1);
-	//	duplicataRepository.saveAll(vs2);
-	//	reciboRepository.saveAll(Arrays.asList(rec1));
-		
-
-	/*	Duplicata dup = vs1.get(0);
-		dup.setEstado(EstadoPagamento.QUITADO);
-		
-		dup.setDataPagamento(Calendar.getInstance().getTime());
-
-		duplicataRepository.save(dup);
-
-		vs1.remove(0);
-
-
-		for (Duplicata duplicata : vs1) {
-			duplicata.setEstado(EstadoPagamento.CANCELADO);
-
-		} 
-		duplicataRepository.saveAll(vs1);
-		
-*/		
-		/*List <Duplicata> dupsCpf = ds.findCpfOuCnpj("01284257258");
-		for (Duplicata duplicata : dupsCpf) {
-			System.out.println(duplicata.getValor());
-		}*/
-
-	/*	List <Duplicata> dupsCli = ds.findCliente("Fabrício");
-		for (Duplicata duplicata : dupsCli) {
-			System.out.println(duplicata.getDataVencimento());
-		}*/
-
-	/*	List <Duplicata> dupsCont = ds.findContrato(1);
-		for (Duplicata duplicata : dupsCont) {
-			System.out.println(duplicata.getDataVencimento());
+		for (Categoria categoria : cats) {
+			if (categoria.equals(categoria1)) {
+				createCL = 0;
+			}
+			if (categoria.equals(categoria2)) {
+				createCV = 0;
+			}
+			if (categoria.equals(categoria3)) {
+				createCC = 0;
+			}
+			if (categoria.equals(categoria4)) {
+				createVI = 0;
+			}
+			if (categoria.equals(categoria5)) {
+				createAV = 0;
+			}
 		}
-		
-		Duplicata dupsId = ds.find(1);
 
-		System.out.println(dupsId.getValor());
-		
-		Cliente cliId = cs.find(1);
+		if (createCL == 1) {
+			catsCreate.add(categoria1);
+		}
+		if (createCV == 1) {
+			catsCreate.add(categoria2);
+		}
+		if (createVI == 1) {
+			catsCreate.add(categoria3);
+		}
+		if (createAV == 1) {
+			catsCreate.add(categoria4);
+		}
+		if (createCC == 1) {
+			catsCreate.add(categoria5);
+		}
+		cr.saveAll(catsCreate);
 
-		System.out.println(cliId.getNome());
-		
-		List<Cliente> allcli = cs.findAll();
-		for (Cliente cliente : allcli) {
-			clienteData.add(cliente);
-			System.out.println(cliente.getNome());
-		}*/
-
-		//List<Cliente> allcli = cs.findAll();
-
-
-
-	//Duplicata vs2 = ds.find(4);
-	//vs2.setEstado(EstadoPagamento.PENDENTE);
-	//duplicataRepository.save(vs2);
 	}
-
 }

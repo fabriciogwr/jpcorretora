@@ -29,17 +29,17 @@ public class ClienteService {
 
 	public Cliente find(Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado! Id: " + id)); 
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado! Id: " + id));
 	}
 	
-/*public Cliente findByCpfOuCnpj(String cpfOuCnpj) {
+public Cliente findByCpfOuCnpj(String cpfOuCnpj) {
 		
 		Cliente obj = repo.findByCpfOuCnpj(cpfOuCnpj);
 		if (obj == null) {
-			throw new ObjectNotFoundException("Duplicatas não encontradas!");
+			return null;			
 		}
 		return obj;
-	}*/
+	}
 
 	@Transactional
 	public Cliente insert(Cliente obj) {

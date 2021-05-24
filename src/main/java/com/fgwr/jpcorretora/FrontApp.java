@@ -11,27 +11,35 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
+import com.fgwr.jpcorretora.domain.Categoria;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Despesa;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Proprietario;
+import com.fgwr.jpcorretora.domain.Receita;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
+import com.fgwr.jpcorretora.views.CadastrarDespesaController;
+import com.fgwr.jpcorretora.views.CadastrarReceitaController;
 import com.fgwr.jpcorretora.views.ChecklistController;
 import com.fgwr.jpcorretora.views.ClienteController;
 import com.fgwr.jpcorretora.views.ConfiguraPagamentoController;
+import com.fgwr.jpcorretora.views.ConfiguraPagamentoDespesaController;
+import com.fgwr.jpcorretora.views.ConfiguraPagamentoReceitaController;
 import com.fgwr.jpcorretora.views.ContratoController;
 import com.fgwr.jpcorretora.views.EditClienteController;
 import com.fgwr.jpcorretora.views.EditObsController;
 import com.fgwr.jpcorretora.views.EditRefController;
 import com.fgwr.jpcorretora.views.EventosController;
 import com.fgwr.jpcorretora.views.ImovelController;
+import com.fgwr.jpcorretora.views.NovaCategoriaController;
 import com.fgwr.jpcorretora.views.NovoClienteController;
 import com.fgwr.jpcorretora.views.NovoContratoController;
 import com.fgwr.jpcorretora.views.NovoImovelController;
@@ -487,6 +495,134 @@ public class FrontApp extends Application {
 			return false;
 		}
 	}
+	
+	public boolean showConfiguraPagamentoDespesa(Despesa despesa) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamentoDespesa.fxml"));
+			// //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\ConfiguraPagamentoDespesa.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new ConfiguraPagamentoDespesaController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Configurar Pagamento");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			ConfiguraPagamentoDespesaController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setDespesa(despesa);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean showCadastrarDespesa(Despesa despesa) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamentoDespesa.fxml"));
+			// //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\Despesas.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new CadastrarDespesaController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Configurar Despesa");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			CadastrarDespesaController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setDespesa(despesa);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean showConfiguraPagamentoReceita(Receita receita) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamentoReceita.fxml"));
+			// //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\ConfiguraPagamentoReceita.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new ConfiguraPagamentoReceitaController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Configurar Pagamento");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			ConfiguraPagamentoReceitaController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setReceita(receita);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean showCadastrarReceita(Receita receita) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/ConfiguraPagamentoReceita.fxml"));
+			// //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\Receitas.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new CadastrarReceitaController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Configurar Receita");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			CadastrarReceitaController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setReceita(receita);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public boolean showEditRef(Cliente cliente, Referencia selectedReferencia) {
 		try {
@@ -509,6 +645,37 @@ public class FrontApp extends Application {
 			EditRefController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 			controller.setClienteReferencia(cliente, selectedReferencia);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean showNovaCategoria(Categoria categoria) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/NovaCategoria.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\NovaCategoria.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new NovaCategoriaController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Nova Categoria");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			NovaCategoriaController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setCategoria(categoria);
 
 			dialogStage.showAndWait();
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: fff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fgwr.jpcorretora.views.CategoriaReceitaController">
+   <children>
+      <TableView fx:id="catTable" layoutX="50.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <columns>
+          <TableColumn fx:id="codCol" prefWidth="55.0" text="Código" />
+          <TableColumn fx:id="catCol" prefWidth="120.0" text="Categoria" />
+            <TableColumn fx:id="descCol" prefWidth="204.0" text="Descrição" />
+        </columns>
+      </TableView>
+      <HBox layoutX="10.0" layoutY="10.0" spacing="20.0" AnchorPane.bottomAnchor="20.0">
+         <children>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#novaCategoriaReceita" prefHeight="25.0" stylesheets="@../css/minorbuttons.css" text="Nova Categoria" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#excluiCategoria" prefHeight="25.0" stylesheets="@../css/minorbuttons.css" text="Remover Categoria" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

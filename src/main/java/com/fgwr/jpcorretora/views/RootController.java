@@ -56,6 +56,10 @@ public class RootController {
 	private Button relatoriosBtn;
 	@FXML
 	private Button manutencaoBtn;
+	@FXML
+	private Button despesasBtn;
+	@FXML
+	private Button receitasBtn;
 
 	private Stage secStage;
 	private Stage thrStage;
@@ -379,5 +383,57 @@ public class RootController {
 			e.printStackTrace();
 		}
 
+	}
+	
+	@FXML
+	public void showDespesas(ActionEvent event) throws IOException {
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		contratosLBtn.getStylesheets().clear();
+		contratosLBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		contratosVBtn.getStylesheets().clear();
+		contratosVBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		manutencaoBtn.getStylesheets().clear();
+		manutencaoBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/selected.css")));
+
+		AnchorPane showDespesas = FXMLLoader
+				.load(Paths.get(Paths.get(dir + "\\fxml\\TelaDespesas.fxml").toUri()).toUri().toURL()); // BUILD
+		// AnchorPane showContratos =
+		// FXMLLoader.load(getClass().getResource("TelaDespesas.fxml")); //DEV
+		rootLayout.setCenter(showDespesas);
+	}
+	
+	@FXML
+	public void showReceitas(ActionEvent event) throws IOException {
+		clientesBtn.getStylesheets().clear();
+		clientesBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		imoveisBtn.getStylesheets().clear();
+		imoveisBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		proprietariosBtn.getStylesheets().clear();
+		proprietariosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		relatoriosBtn.getStylesheets().clear();
+		relatoriosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		contratosLBtn.getStylesheets().clear();
+		contratosLBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		contratosVBtn.getStylesheets().clear();
+		contratosVBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		eventosBtn.getStylesheets().clear();
+		eventosBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/style.css")));
+		manutencaoBtn.getStylesheets().clear();
+		manutencaoBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/selected.css")));
+
+		AnchorPane showDespesas = FXMLLoader
+				.load(Paths.get(Paths.get(dir + "\\fxml\\TelaReceitas.fxml").toUri()).toUri().toURL()); // BUILD
+		// AnchorPane showContratos =
+		// FXMLLoader.load(getClass().getResource("TelaReceitas.fxml")); //DEV
+		rootLayout.setCenter(showDespesas);
 	}
 }
