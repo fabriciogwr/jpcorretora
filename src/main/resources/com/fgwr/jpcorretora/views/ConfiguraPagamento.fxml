@@ -44,7 +44,8 @@
             <TextField fx:id="valorCorrigidoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <TextField fx:id="totalPagoField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label text="Meio de Pagamento" GridPane.rowIndex="3" />
-            <ComboBox fx:id="meioPgtoBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />         
+            <ComboBox fx:id="meioPgtoBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <CheckBox fx:id="geraReciboChk" mnemonicParsing="false" text="Gerar Recibo" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />         
 </children>
 </GridPane>
 <HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

@@ -25,7 +25,7 @@
                <children>
                   <Group VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox layoutY="8.0" prefHeight="151.0" prefWidth="760.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;" stylesheets="@../css/textfield.css">
+                        <HBox layoutY="8.0" prefHeight="151.0" prefWidth="760.0" style="-fx-padding: 20px; -fx-background-radius: 5px; -fx-border-color: black; -fx-border-radius: 5px;">
                            <children>
                               <GridPane HBox.hgrow="ALWAYS">
                                 <columnConstraints>
@@ -46,10 +46,13 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="nomeField" GridPane.columnIndex="1">
+                                    <TextField id="nomeField" fx:id="nomeField" promptText="Nome" GridPane.columnIndex="1">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
+                                       <opaqueInsets>
+                                          <Insets left="50.0" />
+                                       </opaqueInsets>
                                     </TextField>
                               	<Label text="CPF" GridPane.rowIndex="1">
                                        <font>
@@ -135,7 +138,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="telefonePrefField" GridPane.columnIndex="1">
+                                    <TextField fx:id="telefonePrefField" stylesheets="@../css/textfield.css" GridPane.columnIndex="1">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -145,7 +148,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="telefoneAltField" GridPane.columnIndex="4">
+                                    <TextField fx:id="telefoneAltField" stylesheets="@../css/textfield.css" GridPane.columnIndex="4">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -155,7 +158,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="emailField" GridPane.columnIndex="7">
+                                    <TextField fx:id="emailField" stylesheets="@../css/textfield.css" GridPane.columnIndex="7">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -198,19 +201,29 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="bancoBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="239.0" GridPane.columnIndex="1" />
+                                    <ComboBox fx:id="bancoBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="239.0" stylesheets="@../css/combobox.css" GridPane.columnIndex="1" />
                               	<Label text="Tipo de Conta" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="tipoContaBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="238.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="tipoContaBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="238.0" stylesheets="@../css/combobox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Chave Pix" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="pixField" stylesheets="@../css/textfield.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
                               	<Label text="Agência" GridPane.columnIndex="3">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="agenciaField" GridPane.columnIndex="4">
+                                    <TextField fx:id="agenciaField" stylesheets="@../css/textfield.css" GridPane.columnIndex="4">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -220,7 +233,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="contaField" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                    <TextField fx:id="contaField" stylesheets="@../css/textfield.css" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -230,17 +243,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="titularField" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </TextField>
-                                    <Label text="Chave Pix" GridPane.rowIndex="2">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="pixField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <TextField fx:id="titularField" stylesheets="@../css/textfield.css" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

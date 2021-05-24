@@ -1,6 +1,8 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.CorretorRepository;
+import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.collections.FXCollections;
@@ -231,7 +234,18 @@ public class EditClienteController {
 			} else {
 				cliente.setTelefoneAlt("");
 			}
-            cliente.setDataNascimento(Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			if (dataNascimentoField.getEditor().getText().isBlank()) {
+				cliente.setDataNascimento(
+						Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+		            cliente.setDataNascimento(date);
+		        } catch (ParseException e) {
+		            e.printStackTrace();
+		        }
+			}
             cliente.setCpfOuCnpj(cpfField.getText());
             cliente.setRg(rgField.getText());
             cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
@@ -269,6 +283,15 @@ public class EditClienteController {
 		} else if (cpfField.getText().length() != 11 || cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido, digite somente números\n";
 		}
+        
+        if (cpfField.getText() != cliente.getCpfOuCnpj()) {
+        ClienteService cliServ= (ClienteService)context.getBean("clienteService");
+		Cliente cli = cliServ.findByCpfOuCnpj(cpfField.getText());
+		if (cli != null ) {
+			errorMessage += "CPF já cadastrado para o cliente " + cli.getNome() + "\n";
+		}
+        }
+		
 
 		if (rgField.getText() == null || rgField.getText().length() == 0  || rgField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "RG inválido\n";

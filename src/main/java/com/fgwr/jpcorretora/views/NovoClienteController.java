@@ -22,6 +22,7 @@ import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
 import com.fgwr.jpcorretora.repositories.CorretorRepository;
+import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.utils.AutoCompleteBox;
 import com.fgwr.jpcorretora.utils.FilesUtils;
 
@@ -29,8 +30,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -39,6 +38,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -204,6 +205,8 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 	private boolean isInputValid() {
 		String errorMessage = "";
 
+		
+		
 		if (nomeField.getText() == null || nomeField.getText().length() == 0 || nomeField.getText().matches("[0-9]")) {
 			errorMessage += "Nome inválido\n";
 		}
@@ -212,6 +215,12 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 			errorMessage += "Digite um CPF\n";
 		} else if (cpfField.getText().length() != 11 || cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido, digite somente números\n";
+		}
+		
+		ClienteService cliServ= (ClienteService)context.getBean("clienteService");
+		Cliente cli = cliServ.findByCpfOuCnpj(cpfField.getText());
+		if (cli != null ) {
+			errorMessage += "CPF já cadastrado para o cliente " + cli.getNome() + "\n";
 		}
 		
 		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {
