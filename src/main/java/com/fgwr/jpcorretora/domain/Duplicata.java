@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.MeioPagamento;
 
@@ -56,6 +58,9 @@ public class Duplicata implements Serializable {
 	private Recibo recibo;
 	
 	private Integer meioPagamento;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Receita receita;
 	
 
 	public Duplicata () {
@@ -139,6 +144,16 @@ public class Duplicata implements Serializable {
 
 	public void setValor(Double valor) {
 		this.valor = valor;
+	}
+
+
+	public Receita getReceita() {
+		return receita;
+	}
+
+
+	public void setReceita(Receita receita) {
+		this.receita = receita;
 	}
 
 

@@ -86,7 +86,6 @@ public class ContratoPdfGen {
         document.setMargins(topMargin, 36, 36, 36);
         
         Border b3 = new SolidBorder(ColorConstants.BLACK, 1);
-		Border b2 = (new SolidBorder(ColorConstants.WHITE, 0));
 
 		Cell cell = new Cell();
 		
@@ -113,7 +112,7 @@ public class ContratoPdfGen {
 		p = new Paragraph("\nSão partes neste instrumento :\n");	
 		cell.add(p);
 
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 
 		table2.addCell(cell);
 
@@ -124,7 +123,7 @@ public class ContratoPdfGen {
 		p.add("JOÃO PAULO SANTOS TEODORO, CPF: 657.114.242-20, CORRETOR DE IMÓVEIS, CRECI/RO 1637, 24° REGIÃO.\n");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 
 		cell = new Cell();
@@ -137,7 +136,7 @@ public class ContratoPdfGen {
 				+ ", residente e domiciliado(a) nesta cidade de VILHENA-RO, Telefone Principal " + StringsUtils.formatarTelefone(contrato.getCliente().getTelefonePref()) + ".\n");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 
 		cell = new Cell();
@@ -156,7 +155,7 @@ public class ContratoPdfGen {
 		p.add(bodyA);
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -197,7 +196,7 @@ public class ContratoPdfGen {
 		
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -240,7 +239,7 @@ public class ContratoPdfGen {
 		
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -256,7 +255,7 @@ public class ContratoPdfGen {
 		p.add(" do imóvel uma cópia dos comprovantes de pagamento das contas de energia elétrica e água para que sejam arquivados junto ao presente contrato de locação de imóvel.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -266,7 +265,7 @@ public class ContratoPdfGen {
 		p.add("Em caso de atraso no pagamento do aluguel, aplicar-se-há uma multa de 2% (dois por cento) sobre o valor devido e juros mensais de 1% (um por cento) sob montante devido.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -280,7 +279,7 @@ public class ContratoPdfGen {
 		p.add(dot);
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -304,7 +303,7 @@ public class ContratoPdfGen {
 		p.add(" qualquer indenização pelas obras ou retenção por benfeitorias. As benfeitorias removíveis poderão ser retiradas, desde que não desfigurem o imóvel locado.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -316,7 +315,7 @@ public class ContratoPdfGen {
 		p.add(" declara que o imóvel ora locado destina-se para seu uso familiar.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -330,7 +329,7 @@ public class ContratoPdfGen {
 		p.add(".");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -342,7 +341,7 @@ public class ContratoPdfGen {
 		p.add(" pelo prazo restante do contrato, que ficará prorrogado pelo mesmo tempo de duração das obras de reconstrução.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -352,7 +351,7 @@ public class ContratoPdfGen {
 		p.add("Em caso de desapropriação total ou parcial do imóvel locado, ficará rescindido de pleno direito o presente contrato de locação, independente de quaisquer indenizações de ambas as partes ou contratantes.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -368,7 +367,7 @@ public class ContratoPdfGen {
 		p.add(" deverá constar da respectiva escritura pública à existência do presente contrato, para que o adquirente o respeite nos termos da legislação vigente. ");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 
 		cell = new Cell();
@@ -382,7 +381,7 @@ public class ContratoPdfGen {
 		p.add(" dentro de prazos que permita o seu cumprimento, aviso ou notificação de interesse do imóvel, sob pena de, não o fazendo, assumir integral responsabilidade pela falta.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -403,7 +402,7 @@ public class ContratoPdfGen {
 		p.add("), tomando por base o último aluguel, cobrável ou não, por ação executiva, sem prejuízo da rescisão imediata deste contrato, além do pagamento de todas as despesas por procedimentos judiciais e outras sanções que o caso indicar, proporcionalmente ao período de contrato (pro-rata).");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -413,7 +412,7 @@ public class ContratoPdfGen {
 		p.add("As partes contratantes obrigam-se por si, herdeiros e/ou sucessores, elegendo o Foro da Cidade de Vilhena para o processamento de qualquer ação oriunda da presente avença, renunciando, de futuro, a qualquer outro, por mais privilegiado que seja o domicílio dos mesmos.");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		
 		cell = new Cell();
@@ -422,7 +421,7 @@ public class ContratoPdfGen {
 		p.setFirstLineIndent(24);
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);		
 		
 		cell = new Cell();
@@ -431,7 +430,7 @@ public class ContratoPdfGen {
 		p.setFirstLineIndent(24);
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.JUSTIFIED);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);		
 		
 		cell = new Cell();
@@ -440,7 +439,7 @@ public class ContratoPdfGen {
 		p.add("\nVilhena, "  + cal.get(Calendar.DAY_OF_MONTH) + " de "  + new SimpleDateFormat("MMMMM", new Locale ("pt", "BR")).format(cal.getTime()) + " de " + cal.get(Calendar.YEAR) + ".");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.RIGHT);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table2.addCell(cell);
 		document.add(table2);
 		
@@ -451,7 +450,7 @@ public class ContratoPdfGen {
 		p = new Paragraph("João Paulo Santos Teodoro\nCPF: 657.114.292-20\nAdministrador");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		cell.setBorderTop(b3);
 		table3.addCell(cell);
 		
@@ -460,13 +459,13 @@ public class ContratoPdfGen {
 		p = new Paragraph(contrato.getCliente().getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(contrato.getCliente().getCpfOuCnpj()) + "\nLocatário");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		cell.setBorderTop(b3);
 		table3.addCell(cell);
 		
 		cell = new Cell();
 		cell.setHeight(50);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table3.addCell(cell);
 		table3.addCell(cell);
 		table3.addCell(cell);
@@ -475,19 +474,19 @@ public class ContratoPdfGen {
 		p = new Paragraph(test1.getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(test1.getCpf()) + "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		cell.setBorderTop(b3);
 		table3.addCell(cell);
 		
 		cell = new Cell();
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		table3.addCell(cell);
 		
 		cell = new Cell();
 		p = new Paragraph(test2.getNome() + "\nCPF: " + StringsUtils.formatarCpfOuCnpj(test2.getCpf())+ "\nTestemunha");
 		cell.add(p);
 		cell.setTextAlignment(TextAlignment.LEFT);
-		cell.setBorder(b2);
+		cell.setBorder(Border.NO_BORDER);
 		cell.setBorderTop(b3);
 		table3.addCell(cell);
 		
@@ -547,11 +546,11 @@ public class ContratoPdfGen {
 			
         	table = new Table(2).useAllAvailableWidth();
 			Border b1 = new SolidBorder(ColorConstants.BLACK, 2);
-			Border b2 = (new SolidBorder(ColorConstants.WHITE, 0));
+			
 
 			Cell cell = new Cell();
 			cell.add(logoHeader.setWidth(150));
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
@@ -567,7 +566,7 @@ public class ContratoPdfGen {
 			p.setMarginRight(5);
 			cell.add(p);
 			cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
 			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));

@@ -59,12 +59,10 @@ public class ReciboPdfGen {
 
 			Table table = new Table(2).useAllAvailableWidth();
 			Border b1 = new SolidBorder(ColorConstants.BLACK, 2);
-			Border b2 = (new SolidBorder(ColorConstants.WHITE, 0));
 
 			Cell cell = new Cell();
 			cell.add(logoHeader.setWidth(150));
-			cell.setBorder(b2);
-
+			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
 			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
@@ -79,7 +77,7 @@ public class ReciboPdfGen {
 			p.setMarginRight(20);
 			cell.add(p);
 			cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
 			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
@@ -117,7 +115,7 @@ public class ReciboPdfGen {
 			p.add(" do contrato "+ recibo.getDuplicata().getContrato().getId() + " de locação de imóvel.");
 			cell.add(p);
 			cell.setHeight(80);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			cell.setTextAlignment(TextAlignment.JUSTIFIED);
 			table2.addCell(cell);
 			
@@ -126,7 +124,7 @@ public class ReciboPdfGen {
 			
 			cell.add(new Paragraph("Para clareza, firmamos o presente recibo para que produza os seus efeitos, dando plena, rasa e irrevogável quitação, pelo valor recebido."));
 			cell.setHeight(50);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			cell.setTextAlignment(TextAlignment.JUSTIFIED);
 			table2.addCell(cell);
 			
@@ -135,7 +133,7 @@ public class ReciboPdfGen {
 			
 			cell.setTextAlignment(TextAlignment.RIGHT);
 			cell.setHeight(40);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			cell.add(p);
 			table2.addCell(cell);
 			
@@ -146,7 +144,7 @@ public class ReciboPdfGen {
 			cell.add(p);
 			cell.setTextAlignment(TextAlignment.RIGHT);
 			cell.setHeight(90);
-			cell.setBorder(b2);
+			cell.setBorder(Border.NO_BORDER);
 			table2.addCell(cell);
 			
 			document.add(table2);
@@ -157,7 +155,7 @@ public class ReciboPdfGen {
 
 			Cell cell2 = new Cell();
 			cell2.add(logoHeader.setWidth(150));
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 
 			cell2.setBorderTop(b1);
 			cell2.setBorderBottom(b1);
@@ -173,7 +171,7 @@ public class ReciboPdfGen {
 			p2.setMarginRight(20);
 			cell2.add(p2);
 			cell2.setVerticalAlignment(VerticalAlignment.MIDDLE);
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 			cell2.setBorderTop(b1);
 			cell2.setBorderBottom(b1);
 			cell2.setBackgroundColor(new DeviceRgb(255, 207, 51));
@@ -206,7 +204,7 @@ public class ReciboPdfGen {
 			p2.add(" do contrato "+ recibo.getDuplicata().getContrato().getId() + " de locação de imóvel.");
 			cell2.add(p2);
 			cell2.setHeight(80);
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 			cell2.setTextAlignment(TextAlignment.JUSTIFIED);
 			table4.addCell(cell2);
 			
@@ -215,7 +213,7 @@ public class ReciboPdfGen {
 			
 			cell2.add(new Paragraph("Para clareza, firmamos o presente recibo para que produza os seus efeitos, dando plena, rasa e irrevogável quitação, pelo valor recebido."));
 			cell2.setHeight(50);
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 			cell2.setTextAlignment(TextAlignment.JUSTIFIED);
 			table4.addCell(cell2);
 			
@@ -224,7 +222,7 @@ public class ReciboPdfGen {
 			
 			cell2.setTextAlignment(TextAlignment.RIGHT);
 			cell2.setHeight(40);
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 			cell2.add(p2);
 			table4.addCell(cell2);
 			
@@ -235,7 +233,7 @@ public class ReciboPdfGen {
 			cell2.add(p);
 			cell2.setTextAlignment(TextAlignment.RIGHT);
 			cell2.setHeight(60);
-			cell2.setBorder(b2);
+			cell2.setBorder(Border.NO_BORDER);
 			table4.addCell(cell2);
 			
 			document.add(table4);

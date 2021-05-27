@@ -64,7 +64,6 @@ public class ReceitasMensalGen {
 			Cell cell = new Cell();
 			cell.add(logoHeader.setWidth(150));
 			cell.setBorder(Border.NO_BORDER);
-
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
 			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));

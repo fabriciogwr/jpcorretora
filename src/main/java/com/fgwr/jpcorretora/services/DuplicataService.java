@@ -57,7 +57,6 @@ public class DuplicataService {
 
 		for (int i = 1; i <= qtdParcelas; i++) {
 			cal = Calendar.getInstance();
-			System.out.println("Execução" + i);
 			Duplicata duplicata = new Duplicata();
 			if (i == 1) {
 				if (primeiraParcela > cal.get(Calendar.DAY_OF_MONTH)) {
@@ -82,7 +81,6 @@ public class DuplicataService {
 					cal.add(Calendar.MONTH, i - 1);
 
 				} else if (primeiraParcela < cal.get(Calendar.DAY_OF_MONTH)) {
-					System.out.println("i = 1 < /" + cal.getTime());
 					Double pc1 = (contrato.getValorDeCadaParcela() / 100) * 1;
 					Double pc2 = (contrato.getValorDeCadaParcela() / 100) * 2;
 

@@ -246,7 +246,6 @@ public class ProprietarioController {
 					}
 
 				}
-				System.out.println(lock);
 				if (lock == 0) {
 
 					for (Imovel imovel : allImv) {

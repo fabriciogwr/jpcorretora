@@ -258,7 +258,6 @@ public class NovoContratoController {
 			ContratoRepository contRepo = (ContratoRepository) context.getBean("contratoRepository");
 			DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
 			ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
-			ReceitaRepository recRepo = (ReceitaRepository) context.getBean("receitaRepository");
 			ImovelRepository imRepo = (ImovelRepository) context.getBean("imovelRepository");
 			ImovelService is = (ImovelService) context.getBean("imovelService");
 			ClienteService cs = (ClienteService) context.getBean("clienteService");
@@ -293,7 +292,7 @@ public class NovoContratoController {
 
 			contrato = contRepo.save(contrato);
 			cliRepo.save(cliente);
-			dupRepo.saveAll(dups);
+			
 			imRepo.save(imovel);
 
 			Testemunha t1 = new Testemunha(testemunha1Field.getText(), testemunha1CpfField.getText());
@@ -306,14 +305,6 @@ public class NovoContratoController {
 				e.printStackTrace();
 			}
 
-			List<Duplicata> sDups = ds.findByContrato(contrato);
-			dupRepo.flush();
-			Duplicata selDup = sDups.get(0);
-			sDups.clear();
-			System.out.println(selDup.getId());
-			selDup = handlePagamento(selDup);
-			List<Receita> receitas = new ArrayList<>();
-
 			for (Duplicata duplicata : dups) {
 				Receita receita = new Receita();
 				if (duplicata.getParcela() == 1) {
@@ -321,12 +312,8 @@ public class NovoContratoController {
 					receita.setDescricao("Comissão de locação de imóvel - contrato nº "
 							+ duplicata.getContrato().getId().toString());
 					receita.setEstado(duplicata.getEstado());
-					if (pago) {
-						receita.setMeioPagamento(duplicata.getMeioPagamento());
-					}
 					receita.setPagador(duplicata.getCliente().getNome());
 					receita.setValor(duplicata.getValor() / 2);
-					receita.setValorPago(duplicata.getValorPago());
 					receita.setCategoria(catServ.find(1));
 				} else {
 					receita.setDataVencimento(duplicata.getDataVencimento());
@@ -335,13 +322,18 @@ public class NovoContratoController {
 					receita.setEstado(duplicata.getEstado());
 					receita.setPagador(duplicata.getCliente().getNome());
 					receita.setValor(duplicata.getValor() / 10);
-					receita.setValorPago(duplicata.getValorPago());
 					receita.setCategoria(catServ.find(1));
 				}
-				receitas.add(receita);
+				duplicata.setReceita(receita);
 			}
-
-			recRepo.saveAll(receitas);
+			dupRepo.saveAll(dups);
+			
+			List<Duplicata> sDups = ds.findByContrato(contrato);
+			dupRepo.flush();
+			Duplicata selDup = sDups.get(0);
+			sDups.clear();
+			selDup = handlePagamento(selDup);
+			
 			okClicked = true;
 
 			dialogStage.close();
@@ -390,8 +382,6 @@ public class NovoContratoController {
 	}
 
 	public void visualizaRecibo(Recibo rec) throws IOException {
-		System.out.println(rec.getId());
-		System.out.println(rec.getCliente().getNome());
 		File file = new File(FilesUtils.pathRecibos(rec));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);

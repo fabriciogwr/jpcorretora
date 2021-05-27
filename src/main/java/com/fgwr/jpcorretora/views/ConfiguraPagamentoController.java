@@ -16,10 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Duplicata;
+import com.fgwr.jpcorretora.domain.Receita;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.MeioPagamento;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
+import com.fgwr.jpcorretora.repositories.ReceitaRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
 import com.fgwr.jpcorretora.utils.FilesUtils;
 import com.fgwr.jpcorretora.utils.StringsUtils;
@@ -193,6 +195,7 @@ public class ConfiguraPagamentoController {
 		if (isInputValid()) {
 			ApplicationContext context = SpringContext.getAppContext();
 			DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
+			ReceitaRepository desRepo = (ReceitaRepository) context.getBean("receitaRepository");
 			Double valorPago;
 
 			if (totalPagoField.getText().length() > 0) {
@@ -200,7 +203,6 @@ public class ConfiguraPagamentoController {
 			} else {
 				valorPago = valorCorrigido;
 			}
-
 			Date dataPgto = Date.from(dataPagamentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(),
 					duplicata.getContrato().getQtdParcelas(), duplicata.getDataVencimento(), dataPgto);
@@ -211,6 +213,31 @@ public class ConfiguraPagamentoController {
 			duplicata.setEstado(EstadoPagamento.QUITADO);
 			rec.setDuplicata(duplicata);
 			duplicata = dupRepo.save(duplicata);
+
+			if (duplicata.getReceita() != null) {
+				Receita receita = duplicata.getReceita();
+				receita = duplicata.getReceita();	
+				receita.setDataRecebimento(dataPgto);
+				receita.setMeioPagamento(meioPgtoBox.getValue());
+				if (duplicata.getParcela() == 1) {
+				receita.setValorPago(valorPago / 2);
+				} else {
+					receita.setValorPago(valorPago / 10);
+				}
+				receita.setEstado(EstadoPagamento.QUITADO);
+				desRepo.save(receita);
+			} else {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.initStyle(StageStyle.UNIFIED);
+				DialogPane dialogPane = alert.getDialogPane();
+				dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+				alert.setTitle("Não encontrada receita");
+				alert.setHeaderText("Será necessário dar baixa manualmente da receita de entrada desta mensalidade.");
+				alert.showAndWait();
+			}
+			
+			
+
 			reciboPdfGen.geraRecibo(duplicata.getRecibo());
 
 			okClicked = true;

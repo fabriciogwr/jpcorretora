@@ -165,7 +165,6 @@ public class ManutencaoController {
 	@FXML
 	private void restauraBackup() throws IOException, InterruptedException {
 		if (selectedRestoreDirectory != null) {
-			System.out.println(selectedRestoreDirectory.getAbsolutePath());
 			PostgresBackup.realizaRestore(selectedRestoreDirectory.getAbsolutePath());
 			if (rDadosImoveisChk.isSelected()) {
 				Path src = Path.of(selectedRestoreDirectory.getAbsoluteFile().getParent(), "\\Imoveis");

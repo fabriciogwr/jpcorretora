@@ -121,8 +121,6 @@ public class FrontApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("JPCorretora");
 		primaryStage.getIcons().add(new Image("file:\\\\"+ dir+ "\\imgs\\icone.ico"));
-		
-		System.out.println("file:" + dir + "\\imgs\\icone.ico");
 		this.secStage = new Stage();
 		this.secStage.setTitle("Eventos");
 

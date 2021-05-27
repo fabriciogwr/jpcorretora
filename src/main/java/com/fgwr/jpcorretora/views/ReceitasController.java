@@ -132,8 +132,6 @@ public class ReceitasController {
 	}
 
 	void listaReceitaMes(Integer mes) {
-		
-		System.out.println(mes);
 		ReceitaRepository desRepo = (ReceitaRepository) context.getBean("receitaRepository");
 		receitasTable.getItems().clear();
 		int year;
@@ -148,7 +146,6 @@ public class ReceitasController {
 		start = cal.getTime();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		end = cal.getTime();
-		System.out.println(start + ", " + end);
 		despsPgto.clear();
 		despsAll.clear();
 		despsPgto = desRepo.findAllByDataRecebimentoBetween(start, end);

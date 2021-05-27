@@ -115,7 +115,6 @@ public class ContratoController {
 						mark = true;
 					}
 					
-					System.out.println(mark);
 					if (duplicata.getDataVencimento().before(cal.getTime())
 							&& duplicata.getEstado().equals(EstadoPagamento.PENDENTE)) {
 						mark = false;

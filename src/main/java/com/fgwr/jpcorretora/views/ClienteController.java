@@ -232,7 +232,6 @@ public class ClienteController {
 				numeroContaLabel.setText(cliente.getDadosBancarios().getConta());
 				titularLabel.setText(cliente.getDadosBancarios().getTitular());
 				pixLabel.setText(cliente.getDadosBancarios().getPix());
-				System.out.println(cliente.getDadosBancarios().getPix());
 			
 			referenciaData.clear();
 			referenciaData = FXCollections.observableArrayList(getReferenciaData(cliente));
