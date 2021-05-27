@@ -1,11 +1,14 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.swing.filechooser.FileSystemView;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -15,11 +18,12 @@ import org.springframework.stereotype.Component;
 import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Receita;
-import com.fgwr.jpcorretora.enums.Meses;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.Meses;
 import com.fgwr.jpcorretora.repositories.ReceitaRepository;
+import com.fgwr.jpcorretora.services.ReceitasMensalGen;
 import com.fgwr.jpcorretora.utils.FilesUtils;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 import com.ibm.icu.util.Calendar;
 
 import javafx.collections.FXCollections;
@@ -29,10 +33,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
@@ -61,6 +68,13 @@ public class ReceitasController {
 	private ComboBox<Meses> mesBox;
 	@FXML
 	private ComboBox<Integer> anoBox;
+	@FXML
+	private Label recebidasLabel;
+	@FXML
+	private Label receberLabel;
+	
+	Double recebidas = 0.0;
+	Double receber = 0.0;
 
 	Calendar cal = Calendar.getInstance();
 	FrontApp frontApp = new FrontApp();
@@ -114,9 +128,12 @@ public class ReceitasController {
 
 		mesBox.valueProperty().addListener((observable, oldValue, newValue) -> listaReceitaMes(newValue.getCod()));
 		mesBox.setValue(Meses.toEnum(cal.get(Calendar.MONTH)));
+		
 	}
 
 	void listaReceitaMes(Integer mes) {
+		
+		System.out.println(mes);
 		ReceitaRepository desRepo = (ReceitaRepository) context.getBean("receitaRepository");
 		receitasTable.getItems().clear();
 		int year;
@@ -124,18 +141,29 @@ public class ReceitasController {
 		Date end;
 		List<Receita> despsPgto = new ArrayList<>();
 		List<Receita> despsAll = new ArrayList<>();
+		cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, mes);
 		year = anoBox.getValue();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		start = cal.getTime();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		end = cal.getTime();
+		System.out.println(start + ", " + end);
 		despsPgto.clear();
 		despsAll.clear();
 		despsPgto = desRepo.findAllByDataRecebimentoBetween(start, end);
 		despsPgto.addAll(desRepo.findAllByDataVencimentoBetween(start, end));
 		despsAll = despsPgto.stream().distinct().collect(Collectors.toList());
 		receitasTable.setItems(FXCollections.observableArrayList(despsAll));
+		
+		for (Receita receita : despsAll) {
+			recebidas = (receita.getEstado() == EstadoPagamento.QUITADO) ? recebidas + receita.getValor() : recebidas + 0;
+			receber = (receita.getEstado() == EstadoPagamento.PENDENTE) ? receber + receita.getValor() : receber + 0;
+		}
+		
+		recebidasLabel.setText(StringsUtils.formatarRealCifra(recebidas));
+		receberLabel.setText(StringsUtils.formatarRealCifra(receber));
+		
 
 	}
 
@@ -205,12 +233,32 @@ public class ReceitasController {
 		if (okClicked) {
 			receitasTable.getItems().add(receita);
 			receitasTable.refresh();
+			listaReceitaMes(mesBox.getValue().getCod());
 		}
 	}
 
 	@FXML
 	void handleGeraRelatorio() {
-
+		File selectedRestoreDirectory = null;
+		Stage primaryStage = null;
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Arquivo PDF (*.pdf)", "*.pdf");
+        fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.setTitle("Salvar relatório");
+		fileChooser.setInitialDirectory(new File(docFolder));
+		selectedRestoreDirectory = fileChooser.showSaveDialog(primaryStage);
+		String path = selectedRestoreDirectory.getAbsolutePath();
+		
+		List<Receita> relatorio = receitasTable.getItems();
+		
+		ReceitasMensalGen rmg = new ReceitasMensalGen();
+		try {
+			rmg.geraRelatorioReceita(relatorio, path, cal.get(Calendar.MONTH), recebidas, receber);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

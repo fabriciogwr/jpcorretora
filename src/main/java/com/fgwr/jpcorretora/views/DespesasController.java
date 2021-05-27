@@ -1,11 +1,14 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.swing.filechooser.FileSystemView;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -18,7 +21,9 @@ import com.fgwr.jpcorretora.domain.Despesa;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.enums.Meses;
 import com.fgwr.jpcorretora.repositories.DespesaRepository;
+import com.fgwr.jpcorretora.services.DespesasMensalGen;
 import com.fgwr.jpcorretora.utils.FilesUtils;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 import com.ibm.icu.util.Calendar;
 
 import javafx.collections.FXCollections;
@@ -28,10 +33,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
@@ -60,6 +68,13 @@ public class DespesasController {
     private ComboBox<Meses> mesBox;
     @FXML
     private ComboBox<Integer> anoBox;
+    @FXML
+    private Label pagarLabel;
+    @FXML
+    private Label pagasLabel;
+    
+    Double pagas = 0.0;
+	Double pagar = 0.0;
     
     Calendar cal = Calendar.getInstance();
     FrontApp frontApp = new FrontApp();
@@ -124,6 +139,7 @@ public class DespesasController {
 		Date end;
 		List<Despesa> despsPgto = new ArrayList<>();
 		List<Despesa> despsAll = new ArrayList<>();
+		cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, mes);
 		year = anoBox.getValue();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMinimum(Calendar.DAY_OF_MONTH));
@@ -136,6 +152,14 @@ public class DespesasController {
 		despsPgto.addAll(desRepo.findAllByDataVencimentoBetween(start, end));
 		despsAll = despsPgto.stream().distinct().collect(Collectors.toList());
 		despesasTable.setItems(FXCollections.observableArrayList(despsAll));
+		
+		for (Despesa despesa : despsAll) {
+			pagas = (despesa.getEstado() == EstadoPagamento.QUITADO) ? pagas + despesa.getValor() : pagas + 0;
+			pagar = (despesa.getEstado() == EstadoPagamento.PENDENTE) ? pagar + despesa.getValor() : pagar + 0;
+		}
+		
+		pagasLabel.setText(StringsUtils.formatarRealCifra(pagas));
+		pagarLabel.setText(StringsUtils.formatarRealCifra(pagar));
 		
 	}
     @FXML
@@ -213,12 +237,33 @@ public class DespesasController {
     	if (okClicked) {
     		despesasTable.getItems().add(despesa);
     		despesasTable.refresh();
+    		//workaroud temporário, corrigir somas em despesas e receitas
+    		listaReceitaMes(mesBox.getValue().getCod());
     	}
     }
     
     @FXML
-    void handleGeraRelatorio() {
-
-    }
+	void handleGeraRelatorio() {
+		File selectedRestoreDirectory = null;
+		Stage primaryStage = null;
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Arquivo PDF (*.pdf)", "*.pdf");
+        fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.setTitle("Salvar relatório");
+		fileChooser.setInitialDirectory(new File(docFolder));
+		selectedRestoreDirectory = fileChooser.showSaveDialog(primaryStage);
+		String path = selectedRestoreDirectory.getAbsolutePath();
+		
+		List<Despesa> relatorio = despesasTable.getItems();
+		
+		DespesasMensalGen dmg = new DespesasMensalGen();
+		try {
+			dmg.geraRelatorioDespesa(relatorio, path, cal.get(Calendar.MONTH), pagas, pagar);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

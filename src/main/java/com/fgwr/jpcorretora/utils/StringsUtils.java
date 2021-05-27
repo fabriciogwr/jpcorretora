@@ -51,7 +51,7 @@ public class StringsUtils {
 		NumberFormat real = NumberFormat.getNumberInstance();
 		real.setMinimumFractionDigits(2);
 		real.setMaximumFractionDigits(2);
-		return "R$"+real.format(valor);
+		return "R$ "+real.format(valor);
 		}
 	
 	public static String formatarCep(String cep) {
@@ -61,8 +61,13 @@ public class StringsUtils {
 		}
 	
 	public static String formatarData(Date data) {
+		String dataString;
+		if (data != null) {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    	String dataString = df.format(data);
+    	dataString = df.format(data);
+		} else {
+			dataString = "";
+		}
 		return dataString;
 	}
 	

@@ -15,6 +15,7 @@ import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -66,7 +67,7 @@ public class ReciboPdfGen {
 
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
-			cell.setBackgroundColor(ColorConstants.YELLOW);
+			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table.addCell(cell);
 
@@ -81,7 +82,7 @@ public class ReciboPdfGen {
 			cell.setBorder(b2);
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
-			cell.setBackgroundColor(ColorConstants.YELLOW);
+			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table.addCell(cell);
 			document.add(table);
@@ -160,7 +161,7 @@ public class ReciboPdfGen {
 
 			cell2.setBorderTop(b1);
 			cell2.setBorderBottom(b1);
-			cell2.setBackgroundColor(ColorConstants.YELLOW);
+			cell2.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table3.addCell(cell2);
 
@@ -175,7 +176,7 @@ public class ReciboPdfGen {
 			cell2.setBorder(b2);
 			cell2.setBorderTop(b1);
 			cell2.setBorderBottom(b1);
-			cell2.setBackgroundColor(ColorConstants.YELLOW);
+			cell2.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table3.addCell(cell2);
 			document.add(table3);

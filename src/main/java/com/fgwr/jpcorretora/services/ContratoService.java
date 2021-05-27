@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.services.exceptions.ObjectNotFoundException;
@@ -49,9 +50,9 @@ public class ContratoService {
 
 	
 
-	public Contrato findByCliente(String nome) {
+	public Contrato findByCliente(Cliente cliente) {
 
-		Contrato contrato = repo.findByCliente(nome);
+		Contrato contrato = repo.findByCliente(cliente);
 		if (contrato == null) {
 			throw new ObjectNotFoundException("Contratos não encontradas!");
 		}

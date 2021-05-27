@@ -20,6 +20,7 @@ import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -554,7 +555,7 @@ public class ContratoPdfGen {
 
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
-			cell.setBackgroundColor(ColorConstants.YELLOW);
+			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table.addCell(cell);
 
@@ -569,7 +570,7 @@ public class ContratoPdfGen {
 			cell.setBorder(b2);
 			cell.setBorderTop(b1);
 			cell.setBorderBottom(b1);
-			cell.setBackgroundColor(ColorConstants.YELLOW);
+			cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
 
 			table.addCell(cell);
         }

@@ -37,6 +37,12 @@ public class FilesUtils {
 		return path;
 	}
 	
+	public static String pathReceitas() {
+		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		String path = (docFolder + "\\Receitas\\");
+		return path;
+	}
+	
 	public static String pathContratos(Contrato c, boolean edit) {
 		String[] nomeArr = StringUtils.split(c.getCliente().getNome());
 		String docFolder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
