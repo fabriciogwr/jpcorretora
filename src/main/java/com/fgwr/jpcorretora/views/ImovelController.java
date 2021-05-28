@@ -34,6 +34,7 @@ import com.fgwr.jpcorretora.dto.ImovelChecklistDTO;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ProprietarioRepository;
 import com.fgwr.jpcorretora.utils.FilesUtils;
+import com.fgwr.jpcorretora.utils.StringsUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -206,7 +207,7 @@ public class ImovelController {
 			logradouroLabel.setText(imovel.getEndereco().getLogradouro());
 			numeroLabel.setText(imovel.getEndereco().getNumero());
 			bairroLabel.setText(imovel.getEndereco().getBairro());
-			cepLabel.setText(imovel.getEndereco().getCep());
+			cepLabel.setText(StringsUtils.formatarCep(imovel.getEndereco().getCep()));
 			dataAngariacaoLabel.setText(imovel.getDataAngariacaoString());
 
 			obsField.setText(readObs(imovel.getId()));

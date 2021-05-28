@@ -288,7 +288,9 @@ public class EditClienteController {
         ClienteService cliServ= (ClienteService)context.getBean("clienteService");
 		Cliente cli = cliServ.findByCpfOuCnpj(cpfField.getText());
 		if (cli != null ) {
+			if (cli != cliente ) {
 			errorMessage += "CPF já cadastrado para o cliente " + cli.getNome() + "\n";
+		}
 		}
         }
 		

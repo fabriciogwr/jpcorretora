@@ -211,7 +211,9 @@ public class ClienteController {
 			} else {
 				telefoneAltLabel.setText("");
 			}
+			if (cliente.getDataNascimento() != null ) {
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
+			}
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
 			if (cliente.getCorretor() != null) {
