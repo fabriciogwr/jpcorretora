@@ -121,7 +121,7 @@ public class EventosController {
 			LocalDate ldEnd = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			Integer count = Math.toIntExact(ChronoUnit.DAYS.between(ldNow, ldEnd));
 
-			if (count < 61) {
+			if (count < 61 && contrato.getActive()) {
 				filterContratos.add(contrato);
 
 			}

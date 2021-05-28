@@ -132,6 +132,8 @@ public class DespesasController {
 	}
 
 	void listaReceitaMes(Integer mes) {
+		pagas = 0.0;
+		pagar = 0.0;
 		DespesaRepository desRepo = (DespesaRepository) context.getBean("despesaRepository");
 		despesasTable.getItems().clear();
 		int year;

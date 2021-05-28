@@ -285,7 +285,12 @@ public class Cliente implements Serializable {
 	}
 
 	public StringProperty cod() {
-		StringProperty cod = new SimpleStringProperty(this.id.toString());
+		StringProperty cod;
+		if (this.id < 10 ) {
+			cod = new SimpleStringProperty("0" + this.id.toString());	
+		} else {
+		 cod = new SimpleStringProperty(this.id.toString());
+		}
 		return cod;
 	}
 

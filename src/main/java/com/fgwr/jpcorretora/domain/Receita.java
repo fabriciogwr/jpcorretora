@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,14 +38,17 @@ public class Receita implements Serializable {
 	private Date dataVencimento;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = true)
 	private Date dataRecebimento;
 	
 	private Double valor;
 	
+	@Column(nullable = true)
 	private Double valorPago;
 	
 	private Integer estado;
 	
+	@Column(nullable = true)
 	private Integer meioRecebimento;
 	
 
@@ -69,6 +73,10 @@ public class Receita implements Serializable {
 
     public void setMeioPagamento(MeioPagamento meioRecebimento) {
         this.meioRecebimento = meioRecebimento.getCod();
+    }
+    
+    public void setMeioPagamento(Integer integer) {
+        this.meioRecebimento = integer;
     }
     
 	public Integer getId() {

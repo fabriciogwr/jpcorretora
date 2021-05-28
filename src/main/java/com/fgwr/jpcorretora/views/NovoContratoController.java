@@ -181,6 +181,11 @@ public class NovoContratoController {
 			pause.playFromStart();
 
 		});
+		
+		testemunha1Field.setText("Débora Fernanda Rodrigues");
+		testemunha1CpfField.setText("05095351277");
+		testemunha2Field.setText("Grasiela da Silva Weyh");
+		testemunha2CpfField.setText("88443892234");
 
 	}
 
@@ -330,9 +335,17 @@ public class NovoContratoController {
 			
 			List<Duplicata> sDups = ds.findByContrato(contrato);
 			dupRepo.flush();
-			Duplicata selDup = sDups.get(0);
+			Duplicata selDup = new Duplicata();
+			for (Duplicata duplicata : sDups) {
+				if(duplicata.getParcela() == 1) {
+					selDup = duplicata;
+				}
+			}
+			
 			sDups.clear();
+			if (selDup != null) {
 			selDup = handlePagamento(selDup);
+			}
 			
 			okClicked = true;
 

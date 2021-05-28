@@ -20,6 +20,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -46,6 +48,7 @@ public class Contrato implements Serializable {
     
     @OneToMany(mappedBy ="contrato", cascade = CascadeType.PERSIST)
     @LazyCollection(LazyCollectionOption.FALSE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Duplicata> duplicatas;
     
     private Boolean active;
@@ -161,7 +164,13 @@ public class Contrato implements Serializable {
 	}
 	
 	public StringProperty num() {
-		StringProperty num = new SimpleStringProperty(this.id.toString());
+		StringProperty num;
+		if (this.id <10 ) {
+			num = new SimpleStringProperty("0" + this.id.toString());	
+		} else {
+			num = new SimpleStringProperty(this.id.toString());
+		}
+		 
 		return num;
 	}
 	
@@ -172,7 +181,13 @@ public class Contrato implements Serializable {
 	}
 	
 	public StringProperty vigencia() {
-		StringProperty vigencia = new SimpleStringProperty(this.qtdParcelas.toString());
+		StringProperty vigencia;
+		if (this.qtdParcelas <10 ) {
+			vigencia = new SimpleStringProperty("0" + this.qtdParcelas.toString() + " meses");	
+		} else {
+			vigencia = new SimpleStringProperty(this.qtdParcelas.toString() + " meses");
+		}
+		 
 		return vigencia;
 	
 	}
@@ -194,7 +209,7 @@ public class Contrato implements Serializable {
 	public StringProperty dataFim() {
 		Calendar gCal = new GregorianCalendar();
 		gCal.setTime(this.data);
-		gCal.add(Calendar.MONTH, qtdParcelas-1);
+		gCal.add(Calendar.MONTH, qtdParcelas);
 		
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		StringProperty data = new SimpleStringProperty(df.format(gCal.getTime()));

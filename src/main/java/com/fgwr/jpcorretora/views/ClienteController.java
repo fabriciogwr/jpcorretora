@@ -17,12 +17,14 @@ import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
 import com.fgwr.jpcorretora.domain.Duplicata;
+import com.fgwr.jpcorretora.domain.Receita;
 import com.fgwr.jpcorretora.domain.Recibo;
 import com.fgwr.jpcorretora.domain.Referencia;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
+import com.fgwr.jpcorretora.repositories.ReceitaRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.repositories.ReferenciaRepository;
 import com.fgwr.jpcorretora.services.ReciboPdfGen;
@@ -537,6 +539,7 @@ public class ClienteController {
 		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
 		Duplicata selectedDuplicata = duplicataTable.getSelectionModel().getSelectedItem();
 		ReciboRepository recRepo = (ReciboRepository) context.getBean("reciboRepository");
+		ReceitaRepository rRepo = (ReceitaRepository) context.getBean("receitaRepository");
 		if (selectedDuplicata != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.initStyle(StageStyle.UNIFIED);
@@ -555,8 +558,18 @@ public class ClienteController {
 				temp.setDataVencimento(selectedDuplicata.getDataVencimento());
 				temp.setCliente(selectedDuplicata.getCliente());
 				temp.setContrato(selectedDuplicata.getContrato());
+				temp.setReceita(selectedDuplicata.getReceita());
 				temp = dupRepo.save(temp);
 				recRepo.delete(selectedDuplicata.getRecibo());
+				
+				Receita receita = selectedDuplicata.getReceita();
+				receita.setDataRecebimento(null);
+				receita.setEstado(EstadoPagamento.PENDENTE);
+				receita.setValorPago(null);
+				Integer x = null;
+				receita.setMeioPagamento(x);
+				rRepo.save(receita);
+				
 
 			}
 			duplicataTable.getItems().remove(selectedDuplicata);
