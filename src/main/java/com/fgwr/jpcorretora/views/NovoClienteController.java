@@ -1,6 +1,7 @@
 package com.fgwr.jpcorretora.views;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -14,10 +15,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fgwr.jpcorretora.FrontApp;
 import com.fgwr.jpcorretora.SpringContext;
 import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Corretor;
 import com.fgwr.jpcorretora.domain.DadosBancarios;
+import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.enums.Banco;
 import com.fgwr.jpcorretora.enums.EstadoCivil;
 import com.fgwr.jpcorretora.enums.TipoConta;
@@ -93,6 +96,8 @@ public class NovoClienteController {
 	private Stage dialogStage;
 	private Cliente cliente;
 	private DadosBancarios db;
+	FrontApp frontApp = new FrontApp();
+	Endereco endereco = new Endereco();
 	private boolean okClicked = false;
 
 	private EstadoCivil[] estadoCivil = EstadoCivil.values();
@@ -101,8 +106,8 @@ public class NovoClienteController {
 
 	@FXML
 	public void handleOnKeyPressed(KeyEvent e) {
-		KeyCode code = e.getCode();		
-		
+		KeyCode code = e.getCode();
+
 		if (code == KeyCode.ENTER) {
 			handleOk();
 		}
@@ -110,14 +115,14 @@ public class NovoClienteController {
 			handleCancel();
 		}
 	}
-    
+
 	private List<Corretor> getCorretorData() {
-    	CorretorRepository crrRepo = (CorretorRepository)context.getBean("corretorRepository");
+		CorretorRepository crrRepo = (CorretorRepository) context.getBean("corretorRepository");
 		List<Corretor> allCrr = crrRepo.findAll();
-    	return allCrr;
-    	
-    }
-	
+		return allCrr;
+
+	}
+
 	@FXML
 	private void initialize() {
 
@@ -136,7 +141,7 @@ public class NovoClienteController {
 
 		estadoCivilBox.setItems(FXCollections.observableArrayList(estadoCivilAux));
 		bancoBox.setItems(FXCollections.observableArrayList(Banco.values()));
-		
+
 		Callback<ListView<Banco>, ListCell<Banco>> bancoCellFactory = new Callback<ListView<Banco>, ListCell<Banco>>() {
 
 			@Override
@@ -159,33 +164,33 @@ public class NovoClienteController {
 		bancoBox.setButtonCell(bancoCellFactory.call(null));
 		bancoBox.setCellFactory(bancoCellFactory);
 		bancoBox.setTooltip(new Tooltip());
-		
+
 		new AutoCompleteBox<Banco>(bancoBox);
 		tipoContaBox.setItems(FXCollections.observableArrayList(tipoContaAux));
-		
-corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
-    	
-    	Callback<ListView<Corretor>, ListCell<Corretor>> corretorCellFactory = new Callback<ListView<Corretor>, ListCell<Corretor>>() {
 
-    	    @Override
-    	    public ListCell<Corretor> call(ListView<Corretor> l) {
-    	        return new ListCell<Corretor>() {
+		corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 
-    	            @Override
-    	            protected void updateItem(Corretor corretor, boolean empty) {
-    	                super.updateItem(corretor, empty);
-    	                if (corretor == null || empty) {
-    	                    setGraphic(null);
-    	                } else {
-    	                    setText(corretor.getNome());
-    	                }
-    	            }
-    	        }; 
-    	    }
-    	};
+		Callback<ListView<Corretor>, ListCell<Corretor>> corretorCellFactory = new Callback<ListView<Corretor>, ListCell<Corretor>>() {
 
-    	corretorBox.setButtonCell(corretorCellFactory.call(null));
-    	corretorBox.setCellFactory(corretorCellFactory);
+			@Override
+			public ListCell<Corretor> call(ListView<Corretor> l) {
+				return new ListCell<Corretor>() {
+
+					@Override
+					protected void updateItem(Corretor corretor, boolean empty) {
+						super.updateItem(corretor, empty);
+						if (corretor == null || empty) {
+							setGraphic(null);
+						} else {
+							setText(corretor.getNome());
+						}
+					}
+				};
+			}
+		};
+
+		corretorBox.setButtonCell(corretorCellFactory.call(null));
+		corretorBox.setCellFactory(corretorCellFactory);
 
 	}
 
@@ -205,40 +210,41 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 	private boolean isInputValid() {
 		String errorMessage = "";
 
-		
-		
 		if (nomeField.getText() == null || nomeField.getText().length() == 0 || nomeField.getText().matches("[0-9]")) {
 			errorMessage += "Nome inválido\n";
 		}
-		
+
 		if (cpfField.getText() == null || cpfField.getText().length() == 0) {
 			errorMessage += "Digite um CPF\n";
-		} else if (cpfField.getText().length() != 11 || cpfField.getText().matches("[a-zA-Z_]+")) {
+		} else if ((cpfField.getText().length() != 11 && cpfField.getText().length() != 14)
+				|| cpfField.getText().matches("[a-zA-Z_]+")) {
 			errorMessage += "CPF inválido, digite somente números\n";
 		}
-		
-		ClienteService cliServ= (ClienteService)context.getBean("clienteService");
-		Cliente cli = cliServ.findByCpfOuCnpj(cpfField.getText());
-		if (cli != null ) {
-			errorMessage += "CPF já cadastrado para o cliente " + cli.getNome() + "\n";
-		}
-		
-		if (telefonePrefField.getText() == null || telefonePrefField.getText().length() == 0) {
-			errorMessage += "Adicione ao menos 1 telefone\n";
-			if (telefonePrefField.getText().length() <10 || telefonePrefField.getText().length() > 11) {
-				errorMessage += "Telefone inválico\n";
+
+		if (cpfField.getText() != cliente.getCpfOuCnpj()) {
+			ClienteService cliServ = (ClienteService) context.getBean("clienteService");
+			Cliente cli = cliServ.findByCpfOuCnpj(cpfField.getText());
+			if (cli != null) {
+				if (cli.getId() != cliente.getId()) {
+					errorMessage += "CPF já cadastrado para o cliente " + cli.getNome() + "\n";
+				}
 			}
 		}
 
-		if (rgField.getText() == null || rgField.getText().length() == 0  || rgField.getText().matches("[a-zA-Z_]+")) {
-			errorMessage += "RG inválido\n";
+		if (rgField.getText() == null || rgField.getText().length() == 0 || rgField.getText().matches("[a-zA-Z_]+")) {
+			if (cpfField.getText().length() == 11) {
+				errorMessage += "RG inválido\n";
+			}
 		}
 
 		if (estadoCivilBox.getValue() == null) {
-			errorMessage += "Selecione um Estado Civil\n";
+			if (cpfField.getText().length() == 11) {
+				errorMessage += "Selecione um Estado Civil\n";
+			}
 		}
 
-		if ((dataNascimentoField.getValue() == null || dataNascimentoField.getEditor().getText().isBlank()) && dataNascimentoField.getEditor().getText().length() < 8) {
+		if ((dataNascimentoField.getValue() == null || dataNascimentoField.getEditor().getText().isBlank())
+				&& dataNascimentoField.getEditor().getText().length() < 10 && cpfField.getText().length() == 14) {
 			errorMessage += "Data de Nascimento inválida\n";
 
 		}
@@ -259,9 +265,10 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 		}
 	}
 
-	public void setCliente(Cliente cliente, DadosBancarios db) {
+	public void setCliente(Cliente cliente, DadosBancarios db, Endereco end) {
 		this.cliente = cliente;
 		this.db = db;
+		this.endereco = end;
 
 		nomeField.setText("");
 		emailField.setText("");
@@ -286,6 +293,28 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 	}
 
 	@FXML
+	private void handleEditEndereco() throws IOException {
+		if (endereco == null) {
+			endereco = new Endereco();
+
+			boolean okClicked = frontApp.showEditEndereco(endereco);
+
+			if (okClicked) {
+				endereco.setCliente(cliente);
+				this.cliente.getEnderecos().add(endereco);
+			}
+
+		} else {
+			boolean okClicked = frontApp.showEditEndereco(endereco);
+			if (okClicked) {
+				if (endereco == null) {
+					cliente.getEnderecos().clear();
+				}
+			}
+		}
+	}
+
+	@FXML
 	private void handleOk() {
 		if (isInputValid()) {
 
@@ -299,44 +328,46 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 			} else {
 				cliente.setTelefoneAlt("");
 			}
-			
+
 			if (dataNascimentoField.getEditor().getText().isBlank()) {
 				cliente.setDataNascimento(
 						Date.from(dataNascimentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-		            Date date = formatter.parse(dataNascimentoField.getEditor().getText().trim());
-		            cliente.setDataNascimento(date);
-		        } catch (ParseException e) {
-		            e.printStackTrace();
-		        }
+					Date date = formatter.parse(dataNascimentoField.getEditor().getText().trim());
+					cliente.setDataNascimento(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
-			
+
 			cliente.setCpfOuCnpj(cpfField.getText().trim());
 			cliente.setRg(rgField.getText().trim());
-			cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
+			if (cpfField.getText().length() == 14) {
+				Integer x = null;
+				cliente.setEstadoCivil(x);
+			} else {
+				cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
+			}
 			cliente.setProfissao(profissaoField.getText().trim());
 			cliente.setObs(obsField.getText());
 
+			db.setId(null);
+			db.setPix(pixField.getText().trim());
+			db.setAgencia(agenciaField.getText().trim());
+			db.setConta(contaField.getText().trim());
+			db.setTitular(titularField.getText().trim());
+			if (bancoBox.getValue() != null) {
+				db.setBanco(bancoBox.getValue());
+			}
+			if (tipoContaBox.getValue() != null) {
+				db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
+			}
 
-				db.setId(null);
-				db.setPix(pixField.getText().trim());
-				db.setAgencia(agenciaField.getText().trim());
-				db.setConta(contaField.getText().trim());
-				db.setTitular(titularField.getText().trim());
-				if (bancoBox.getValue() != null) {
-					db.setBanco(bancoBox.getValue());
-				}
-				if (tipoContaBox.getValue() != null) {
-					db.setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
-				}
-				
-
-			
 			db.setCliente(cliente);
 			cliente.setDadosBancarios(db);
-			
+
 			okClicked = true;
 			dialogStage.close();
 		}

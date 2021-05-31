@@ -22,6 +22,7 @@ import com.fgwr.jpcorretora.domain.Endereco;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.DadosBancariosRepository;
+import com.fgwr.jpcorretora.repositories.EnderecoRepository;
 import com.fgwr.jpcorretora.utils.FilesUtils;
 
 import javafx.event.ActionEvent;
@@ -32,7 +33,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 
 @Component
@@ -277,14 +277,20 @@ public class RootController {
 	private void handleNovoCliente(ActionEvent event) throws IOException {
 		Cliente tempCliente = new Cliente();
 		DadosBancarios db = new DadosBancarios();
+		Endereco end = null;
 
-		boolean okClicked = frontApp.showNovoCliente(tempCliente, db);
+		boolean okClicked = frontApp.showNovoCliente(tempCliente, db, end);
 		if (okClicked) {
 			ApplicationContext context = SpringContext.getAppContext();
 			ClienteRepository repoCli = (ClienteRepository) context.getBean("clienteRepository");
 			DadosBancariosRepository repoDb = (DadosBancariosRepository) context.getBean("dadosBancariosRepository");
+			EnderecoRepository endRepo = (EnderecoRepository) context.getBean("enderecoRepository");
+			if (end != null) {
+				end = endRepo.save(end);
+			}
 			repoCli.save(tempCliente);
 			repoDb.save(db);
+			
 
 			clientesBtn.getStylesheets().clear();
 			clientesBtn.getStylesheets().add(FilesUtils.fileToString(new File("css/selected.css")));

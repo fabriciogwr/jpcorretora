@@ -52,7 +52,6 @@ public class Cliente implements Serializable {
 	private Boolean active;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Endereco> enderecos = new ArrayList<>();
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST)
@@ -188,6 +187,9 @@ public class Cliente implements Serializable {
 
 	public void setEstadoCivil(EstadoCivil estadoCivil) {
 		this.estadoCivil = estadoCivil.getCod();
+	}
+	public void setEstadoCivil(Integer estadoCivil) {
+		this.estadoCivil = estadoCivil;
 	}
 
 	public String getProfissao() {

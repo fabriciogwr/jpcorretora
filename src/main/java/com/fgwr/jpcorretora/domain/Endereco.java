@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fgwr.jpcorretora.enums.TipoEndereco;
 
 @Entity
@@ -26,6 +29,7 @@ public class Endereco implements Serializable {
 	private String cep;
 	
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Cliente cliente;
 	
 	@ManyToOne

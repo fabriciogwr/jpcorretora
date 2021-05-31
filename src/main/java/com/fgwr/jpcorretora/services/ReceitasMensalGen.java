@@ -42,6 +42,7 @@ public class ReceitasMensalGen {
 
 	public void geraRelatorioReceita(List<Receita> receitas, String path, Integer mes, Double recebidas, Double receber)
 			throws FileNotFoundException {
+		System.out.println(recebidas + ", " + receber);
 
 		PdfWriter writer = new PdfWriter(path);
 		PdfDocument pdfDoc = new PdfDocument(writer);
@@ -90,9 +91,10 @@ public class ReceitasMensalGen {
 			document.add(new Paragraph());
 			document.add(new Paragraph());
 
-			Table table2 = new Table(4).useAllAvailableWidth();
+			Table table2 = new Table(5).useAllAvailableWidth();
+			table2.setFontSize(10);
 
-			var headers = List.of("Categoria", "Vencimento", "Pagamento", "Valor");
+			var headers = List.of("Categoria","Descrição", "Vencimento", "Pagamento", "Valor");
 
 			for (String head : headers) {
 				cell = new Cell();
@@ -108,20 +110,21 @@ public class ReceitasMensalGen {
 				cell.setBackgroundColor(new DeviceRgb(255, 207, 51));
 				cell.setBorderBottom(b3);
 				cell.setBorderRight(Border.NO_BORDER);
-				cell.setTextAlignment(TextAlignment.JUSTIFIED);
+				cell.setTextAlignment(TextAlignment.LEFT);
 				table2.addCell(cell);
 			}
 
 			for (Receita receita : receitas) {
 				tableLines++;
 				var line = List.of(receita.getCategoria().getNome(),
+						receita.getDescricao(),
 						StringsUtils.formatarData(receita.getDataVencimento()),
 						StringsUtils.formatarData(receita.getDataRecebimento()),
 						StringsUtils.formatarRealCifra(receita.getValor()));
 				for (String string : line) {
 					cell = new Cell();
-					String categoria = string;
-					Text t1 = new Text(categoria);
+					String texto = string;
+					Text t1 = new Text(texto);
 
 					p = new Paragraph();
 					p.add(t1);
@@ -129,7 +132,7 @@ public class ReceitasMensalGen {
 					cell.setHeight(16);
 
 					cell.setBorder(Border.NO_BORDER);
-					cell.setTextAlignment(TextAlignment.JUSTIFIED);
+					cell.setTextAlignment(TextAlignment.LEFT);
 					if (tableLines % 2 == 1) {
 						cell.setBackgroundColor(new DeviceRgb(214, 214, 214));
 						// cell.setBorderRight(new SolidBorder(new DeviceRgb(214, 214, 214), 1));
@@ -139,7 +142,7 @@ public class ReceitasMensalGen {
 
 			}
 
-			cell = new Cell();
+			cell = new Cell(1,4);
 			String recebidasT = "Total de receitas recebidas";
 			Text t1 = new Text(recebidasT);
 			p = new Paragraph();
@@ -148,17 +151,7 @@ public class ReceitasMensalGen {
 			cell.setHeight(17);
 			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderTop(b4);
-			cell.setTextAlignment(TextAlignment.JUSTIFIED);
-			table2.addCell(cell);
-
-			cell = new Cell();
-			cell.setBorder(Border.NO_BORDER);
-			cell.setBorderTop(b4);
-			table2.addCell(cell);
-
-			cell = new Cell();
-			cell.setBorder(Border.NO_BORDER);
-			cell.setBorderTop(b4);
+			cell.setTextAlignment(TextAlignment.LEFT);
 			table2.addCell(cell);
 
 			cell = new Cell();
@@ -170,10 +163,10 @@ public class ReceitasMensalGen {
 			cell.setHeight(17);
 			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderTop(b4);
-			cell.setTextAlignment(TextAlignment.JUSTIFIED);
+			cell.setTextAlignment(TextAlignment.LEFT);
 			table2.addCell(cell);
 
-			cell = new Cell();
+			cell = new Cell(1, 4);
 			String receberT = "Total de receitas ainda a receber";
 			Text t3 = new Text(receberT);
 			p = new Paragraph();
@@ -182,17 +175,7 @@ public class ReceitasMensalGen {
 			cell.setHeight(17);
 			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderBottom(b3);
-			cell.setTextAlignment(TextAlignment.JUSTIFIED);
-			table2.addCell(cell);
-
-			cell = new Cell();
-			cell.setBorder(Border.NO_BORDER);
-			cell.setBorderBottom(b3);
-			table2.addCell(cell);
-
-			cell = new Cell();
-			cell.setBorder(Border.NO_BORDER);
-			cell.setBorderBottom(b3);
+			cell.setTextAlignment(TextAlignment.LEFT);
 			table2.addCell(cell);
 
 			cell = new Cell();
@@ -204,9 +187,10 @@ public class ReceitasMensalGen {
 			cell.setHeight(17);
 			cell.setBorder(Border.NO_BORDER);
 			cell.setBorderBottom(b3);
-			cell.setTextAlignment(TextAlignment.JUSTIFIED);
+			cell.setTextAlignment(TextAlignment.LEFT);
 			table2.addCell(cell);
 
+			
 			document.add(table2);
 
 			document.close();

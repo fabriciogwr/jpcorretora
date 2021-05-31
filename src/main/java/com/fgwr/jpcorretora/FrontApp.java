@@ -35,6 +35,7 @@ import com.fgwr.jpcorretora.views.ConfiguraPagamentoDespesaController;
 import com.fgwr.jpcorretora.views.ConfiguraPagamentoReceitaController;
 import com.fgwr.jpcorretora.views.ContratoController;
 import com.fgwr.jpcorretora.views.EditClienteController;
+import com.fgwr.jpcorretora.views.EditEnderecoController;
 import com.fgwr.jpcorretora.views.EditObsController;
 import com.fgwr.jpcorretora.views.EditRefController;
 import com.fgwr.jpcorretora.views.EventosController;
@@ -276,7 +277,7 @@ public class FrontApp extends Application {
 		}
 	}
 
-	public boolean showNovoCliente(Cliente cliente, DadosBancarios db) {
+	public boolean showNovoCliente(Cliente cliente, DadosBancarios db, Endereco end) {
 		try {
 			// FXMLLoader loader = new
 			// FXMLLoader(FrontApp.class.getResource("views/EditCliente.fxml")); //DEV
@@ -296,7 +297,7 @@ public class FrontApp extends Application {
 
 			NovoClienteController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
-			controller.setCliente(cliente, db);
+			controller.setCliente(cliente, db, end);
 
 			dialogStage.showAndWait();
 
@@ -643,6 +644,37 @@ public class FrontApp extends Application {
 			EditRefController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 			controller.setClienteReferencia(cliente, selectedReferencia);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean showEditEndereco(Endereco endereco) {
+		try {
+			// FXMLLoader loader = new
+			// FXMLLoader(FrontApp.class.getResource("views/EditRef.fxml")); //DEV
+			FXMLLoader loader = new FXMLLoader(
+					Paths.get(Paths.get(dir + "\\fxml\\EditEndereco.fxml").toUri()).toUri().toURL()); // BUILD
+			loader.setController(new EditEnderecoController());
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar Referência");
+			dialogStage.setResizable(false);
+			dialogStage.initStyle(StageStyle.UNIFIED);
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			EditEnderecoController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setEndereco(endereco);
 
 			dialogStage.showAndWait();
 

@@ -120,6 +120,8 @@ public class ClienteController {
 	private Label titularLabel;
 	@FXML
 	private Label pixLabel;
+	@FXML
+	private Label cpfTitleLabel;
 
 	@FXML
 	private Label logradouroLabel;
@@ -202,6 +204,9 @@ public class ClienteController {
 	private void showClient(Cliente cliente) {
 		if (cliente != null) {
 			nomeLabel.setText(cliente.getNome());
+			if(cliente.getCpfOuCnpj().length() == 14) {
+				cpfTitleLabel.setText("CNPJ");
+			}
 			cpfLabel.setText(StringsUtils.formatarCpfOuCnpj(cliente.getCpfOuCnpj()));
 			rgLabel.setText(cliente.getRg());
 			emailLabel.setText(cliente.getEmail());
@@ -213,11 +218,14 @@ public class ClienteController {
 			} else {
 				telefoneAltLabel.setText("");
 			}
+			
+			if (cliente.getCpfOuCnpj().length() == 11) {
 			if (cliente.getDataNascimento() != null ) {
 			dataNascimentoLabel.setText(cliente.getDataNascimentoString());
 			}
 			estadoCivilLabel.setText(cliente.getEstadoCivil().getDescricao());
 			profissaoLabel.setText(cliente.getProfissao());
+			}
 			if (cliente.getCorretor() != null) {
 			corretorLabel.setText(cliente.getCorretor().getNome());
 			} else {

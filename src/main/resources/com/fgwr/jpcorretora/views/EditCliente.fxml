@@ -297,6 +297,12 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="corretorBox" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="239.0" GridPane.columnIndex="3" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEditEndereco" prefWidth="90.0" style="-fx-background-color: fff;" stylesheets="@../css/minorbuttons.css" text="Cadastrar/Editar Endereço" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <Label text="Endereço" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </GridPane>
                            </children>

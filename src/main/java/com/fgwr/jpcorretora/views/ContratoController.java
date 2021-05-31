@@ -223,6 +223,8 @@ public class ContratoController {
 				cliRepo.save(cliente);
 				imvRepo.save(imv);
 				contRepo.delete(selectedContrato);
+				File file = new File(FilesUtils.pathContratos(selectedContrato));
+				file.delete();
 				contratoTable.getItems().remove(selectedContrato);
 
 			}
