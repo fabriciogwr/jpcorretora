@@ -2,12 +2,11 @@ package com.fgwr.jpcorretora.views;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +32,6 @@ import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
-import com.fgwr.jpcorretora.repositories.ReceitaRepository;
 import com.fgwr.jpcorretora.repositories.ReciboRepository;
 import com.fgwr.jpcorretora.services.CategoriaService;
 import com.fgwr.jpcorretora.services.ClienteService;
@@ -51,6 +49,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -71,7 +70,7 @@ public class NovoContratoController {
 	FrontApp frontApp = new FrontApp();
 	private Stage dialogStage;
 	private boolean okClicked = false;
-	private boolean pago = false;
+	
 	Double primeiraParcela;
 	ContratoPdfGen pdfGen = new ContratoPdfGen();
 
@@ -81,6 +80,8 @@ public class NovoContratoController {
 	private ComboBox<Cliente> clienteBox;
 	@FXML
 	private ComboBox<Imovel> imovelBox;
+	@FXML
+	private DatePicker iniciaEmBox;
 	@FXML
 	private TextField tempoLocacaoField;
 	@FXML
@@ -106,8 +107,7 @@ public class NovoContratoController {
 
 	public List<Imovel> getImovelData() {
 		ImovelRepository imRepo = (ImovelRepository) context.getBean("imovelRepository");
-		List<Imovel> imoveis = imRepo.findAll();
-
+		List<Imovel> imoveis = imRepo.findByActiveOrderByProprietarioNomeAsc(true);
 		imoveis.removeIf(imovel -> imovel.getContrato() != null);
 
 		return imoveis;
@@ -115,11 +115,12 @@ public class NovoContratoController {
 
 	public List<Cliente> getClienteData() {
 		ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
-		List<Cliente> clientes = cliRepo.findAll();
+		List<Cliente> clientes = cliRepo.findByActiveOrderByNomeAsc(true);
 		return clientes;
 	}
 
 	public void initialize() {
+		
 
 		imovelBox.setItems(FXCollections.observableArrayList(getImovelData()));
 
@@ -177,9 +178,15 @@ public class NovoContratoController {
 		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		vencimentosField.textProperty().addListener((observable, oldValue, newValue) -> {
 			cal.setTime(now);
-			pause.setOnFinished(event -> correct(newValue, cal, now));
+			pause.setOnFinished(event -> correct(newValue, iniciaEmBox.getValue(), now));
 			pause.playFromStart();
 
+		});
+		
+		iniciaEmBox.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
+		iniciaEmBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+			pause.setOnFinished(event -> correct(vencimentosField.getText(), newValue, now));
+			pause.playFromStart();
 		});
 		
 		testemunha1Field.setText("Débora Fernanda Rodrigues");
@@ -189,9 +196,10 @@ public class NovoContratoController {
 
 	}
 
-	public void correct(String vencimentos, Calendar cal, Date now) {
+	public void correct(String vencimentos, LocalDate loc, Date now) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(Date.from(loc.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		if (vencimentos.isBlank() || Integer.parseInt(vencimentos) == 0) {
-			pago = true;
 			primeiraParcelaField.setText("");
 		} else if (!valorField.getText().isBlank() && !vencimentos.isBlank() && Integer.parseInt(vencimentos) > 0
 				&& Integer.parseInt(vencimentos) > cal.get(Calendar.DAY_OF_MONTH)) {
@@ -266,11 +274,10 @@ public class NovoContratoController {
 			ImovelRepository imRepo = (ImovelRepository) context.getBean("imovelRepository");
 			ImovelService is = (ImovelService) context.getBean("imovelService");
 			ClienteService cs = (ClienteService) context.getBean("clienteService");
-			Date date = new Date();
 
 			contrato.setCliente(clienteBox.getValue());
 			contrato.setImovel(imovelBox.getValue());
-			contrato.setData(date);
+			contrato.setData(Date.from(iniciaEmBox.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			contrato.setId(null);
 			contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText()));
 			contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));

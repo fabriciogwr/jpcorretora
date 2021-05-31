@@ -17,5 +17,7 @@ public interface ImovelRepository extends JpaRepository <Imovel, Integer>{
 	List<Imovel> findByProprietario(Proprietario p);
 	
 	List<Imovel> findByActive(Boolean active);
+	
+	List<Imovel> findByActiveOrderByProprietarioNomeAsc(Boolean active);
 
 }

@@ -132,6 +132,8 @@ public class ReceitasController {
 	}
 
 	void listaReceitaMes(Integer mes) {
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.MONTH, mes);
 		recebidas = 0.0;
 		receber = 0.0;
 		ReceitaRepository desRepo = (ReceitaRepository) context.getBean("receitaRepository");
@@ -141,8 +143,6 @@ public class ReceitasController {
 		Date end;
 		List<Receita> despsPgto = new ArrayList<>();
 		List<Receita> despsAll = new ArrayList<>();
-		cal = Calendar.getInstance();
-		cal.set(Calendar.MONTH, mes);
 		year = anoBox.getValue();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		start = cal.getTime();

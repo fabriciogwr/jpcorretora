@@ -46,9 +46,8 @@ public class Contrato implements Serializable {
     private Integer qtdParcelas;
     private Double valorDeCadaParcela;
     
-    @OneToMany(mappedBy ="contrato", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy ="contrato", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Duplicata> duplicatas;
     
     private Boolean active;

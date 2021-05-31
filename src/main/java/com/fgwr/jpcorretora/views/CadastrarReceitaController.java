@@ -163,7 +163,7 @@ public class CadastrarReceitaController {
 		if (pagarHojeChk.isSelected()) {
 			receita.setDataRecebimento(cal.getTime());
 			receita.setEstado(EstadoPagamento.QUITADO);
-			receita.setValorPago(Double.parseDouble(valorField.getText()));
+			receita.setValorPago(Double.parseDouble(valorField.getText().replace(",", ".")));
 		} else {
 			receita.setEstado(EstadoPagamento.PENDENTE);
 			

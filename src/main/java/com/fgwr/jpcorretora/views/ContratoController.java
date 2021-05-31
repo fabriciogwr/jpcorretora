@@ -3,6 +3,7 @@ package com.fgwr.jpcorretora.views;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,13 @@ import com.fgwr.jpcorretora.domain.Cliente;
 import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Imovel;
+import com.fgwr.jpcorretora.domain.Receita;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
 import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
+import com.fgwr.jpcorretora.repositories.ReceitaRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.utils.FilesUtils;
@@ -153,6 +156,13 @@ public class ContratoController {
 				contratoTable.getItems().remove(selectedContrato);
 
 			}
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+			alert.setTitle("Nenhum contrato selecionado");
+			alert.setHeaderText("Selecione um contrato na tabela.");
+			alert.showAndWait();
 		}
 
 	}
@@ -160,9 +170,71 @@ public class ContratoController {
 	@FXML
 	public void visualizaContrato() throws IOException {
 		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
+		if (selectedContrato != null ) {
 		File file = new File(FilesUtils.pathContratos(selectedContrato));
 		Desktop desktop = Desktop.getDesktop();
 		desktop.open(file);
+	}else {
+		Alert alert = new Alert(AlertType.WARNING);
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+		alert.setTitle("Nenhum contrato selecionado");
+		alert.setHeaderText("Selecione um contrato na tabela.");
+		alert.showAndWait();
+	}
+	}
+	
+	@Transactional
+	@FXML
+	private void excluiContrato() {
+		ContratoRepository contRepo = (ContratoRepository) context.getBean("contratoRepository");
+		ImovelRepository imvRepo = (ImovelRepository) context.getBean("imovelRepository");
+		ClienteRepository cliRepo = (ClienteRepository) context.getBean("clienteRepository");
+		ClienteService cs = (ClienteService) context.getBean("clienteService");
+		ImovelService is = (ImovelService) context.getBean("imovelService");
+		DuplicataRepository dupRepo = (DuplicataRepository) context.getBean("duplicataRepository");
+		ReceitaRepository rRepo = (ReceitaRepository) context.getBean("receitaRepository");
+		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
+
+		if (selectedContrato != null) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+			alert.setTitle("Exclusão de Contrato");
+			alert.setHeaderText("Excluir Contrato Selecionado?");
+			alert.setContentText("Excluir um contrato exclui suas receitas e mensalidades e o próprio contrato.\nUtilize apenas em erros de digitação ou cadastramento indevido do contrato.\nContrato a excluir: " + selectedContrato.getId() + " - " + selectedContrato.getCliente().getNome());
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				List<Duplicata> dups = dupRepo.findByContrato(selectedContrato);
+				List<Receita> rcts = new ArrayList<>();
+				for (Duplicata duplicata : dups) {
+					System.out.println(duplicata.getId());
+					rcts.add(duplicata.getReceita());
+					duplicata.setReceita(null);
+					duplicata.setContrato(null);
+					duplicata = dupRepo.save(duplicata);
+				}
+				rRepo.deleteAll(rcts);
+
+				Cliente cliente = cs.find(selectedContrato.getCliente().getId());
+				Imovel imv = is.find(selectedContrato.getImovel().getId());
+				imv.setContrato(null);
+				cliente.setContrato(null);
+				cliRepo.save(cliente);
+				imvRepo.save(imv);
+				contRepo.delete(selectedContrato);
+				contratoTable.getItems().remove(selectedContrato);
+
+			}
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+			alert.setTitle("Nenhum contrato selecionado");
+			alert.setHeaderText("Selecione um contrato na tabela.");
+			alert.showAndWait();
+		}
+
 	}
 
 	public void setMainApp(FrontApp frontApp) {

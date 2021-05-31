@@ -77,11 +77,6 @@
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>
             </Button>
-            <Button fx:id="contratosVBtn" layoutX="10.0" layoutY="221.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showContratos" prefHeight="60.0" stylesheets="@../css/style.css" text="Contratos - Vendas">
-               <font>
-                  <Font name="Futura Bold Condensed BT" size="28.0" />
-               </font>
-            </Button>
             <Button fx:id="despesasBtn" layoutX="10.0" layoutY="515.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showDespesas" prefHeight="60.0" stylesheets="@../css/style.css" text="Despesas">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
@@ -93,6 +88,11 @@
                </font>
             </Button>
             <Button fx:id="manutencaoBtn" layoutX="10.0" layoutY="401.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showManutencao" prefHeight="60.0" stylesheets="@../css/style.css" text="Manutenção">
+               <font>
+                  <Font name="Futura Bold Condensed BT" size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="contratosVBtn" layoutX="10.0" layoutY="221.0" maxHeight="60.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showContratos" prefHeight="60.0" stylesheets="@../css/style.css" text="Contratos - Vendas" visible="false">
                <font>
                   <Font name="Futura Bold Condensed BT" size="28.0" />
                </font>

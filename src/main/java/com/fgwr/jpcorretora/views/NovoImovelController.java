@@ -109,7 +109,7 @@ public class NovoImovelController {
 
 	public List<Proprietario> getProprietarioData() {
 		ProprietarioRepository propRepo = (ProprietarioRepository) context.getBean("proprietarioRepository");
-		List<Proprietario> proprietarios = propRepo.findAll();
+		List<Proprietario> proprietarios = propRepo.findByActiveOrderByNomeAsc(true);
 		return proprietarios;
 	}
 

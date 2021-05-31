@@ -31,7 +31,8 @@ public class DuplicataService {
 		int qtdParcelas = contrato.getQtdParcelas();
 
 		Calendar cal = Calendar.getInstance();
-		Date now = new Date();
+		cal.setTime(contrato.getData());
+		Date now = cal.getTime();
 
 		for (int i = 1; i <= qtdParcelas; i++) {
 			Duplicata duplicata = new Duplicata();
@@ -56,7 +57,7 @@ public class DuplicataService {
 		Calendar cal = Calendar.getInstance();
 
 		for (int i = 1; i <= qtdParcelas; i++) {
-			cal = Calendar.getInstance();
+			cal.setTime(contrato.getData());
 			Duplicata duplicata = new Duplicata();
 			if (i == 1) {
 				if (primeiraParcela > cal.get(Calendar.DAY_OF_MONTH)) {

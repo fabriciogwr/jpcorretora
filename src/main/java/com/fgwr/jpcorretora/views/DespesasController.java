@@ -141,7 +141,7 @@ public class DespesasController {
 		Date end;
 		List<Despesa> despsPgto = new ArrayList<>();
 		List<Despesa> despsAll = new ArrayList<>();
-		cal = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.MONTH, mes);
 		year = anoBox.getValue();
 		cal.set(year, cal.get(Calendar.MONTH), cal.getActualMinimum(Calendar.DAY_OF_MONTH));

@@ -9,5 +9,6 @@ import com.fgwr.jpcorretora.domain.Proprietario;
 public interface ProprietarioRepository extends JpaRepository<Proprietario, Integer>{
 	
 	List<Proprietario> findByActive(Boolean active);
+	List<Proprietario> findByActiveOrderByNomeAsc(Boolean active);
 
 }

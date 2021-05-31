@@ -166,7 +166,7 @@ public class CadastrarDespesaController {
 		if (pagarHojeChk.isSelected()) {
 			despesa.setDataPagamento(cal.getTime());
 			despesa.setEstado(EstadoPagamento.QUITADO);
-			despesa.setValorPago(Double.parseDouble(valorField.getText()));
+			despesa.setValorPago(Double.parseDouble(valorField.getText().replace(",", ".")));
 		} else {
 			despesa.setEstado(EstadoPagamento.PENDENTE);
 			

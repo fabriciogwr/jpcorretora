@@ -36,6 +36,7 @@ public class Duplicata implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="contrato_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Contrato contrato;
 	
 	@ManyToOne
@@ -247,7 +248,7 @@ public class Duplicata implements Serializable {
 		NumberFormat real = NumberFormat.getNumberInstance();
 		real.setMinimumFractionDigits(2);
 		real.setMaximumFractionDigits(2);
-		StringProperty valor = new SimpleStringProperty("R$ " + real.format(this.valor));
+		StringProperty valor = (valorPago != null) ? new SimpleStringProperty("R$ " + real.format(this.valorPago)) : new SimpleStringProperty("R$ " + real.format(this.valor));
 		return valor;
 	}
 	

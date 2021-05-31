@@ -26,6 +26,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#handleCancelaContrato" stylesheets="@../css/minorbuttons.css" text="Encerrar Contrato" />
             <Button mnemonicParsing="false" onAction="#visualizaContrato" stylesheets="@../css/minorbuttons.css" text="Visualizar Contrato" />
+            <Button mnemonicParsing="false" onAction="#excluiContrato" stylesheets="@../css/minorbuttons.css" text="Excluir Contrato" />
          </children>
       </HBox>
    </children>

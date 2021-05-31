@@ -15,5 +15,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	Cliente findByCpfOuCnpj(String cpfOuCnpj);
 	
 	List<Cliente> findByActive(Boolean active);
+	
+	List<Cliente> findByActiveOrderByNomeAsc(Boolean active);
 
 }
