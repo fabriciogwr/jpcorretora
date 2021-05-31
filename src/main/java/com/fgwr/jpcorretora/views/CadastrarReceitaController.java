@@ -182,12 +182,12 @@ public class CadastrarReceitaController {
 	        }
 		}
 		
-		receita.setDescricao(descField.getText());
+		receita.setDescricao(descField.getText().trim());
 		
 		receita.setMeioPagamento(meioPgtoBox.getValue());
-		receita.setValor(Double.parseDouble(valorField.getText()));
+		receita.setValor(Double.parseDouble(valorField.getText().trim()));
 		receita.setCategoria(categoriaBox.getValue());
-		receita.setPagador(recebedorField.getText());
+		receita.setPagador(recebedorField.getText().trim());
 		
 		
 		

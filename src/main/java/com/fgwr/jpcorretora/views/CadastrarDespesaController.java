@@ -185,12 +185,12 @@ public class CadastrarDespesaController {
 	        }
 		}
 		
-		despesa.setDescricao(descField.getText());
+		despesa.setDescricao(descField.getText().trim());
 		
 		despesa.setMeioPagamento(meioPgtoBox.getValue());
-		despesa.setValor(Double.parseDouble(valorField.getText()));
+		despesa.setValor(Double.parseDouble(valorField.getText().trim()));
 		despesa.setCategoria(categoriaBox.getValue());
-		despesa.setRecebedor(recebedorField.getText());
+		despesa.setRecebedor(recebedorField.getText().trim());
 		
 		
 		

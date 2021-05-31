@@ -281,13 +281,13 @@ public class NovoProprietarioController {
 				proprietario = new Proprietario();
 			}
 			proprietario.setActive(true);
-			proprietario.setNome(nomeField.getText());
-			proprietario.setEmail(emailField.getText());
+			proprietario.setNome(nomeField.getText().trim());
+			proprietario.setEmail(emailField.getText().trim());
 
-			proprietario.setTelefonePref(telefonePrefField.getText());
+			proprietario.setTelefonePref(telefonePrefField.getText().trim());
 
 			if (!telefoneAltField.getText().isBlank()) {
-				proprietario.setTelefoneAlt(telefoneAltField.getText());
+				proprietario.setTelefoneAlt(telefoneAltField.getText().trim());
 			} else {
 				proprietario.setTelefoneAlt("");
 			}
@@ -298,23 +298,23 @@ public class NovoProprietarioController {
 			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-					Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+					Date date = formatter.parse(dataNascimentoField.getEditor().getText().trim());
 					proprietario.setDataNascimento(date);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
-			proprietario.setCpfOuCnpj(cpfField.getText());
-			proprietario.setRg(rgField.getText());
+			proprietario.setCpfOuCnpj(cpfField.getText().trim());
+			proprietario.setRg(rgField.getText().trim());
 			proprietario.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
-			proprietario.setProfissao(profissaoField.getText());
+			proprietario.setProfissao(profissaoField.getText().trim());
 			proprietario.setObs(obsField.getText());
 
 			if (!pixField.getText().isBlank() || !titularField.getText().isBlank()) {
-				db.setAgencia(agenciaField.getText());
-				db.setConta(contaField.getText());
-				db.setPix(pixField.getText());
-				db.setTitular(titularField.getText());
+				db.setAgencia(agenciaField.getText().trim());
+				db.setConta(contaField.getText().trim());
+				db.setPix(pixField.getText().trim());
+				db.setTitular(titularField.getText().trim());
 				if (bancoBox.getValue() != null) {
 					db.setBanco(bancoBox.getValue());
 				}
@@ -327,9 +327,9 @@ public class NovoProprietarioController {
 			} else {
 				db.setId(null);
 				db.setPix(pixField.getText());
-				db.setAgencia(agenciaField.getText());
+				db.setAgencia(agenciaField.getText().trim());
 				db.setConta(contaField.getText());
-				db.setTitular(titularField.getText());
+				db.setTitular(titularField.getText().trim());
 				if (bancoBox.getValue() != null) {
 					db.setBanco(bancoBox.getValue());
 				}

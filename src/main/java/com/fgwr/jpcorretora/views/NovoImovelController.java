@@ -429,14 +429,14 @@ public class NovoImovelController {
 			EnderecoRepository endRepo = (EnderecoRepository) context.getBean("enderecoRepository");
 			proprietario = findProprietario(proprietarioBox.getValue().getId());
 
-			endereco.setLogradouro(logradouroField.getText());
-			endereco.setBairro(bairroField.getText());
-			endereco.setCep(cepField.getText());
-			endereco.setNumero(numeroField.getText());
-			endereco.setComplemento(complementoField.getText());
+			endereco.setLogradouro(logradouroField.getText().trim());
+			endereco.setBairro(bairroField.getText().trim());
+			endereco.setCep(cepField.getText().trim());
+			endereco.setNumero(numeroField.getText().trim());
+			endereco.setComplemento(complementoField.getText().trim());
 			endereco.setTipo(TipoEndereco.IMOVELLOCACAO);
-			endereco.setCidade(cidadeField.getText());
-			endereco.setEstado(estadoField.getText());
+			endereco.setCidade(cidadeField.getText().trim());
+			endereco.setEstado(estadoField.getText().trim());
 			endRepo.save(endereco);
 
 			imovel.setProprietario(proprietario);
@@ -447,7 +447,7 @@ public class NovoImovelController {
 			} else if (!dataAngariacaoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-					Date date = formatter.parse(dataAngariacaoField.getEditor().getText());
+					Date date = formatter.parse(dataAngariacaoField.getEditor().getText().trim());
 					imovel.setDataAngariacao(date);
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -456,7 +456,7 @@ public class NovoImovelController {
 
 			imovel.setActive(true);
 			
-			imovel.setCorretor(corretorField.getText());
+			imovel.setCorretor(corretorField.getText().trim());
 			imovel.setDescricao(descricaoField.getText());
 			imovel.setEstadoImovel(EstadoImovel.valueOfDescricao(estadoImovelBox.getValue()));
 			if (dataLaudoField.getEditor().getText().isBlank()) {
@@ -466,7 +466,7 @@ public class NovoImovelController {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 				try {
-					Date date = formatter.parse(dataLaudoField.getEditor().getText());
+					Date date = formatter.parse(dataLaudoField.getEditor().getText().trim());
 					imovel.setDataLaudo(date);
 				} catch (ParseException e) {
 					e.printStackTrace();

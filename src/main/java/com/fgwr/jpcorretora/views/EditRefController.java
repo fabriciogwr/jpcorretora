@@ -82,8 +82,8 @@ public class EditRefController {
 		if (isInputValid()) {
 
 			if (!refNomeField.getText().isBlank()) {
-				referencia.setNome(refNomeField.getText());
-				referencia.setTelefone(refFoneField.getText());
+				referencia.setNome(refNomeField.getText().trim());
+				referencia.setTelefone(refFoneField.getText().trim());
 				cliente.getReferencia().add(referencia);
 				referencia.setCliente(cliente);
 				cliRepo.save(cliente);

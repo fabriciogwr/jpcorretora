@@ -225,12 +225,12 @@ public class EditClienteController {
         if (isInputValid()) {
         	ApplicationContext context = SpringContext.getAppContext();
         	ClienteRepository repo = (ClienteRepository)context.getBean("clienteRepository");
-        	cliente.setNome(nomeField.getText());
-            cliente.setEmail(emailField.getText());
-            cliente.setTelefonePref(telefonePrefField.getText());
+        	cliente.setNome(nomeField.getText().trim());
+            cliente.setEmail(emailField.getText().trim());
+            cliente.setTelefonePref(telefonePrefField.getText().trim());
 
 			if (!telefoneAltField.getText().isBlank()) {
-				cliente.setTelefoneAlt(telefoneAltField.getText());
+				cliente.setTelefoneAlt(telefoneAltField.getText().trim());
 			} else {
 				cliente.setTelefoneAlt("");
 			}
@@ -240,21 +240,21 @@ public class EditClienteController {
 			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+		            Date date = formatter.parse(dataNascimentoField.getEditor().getText().trim());
 		            cliente.setDataNascimento(date);
 		        } catch (ParseException e) {
 		            e.printStackTrace();
 		        }
 			}
-            cliente.setCpfOuCnpj(cpfField.getText());
-            cliente.setRg(rgField.getText());
+            cliente.setCpfOuCnpj(cpfField.getText().trim());
+            cliente.setRg(rgField.getText().trim());
             cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
-            cliente.setProfissao(profissaoField.getText());
+            cliente.setProfissao(profissaoField.getText().trim());
             
             if (cliente.getDadosBancarios().getBanco() != null ) {
-            cliente.getDadosBancarios().setAgencia(agenciaField.getText());
-            cliente.getDadosBancarios().setConta(contaField.getText());
-            cliente.getDadosBancarios().setTitular(titularField.getText());
+            cliente.getDadosBancarios().setAgencia(agenciaField.getText().trim());
+            cliente.getDadosBancarios().setConta(contaField.getText().trim());
+            cliente.getDadosBancarios().setTitular(titularField.getText().trim());
             cliente.getDadosBancarios().setBanco(Banco.valueOfDescricao(bancoBox.getValue().substring(6)));
             cliente.getDadosBancarios().setTipo(TipoConta.valueOfDescricao(tipoContaBox.getValue()));
             }

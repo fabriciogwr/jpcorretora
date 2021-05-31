@@ -63,6 +63,8 @@ public class ConfiguraPagamentoController {
 	@FXML
 	private CheckBox abaterJurosCheck;
 	@FXML
+	private CheckBox geraReciboChk;
+	@FXML
 	private DatePicker dataPagamentoField;
 	@FXML
 	private TextField vencimentoField;
@@ -117,6 +119,7 @@ public class ConfiguraPagamentoController {
 	}
 
 	public void setDuplicata(Duplicata duplicata) {
+		geraReciboChk.setSelected(true);
 		this.duplicata = duplicata;
 		String valor = "R$ " + StringsUtils.formatarReal(duplicata.getValor());
 		valorVencimentoField.setText(valor);
@@ -199,11 +202,12 @@ public class ConfiguraPagamentoController {
 			Double valorPago;
 
 			if (totalPagoField.getText().length() > 0) {
-				valorPago = Double.parseDouble(totalPagoField.getText().replace(",", "."));
+				valorPago = Double.parseDouble(totalPagoField.getText().trim().replace(",", "."));
 			} else {
 				valorPago = valorCorrigido;
 			}
 			Date dataPgto = Date.from(dataPagamentoField.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			
 			Recibo rec = new Recibo(null, duplicata.getContrato().getCliente(), valorPago, duplicata.getParcela(),
 					duplicata.getContrato().getQtdParcelas(), duplicata.getDataVencimento(), dataPgto);
 			duplicata.setDataPagamento(dataPgto);
@@ -237,9 +241,9 @@ public class ConfiguraPagamentoController {
 			}
 			
 			
-
+			if (geraReciboChk.isSelected()) {
 			reciboPdfGen.geraRecibo(duplicata.getRecibo());
-
+			}
 			okClicked = true;
 			dialogStage.close();
 		}

@@ -185,7 +185,7 @@ public class NovoContratoController {
 		
 		iniciaEmBox.setValue(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate());
 		iniciaEmBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-			pause.setOnFinished(event -> correct(vencimentosField.getText(), newValue, now));
+			pause.setOnFinished(event -> correct(vencimentosField.getText().trim(), newValue, now));
 			pause.playFromStart();
 		});
 		
@@ -279,15 +279,15 @@ public class NovoContratoController {
 			contrato.setImovel(imovelBox.getValue());
 			contrato.setData(Date.from(iniciaEmBox.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			contrato.setId(null);
-			contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText()));
-			contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText()));
+			contrato.setQtdParcelas(Integer.parseInt(tempoLocacaoField.getText().trim()));
+			contrato.setValorDeCadaParcela(Double.parseDouble(valorField.getText().trim()));
 
 			List<Duplicata> dups;
 			if (vencimentosField.getText().isBlank()) {
 				dups = ds.preencherDuplicata(contrato, clienteBox.getValue());
 
 			} else {
-				dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText()),
+				dups = ds.preencherDuplicata(contrato, Integer.parseInt(vencimentosField.getText().trim()),
 						clienteBox.getValue());
 			}
 
@@ -307,8 +307,8 @@ public class NovoContratoController {
 			
 			imRepo.save(imovel);
 
-			Testemunha t1 = new Testemunha(testemunha1Field.getText(), testemunha1CpfField.getText());
-			Testemunha t2 = new Testemunha(testemunha2Field.getText(), testemunha2CpfField.getText());
+			Testemunha t1 = new Testemunha(testemunha1Field.getText().trim(), testemunha1CpfField.getText().trim());
+			Testemunha t2 = new Testemunha(testemunha2Field.getText().trim(), testemunha2CpfField.getText().trim());
 			try {
 				pdfGen.geraContrato(contrato, t1, t2);
 				// new TableHeader().manipulatePdf(path);

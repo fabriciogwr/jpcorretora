@@ -290,12 +290,12 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 		if (isInputValid()) {
 
 			cliente.setActive(true);
-			cliente.setNome(nomeField.getText());
-			cliente.setEmail(emailField.getText());
-			cliente.setTelefonePref(telefonePrefField.getText());
+			cliente.setNome(nomeField.getText().trim());
+			cliente.setEmail(emailField.getText().trim());
+			cliente.setTelefonePref(telefonePrefField.getText().trim());
 
 			if (!telefoneAltField.getText().isBlank()) {
-				cliente.setTelefoneAlt(telefoneAltField.getText());
+				cliente.setTelefoneAlt(telefoneAltField.getText().trim());
 			} else {
 				cliente.setTelefoneAlt("");
 			}
@@ -306,25 +306,25 @@ corretorBox.setItems(FXCollections.observableArrayList(getCorretorData()));
 			} else if (!dataNascimentoField.getEditor().getText().isBlank()) {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-		            Date date = formatter.parse(dataNascimentoField.getEditor().getText());
+		            Date date = formatter.parse(dataNascimentoField.getEditor().getText().trim());
 		            cliente.setDataNascimento(date);
 		        } catch (ParseException e) {
 		            e.printStackTrace();
 		        }
 			}
 			
-			cliente.setCpfOuCnpj(cpfField.getText());
-			cliente.setRg(rgField.getText());
+			cliente.setCpfOuCnpj(cpfField.getText().trim());
+			cliente.setRg(rgField.getText().trim());
 			cliente.setEstadoCivil(EstadoCivil.valueOfDescricao(estadoCivilBox.getValue()));
-			cliente.setProfissao(profissaoField.getText());
+			cliente.setProfissao(profissaoField.getText().trim());
 			cliente.setObs(obsField.getText());
 
 
 				db.setId(null);
-				db.setPix(pixField.getText());
-				db.setAgencia(agenciaField.getText());
-				db.setConta(contaField.getText());
-				db.setTitular(titularField.getText());
+				db.setPix(pixField.getText().trim());
+				db.setAgencia(agenciaField.getText().trim());
+				db.setConta(contaField.getText().trim());
+				db.setTitular(titularField.getText().trim());
 				if (bancoBox.getValue() != null) {
 					db.setBanco(bancoBox.getValue());
 				}

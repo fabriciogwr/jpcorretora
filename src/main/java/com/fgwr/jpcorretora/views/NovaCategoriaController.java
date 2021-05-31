@@ -52,8 +52,8 @@ public class NovaCategoriaController {
     @FXML
     private void handleOk() {
     	CategoriaRepository catRepo = (CategoriaRepository)context.getBean("categoriaRepository");
-    	categoria.setNome(catField.getText());
-    	categoria.setDescricao(descField.getText());
+    	categoria.setNome(catField.getText().trim());
+    	categoria.setDescricao(descField.getText().trim());
     	categoria = catRepo.save(categoria);
     	okClicked = true;
     	dialogStage.close();
