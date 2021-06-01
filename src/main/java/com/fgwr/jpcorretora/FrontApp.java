@@ -84,6 +84,7 @@ public class FrontApp extends Application {
 	private Stage primaryStage;
 	private Stage secStage;
 	private BorderPane rootLayout;
+	Image image = new Image("/imgs/ico.png");
 
 	@Autowired
 	private ConfigurableApplicationContext applicationContext;
@@ -121,7 +122,9 @@ public class FrontApp extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("JPCorretora");
-		primaryStage.getIcons().add(new Image("file:\\\\"+ dir+ "\\imgs\\icone.ico"));
+		
+		
+		primaryStage.getIcons().add(image);
 		this.secStage = new Stage();
 		this.secStage.setTitle("Eventos");
 
@@ -183,7 +186,10 @@ public class FrontApp extends Application {
 
 			Scene scene2 = new Scene(eventosOverview);
 			secStage.setScene(scene2);
+			secStage.getIcons().add(image);
 			secStage.show();
+			
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -256,6 +262,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Editar Cliente");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -287,6 +294,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Novo Cliente");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -318,6 +326,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Dados do Proprietario");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -349,6 +358,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Dados do Novo Imóvel");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -380,6 +390,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Novo Contrato");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -411,6 +422,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Editar Observação");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -442,6 +454,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Editar Observação");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -474,6 +487,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Configurar Pagamento");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -506,6 +520,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Configurar Pagamento");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -538,6 +553,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Configurar Despesa");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -570,6 +586,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Configurar Pagamento");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -602,6 +619,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Configurar Receita");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -633,6 +651,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Editar Referência");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -664,6 +683,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Editar Referência");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -695,6 +715,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Nova Categoria");
 			dialogStage.setResizable(false);
 			dialogStage.initStyle(StageStyle.UNIFIED);
@@ -726,6 +747,7 @@ public class FrontApp extends Application {
 			AnchorPane page = (AnchorPane) loader.load();
 
 			Stage dialogStage = new Stage();
+			dialogStage.getIcons().add(image);
 			dialogStage.setTitle("Checklist");
 
 			dialogStage.setResizable(false);
