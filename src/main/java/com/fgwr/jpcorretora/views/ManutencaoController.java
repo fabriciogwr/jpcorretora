@@ -167,6 +167,7 @@ public class ManutencaoController {
 		if (selectedRestoreDirectory != null) {
 			PostgresBackup.realizaRestore(selectedRestoreDirectory.getAbsolutePath());
 			if (rDadosImoveisChk.isSelected()) {
+				FileUtils.deleteDirectory(new File(docFolder + "/Imoveis"));
 				Path src = Path.of(selectedRestoreDirectory.getAbsoluteFile().getParent(), "\\Imoveis");
 				FileUtils.deleteDirectory(new File(docFolder + "\\Imoveis"));
 				Path dest = Path.of(docFolder + "\\Imoveis");
@@ -174,6 +175,7 @@ public class ManutencaoController {
 			}
 			
 			if (rContratosChk.isSelected()) {
+				FileUtils.deleteDirectory(new File(docFolder + "/Contratos"));
 				Path src = Path.of(selectedRestoreDirectory.getAbsoluteFile().getParent(), "\\Contratos");
 				FileUtils.deleteDirectory(new File(docFolder + "\\Contratos"));
 				Path dest = Path.of(docFolder + "\\Contratos");
@@ -181,11 +183,15 @@ public class ManutencaoController {
 			}
 			
 			if (rRecibosChk.isSelected()) {
+				FileUtils.deleteDirectory(new File(docFolder + "/Recibos"));
 				Path src = Path.of(selectedRestoreDirectory.getAbsoluteFile().getParent(), "\\Recibos");
 				FileUtils.deleteDirectory(new File(docFolder + "\\Recibos"));
 				Path dest = Path.of(docFolder + "\\Recibos");
 				DirectoryCopy.copyFolder(src, dest);
 			}
+			
+			
+			
 			
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
