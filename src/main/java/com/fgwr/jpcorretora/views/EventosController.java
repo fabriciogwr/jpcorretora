@@ -173,6 +173,8 @@ public class EventosController {
 					
 					Recibo rec = recRepo.findByDuplicata(selectedDuplicata);
 					selectedDuplicata.setRecibo(rec);
+					pagamentosTable.getItems().remove(selectedDuplicata);
+					pagamentosTable.refresh();
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert2.initStyle(StageStyle.UNIFIED);
 					DialogPane dialogPane2 = alert2.getDialogPane();

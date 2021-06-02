@@ -244,8 +244,10 @@ public class NovoClienteController {
 		}
 
 		if ((dataNascimentoField.getValue() == null || dataNascimentoField.getEditor().getText().isBlank())
-				&& dataNascimentoField.getEditor().getText().length() < 10 && cpfField.getText().length() == 14) {
+				&& dataNascimentoField.getEditor().getText().length() < 10) {
+			if (cpfField.getText().length() == 11) {
 			errorMessage += "Data de Nascimento inválida\n";
+			}
 
 		}
 

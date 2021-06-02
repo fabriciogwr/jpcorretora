@@ -22,6 +22,7 @@ import com.fgwr.jpcorretora.domain.Contrato;
 import com.fgwr.jpcorretora.domain.Duplicata;
 import com.fgwr.jpcorretora.domain.Imovel;
 import com.fgwr.jpcorretora.domain.Receita;
+import com.fgwr.jpcorretora.domain.Testemunha;
 import com.fgwr.jpcorretora.enums.EstadoPagamento;
 import com.fgwr.jpcorretora.repositories.ClienteRepository;
 import com.fgwr.jpcorretora.repositories.ContratoRepository;
@@ -29,6 +30,7 @@ import com.fgwr.jpcorretora.repositories.DuplicataRepository;
 import com.fgwr.jpcorretora.repositories.ImovelRepository;
 import com.fgwr.jpcorretora.repositories.ReceitaRepository;
 import com.fgwr.jpcorretora.services.ClienteService;
+import com.fgwr.jpcorretora.services.ContratoPdfGen;
 import com.fgwr.jpcorretora.services.ImovelService;
 import com.fgwr.jpcorretora.utils.FilesUtils;
 
@@ -238,9 +240,45 @@ public class ContratoController {
 		}
 
 	}
+	
+	
 
 	public void setMainApp(FrontApp frontApp) {
 		this.frontApp = frontApp;
 	}
 
+	@FXML
+	public void geraContrato() throws IOException {
+		ContratoPdfGen pdfGen = new ContratoPdfGen();
+		Contrato selectedContrato = contratoTable.getSelectionModel().getSelectedItem();
+		if (selectedContrato != null ) {
+			Testemunha t1 = new Testemunha("Débora Fernanda Rodrigues", "05095351277");
+			Testemunha t2 = new Testemunha("Grasiela da Silva Weyh", "88443892234");
+			try {
+				pdfGen.geraContrato(selectedContrato, t1, t2);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				DialogPane dialogPane = alert.getDialogPane();
+				dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+				alert.setTitle("Contrato criado");
+				alert.showAndWait();
+			} catch (Exception e) {
+				Alert alert = new Alert(AlertType.WARNING);
+				DialogPane dialogPane = alert.getDialogPane();
+				dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+				alert.setTitle("Erro ao gerar contrato");
+				alert.setHeaderText(e.getLocalizedMessage());
+				alert.showAndWait();
+				
+				
+			}
+	}else {
+		Alert alert = new Alert(AlertType.WARNING);
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(FilesUtils.fileToString(new File("css/alerts.css")));
+		alert.setTitle("Nenhum contrato selecionado");
+		alert.setHeaderText("Selecione um contrato na tabela.");
+		alert.showAndWait();
+	}
+	}
+	
 }

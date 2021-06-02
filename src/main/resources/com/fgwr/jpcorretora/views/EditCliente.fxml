@@ -29,7 +29,7 @@
                            <children>
                               <GridPane HBox.hgrow="ALWAYS">
                                 <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.0" minWidth="45.0" prefWidth="45.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.0" minWidth="65.0" prefWidth="50.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.0" minWidth="10.0" prefWidth="317.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="43.0" minWidth="16.0" prefWidth="16.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="110.0" />
@@ -54,7 +54,7 @@
                                           <Insets left="50.0" />
                                        </opaqueInsets>
                                     </TextField>
-                              	<Label text="CPF" GridPane.rowIndex="1">
+                              	<Label text="CPF/CNPJ" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -185,8 +185,8 @@
                               <GridPane HBox.hgrow="ALWAYS">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="320.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="25.0" prefWidth="25.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="120.0" prefWidth="120.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
                                  </columnConstraints>
